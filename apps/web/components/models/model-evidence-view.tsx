@@ -1,0 +1,40 @@
+import type { ModelCurrent, ModelEvaluation, StrategyComparison } from "@/lib/api/types";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { EvaluationSummary } from "./evaluation-summary";
+import { ModelCurrentCard } from "./model-current-card";
+import { StrategyComparison as StrategyComparisonCard } from "./strategy-comparison";
+
+type ModelEvidenceViewProps = {
+  current: ModelCurrent;
+  evaluation: ModelEvaluation;
+  strategyComparison: StrategyComparison;
+};
+
+export function ModelEvidenceView({
+  current,
+  evaluation,
+  strategyComparison,
+}: ModelEvidenceViewProps) {
+  return (
+    <div className="space-y-6">
+      <div>
+        <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
+          Model evidence
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight">
+          Feasibility evidence package
+        </h1>
+      </div>
+      <Alert>
+        <AlertTitle>Synthetic data and governance context</AlertTitle>
+        <AlertDescription>
+          The current model evidence is based on {current.dataset_lineage.source_marker};
+          pooled use remains gated by legal review.
+        </AlertDescription>
+      </Alert>
+      <ModelCurrentCard current={current} />
+      <EvaluationSummary evaluation={evaluation} />
+      <StrategyComparisonCard strategyComparison={strategyComparison} />
+    </div>
+  );
+}

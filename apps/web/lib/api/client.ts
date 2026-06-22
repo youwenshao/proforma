@@ -30,3 +30,23 @@ export async function apiGet<T>(path: string): Promise<T> {
 
   return response.json() as Promise<T>;
 }
+
+export async function apiPost<TResponse, TBody>(path: string, body: TBody): Promise<TResponse> {
+  const response = await fetch(`${getApiBaseUrl()}${path}`, {
+    body: JSON.stringify(body),
+    headers: {
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new ApiClientError(
+      `ProForma API request failed for ${path}`,
+      response.status,
+    );
+  }
+
+  return response.json() as Promise<TResponse>;
+}
