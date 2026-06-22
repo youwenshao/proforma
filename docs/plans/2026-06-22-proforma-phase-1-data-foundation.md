@@ -16,6 +16,9 @@
 - Dictionary: `docs/data_dictionary.md`
 - Dataset: `output/proforma_hk_synthetic_mvp.csv`
 - Validation: `output/validation_report.md`
+- Phase 0 requirements: `docs/requirements/product-requirements.md`
+- Phase 0 architecture: `docs/architecture/technical-feasibility-architecture.md`
+- Phase 0 gates: `docs/governance/risk-register.md`
 
 ## Phase Deliverables
 

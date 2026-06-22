@@ -13,6 +13,10 @@
 ## Source Context
 
 - Proposal call to action: `docs/proforma-proposal-prelim.html`
+- Phase 0 requirements: `docs/requirements/product-requirements.md`
+- Phase 0 architecture: `docs/architecture/technical-feasibility-architecture.md`
+- Phase 0 acceptance checklist: `docs/governance/phase-0-acceptance-checklist.md`
+- Phase 0 gates: `docs/governance/risk-register.md`
 - Dataset validation: `output/validation_report.md`
 - Dataset lineage: `output/dataset_lineage.json`
 - Model comparison: `artifacts/reports/model_strategy_comparison.md`

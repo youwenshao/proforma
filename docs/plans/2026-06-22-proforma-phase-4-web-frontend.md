@@ -17,6 +17,9 @@
 - Domain schemas: `proforma_data/schemas.py`
 - Product workflow: `docs/proforma-proposal-prelim.html`
 - Proposal requirement: bilingual English and Traditional Chinese interface.
+- Phase 0 requirements: `docs/requirements/product-requirements.md`
+- Phase 0 bilingual UX decision: `docs/adr/0004-bilingual-ui-through-reviewed-translation-catalog.md`
+- Phase 0 gates: `docs/governance/risk-register.md`
 
 ## Phase Deliverables
 

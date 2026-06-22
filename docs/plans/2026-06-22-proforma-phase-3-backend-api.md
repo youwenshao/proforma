@@ -16,6 +16,9 @@
 - Phase 2 inference: `ml/inference.py`
 - API fixture: `artifacts/fixtures/sample_prediction_response.json`
 - Proposal workflow: `docs/proforma-proposal-prelim.html`
+- Phase 0 architecture: `docs/architecture/technical-feasibility-architecture.md`
+- Phase 0 tenancy decision: `docs/adr/0003-tenant-aware-contracts-before-real-tenancy.md`
+- Phase 0 gates: `docs/governance/risk-register.md`
 
 ## Phase Deliverables
 

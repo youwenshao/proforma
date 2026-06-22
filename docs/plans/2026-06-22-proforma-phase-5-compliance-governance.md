@@ -14,6 +14,9 @@
 
 - Compliance rows: `docs/proforma-proposal-prelim.html`
 - Phase 0 risk register: `docs/governance/risk-register.md`
+- Phase 0 acceptance checklist: `docs/governance/phase-0-acceptance-checklist.md`
+- Phase 0 data residency decision: `docs/adr/0005-data-residency-and-deployment-gate.md`
+- Phase 0 model strategy decision: `docs/adr/0002-compare-firm-specific-and-pooled-models.md`
 - Phase 1 data importer boundary: `docs/data/real-firm-data-import-boundary.md`
 - Phase 2 model cards: `artifacts/reports/`
 - Phase 3 audit logs: `artifacts/audit/prediction_requests.jsonl`

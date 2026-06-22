@@ -17,6 +17,9 @@
 - Validation report: `output/validation_report.md`
 - Data schemas from Phase 1: `proforma_data/schemas.py`
 - Lineage from Phase 1: `output/dataset_lineage.json`
+- Phase 0 model strategy decision: `docs/adr/0002-compare-firm-specific-and-pooled-models.md`
+- Phase 0 tenancy decision: `docs/adr/0003-tenant-aware-contracts-before-real-tenancy.md`
+- Phase 0 gates: `docs/governance/risk-register.md`
 
 ## Phase Deliverables
 
