@@ -19,7 +19,7 @@
     "p50": 363.5747361003132,
     "p90": 563.5148600336738
   },
-  "estimate_id": "2925d661-df83-4a93-a109-5557ef37bd0e",
+  "estimate_id": "sample-estimate-v1",
   "fee_recommendation": {
     "billing_model": "Fixed Fee",
     "confidence_interval_high_hkd": 802695.776149833,

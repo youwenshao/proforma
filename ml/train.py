@@ -251,6 +251,7 @@ def write_sample_prediction_fixture(
     matter_input = {field: row[field] for field in MatterInput.model_fields if field in row}
     matter_input["risk_tolerance"] = "Medium"
     response = predict(bundles, matter_input)
+    response["estimate_id"] = "sample-estimate-v1"
     output_path.write_text(json.dumps(response, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return response
 

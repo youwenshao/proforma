@@ -3,7 +3,7 @@ from pathlib import Path
 
 from ml.inference import predict
 from ml.model_card import write_model_card
-from ml.train import train_regression_model, train_scope_creep_classifier
+from ml.train import train_regression_model, train_scope_creep_classifier, write_sample_prediction_fixture
 
 
 def test_model_cards_include_synthetic_limitations_and_excluded_uses(tmp_path: Path) -> None:
@@ -54,6 +54,23 @@ def test_inference_does_not_return_raw_training_rows() -> None:
 
     assert "training_rows" not in response
     assert "matter_id" not in serialized
+
+
+def test_sample_prediction_fixture_is_reproducible(tmp_path: Path) -> None:
+    bundles = {
+        "total_cost_hkd": train_regression_model("output/proforma_hk_synthetic_mvp.csv", target="total_cost_hkd", sample=300),
+        "duration_days": train_regression_model("output/proforma_hk_synthetic_mvp.csv", target="duration_days", sample=300),
+        "partner_hours": train_regression_model("output/proforma_hk_synthetic_mvp.csv", target="partner_hours", sample=300),
+        "associate_hours": train_regression_model("output/proforma_hk_synthetic_mvp.csv", target="associate_hours", sample=300),
+        "scope_creep_flag": train_scope_creep_classifier("output/proforma_hk_synthetic_mvp.csv", sample=300),
+    }
+    first_path = tmp_path / "first.json"
+    second_path = tmp_path / "second.json"
+
+    write_sample_prediction_fixture("output/proforma_hk_synthetic_mvp.csv", bundles, first_path)
+    write_sample_prediction_fixture("output/proforma_hk_synthetic_mvp.csv", bundles, second_path)
+
+    assert first_path.read_text(encoding="utf-8") == second_path.read_text(encoding="utf-8")
 
 
 def public_matter_input():
