@@ -156,6 +156,8 @@ class FeeRecommendation(ContractModel):
     recommended_fee_hkd: float = Field(gt=0)
     confidence_interval_low_hkd: float = Field(gt=0)
     confidence_interval_high_hkd: float = Field(gt=0)
+    cap_amount_hkd: float | None = Field(default=None, gt=0)
+    expected_downside_hkd: float | None = Field(default=None, ge=0)
     partner_decision_support_disclaimer: str = DEFAULT_DISCLAIMER
 
     @field_validator("billing_model")

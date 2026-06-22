@@ -1,0 +1,862 @@
+{
+  "components": {
+    "schemas": {
+      "EstimateInterval": {
+        "additionalProperties": false,
+        "properties": {
+          "calibration_method": {
+            "title": "Calibration Method",
+            "type": "string"
+          },
+          "confidence_level": {
+            "exclusiveMinimum": 0.0,
+            "maximum": 1.0,
+            "title": "Confidence Level",
+            "type": "number"
+          },
+          "p10": {
+            "minimum": 0.0,
+            "title": "P10",
+            "type": "number"
+          },
+          "p50": {
+            "minimum": 0.0,
+            "title": "P50",
+            "type": "number"
+          },
+          "p90": {
+            "minimum": 0.0,
+            "title": "P90",
+            "type": "number"
+          }
+        },
+        "required": [
+          "p10",
+          "p50",
+          "p90",
+          "confidence_level",
+          "calibration_method"
+        ],
+        "title": "EstimateInterval",
+        "type": "object"
+      },
+      "EstimateRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "matter_input": {
+            "$ref": "#/components/schemas/MatterInput"
+          },
+          "model_strategy": {
+            "enum": [
+              "firm_specific",
+              "pooled_research",
+              "synthetic_baseline"
+            ],
+            "title": "Model Strategy",
+            "type": "string"
+          },
+          "risk_tolerance": {
+            "enum": [
+              "conservative",
+              "balanced",
+              "aggressive"
+            ],
+            "title": "Risk Tolerance",
+            "type": "string"
+          },
+          "tenant_id": {
+            "minLength": 1,
+            "title": "Tenant Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "matter_input",
+          "risk_tolerance",
+          "model_strategy"
+        ],
+        "title": "EstimateRequest",
+        "type": "object"
+      },
+      "FeeRecommendation": {
+        "additionalProperties": false,
+        "properties": {
+          "billing_model": {
+            "enum": [
+              "Hourly",
+              "Fixed Fee",
+              "Capped Fee",
+              "Retainer",
+              "Outcome Related"
+            ],
+            "title": "Billing Model",
+            "type": "string"
+          },
+          "cap_amount_hkd": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cap Amount Hkd"
+          },
+          "confidence_interval_high_hkd": {
+            "exclusiveMinimum": 0.0,
+            "title": "Confidence Interval High Hkd",
+            "type": "number"
+          },
+          "confidence_interval_low_hkd": {
+            "exclusiveMinimum": 0.0,
+            "title": "Confidence Interval Low Hkd",
+            "type": "number"
+          },
+          "expected_downside_hkd": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Downside Hkd"
+          },
+          "partner_decision_support_disclaimer": {
+            "default": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
+            "title": "Partner Decision Support Disclaimer",
+            "type": "string"
+          },
+          "recommended_fee_hkd": {
+            "exclusiveMinimum": 0.0,
+            "title": "Recommended Fee Hkd",
+            "type": "number"
+          },
+          "schema_version": {
+            "const": "proforma.matter.v1",
+            "default": "proforma.matter.v1",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "billing_model",
+          "recommended_fee_hkd",
+          "confidence_interval_low_hkd",
+          "confidence_interval_high_hkd"
+        ],
+        "title": "FeeRecommendation",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "MatterInput": {
+        "additionalProperties": false,
+        "properties": {
+          "billing_model": {
+            "enum": [
+              "Hourly",
+              "Fixed Fee",
+              "Capped Fee",
+              "Retainer",
+              "Outcome Related"
+            ],
+            "title": "Billing Model",
+            "type": "string"
+          },
+          "client_type": {
+            "enum": [
+              "Mainland Enterprise",
+              "HK Listed Co.",
+              "SME/Local Business",
+              "Individual",
+              "Financial Institution",
+              "SOE"
+            ],
+            "title": "Client Type",
+            "type": "string"
+          },
+          "complexity_score": {
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Complexity Score",
+            "type": "integer"
+          },
+          "cross_border_flag": {
+            "title": "Cross Border Flag",
+            "type": "boolean"
+          },
+          "document_volume": {
+            "exclusiveMinimum": 0.0,
+            "title": "Document Volume",
+            "type": "integer"
+          },
+          "firm_tier": {
+            "enum": [
+              "Magic Circle / International",
+              "PRC Elite Firm in HK",
+              "Large Local (11+ partners)",
+              "Mid-tier (6-10 partners)",
+              "Small/Boutique (1-5 partners)"
+            ],
+            "title": "Firm Tier",
+            "type": "string"
+          },
+          "jurisdiction": {
+            "enum": [
+              "HK Only",
+              "GBA Cross-Border (HK-PRC)",
+              "Multi-Jurisdictional (APAC)"
+            ],
+            "title": "Jurisdiction",
+            "type": "string"
+          },
+          "matter_subtype": {
+            "title": "Matter Subtype",
+            "type": "string"
+          },
+          "matter_type": {
+            "enum": [
+              "M&A",
+              "Litigation",
+              "Commercial Property",
+              "Employment",
+              "IP/Technology",
+              "Corporate Restructuring",
+              "Banking & Finance",
+              "Wills & Probate",
+              "Regulatory/Compliance",
+              "Arbitration"
+            ],
+            "title": "Matter Type",
+            "type": "string"
+          },
+          "party_count": {
+            "exclusiveMinimum": 0.0,
+            "title": "Party Count",
+            "type": "integer"
+          },
+          "risk_tolerance": {
+            "enum": [
+              "Low",
+              "Medium",
+              "High"
+            ],
+            "title": "Risk Tolerance",
+            "type": "string"
+          },
+          "schema_version": {
+            "const": "proforma.matter.v1",
+            "default": "proforma.matter.v1",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "matter_type",
+          "matter_subtype",
+          "jurisdiction",
+          "firm_tier",
+          "client_type",
+          "document_volume",
+          "complexity_score",
+          "party_count",
+          "cross_border_flag",
+          "billing_model",
+          "risk_tolerance"
+        ],
+        "title": "MatterInput",
+        "type": "object"
+      },
+      "PredictionResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "cost_estimate": {
+            "$ref": "#/components/schemas/EstimateInterval"
+          },
+          "dataset_lineage": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Dataset Lineage",
+            "type": "object"
+          },
+          "decision_support_disclaimer": {
+            "title": "Decision Support Disclaimer",
+            "type": "string"
+          },
+          "duration_estimate": {
+            "$ref": "#/components/schemas/EstimateInterval"
+          },
+          "estimate_id": {
+            "title": "Estimate Id",
+            "type": "string"
+          },
+          "fee_recommendation": {
+            "$ref": "#/components/schemas/FeeRecommendation"
+          },
+          "input_summary": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "Input Summary",
+            "type": "object"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "model_version": {
+            "title": "Model Version",
+            "type": "string"
+          },
+          "scope_creep_probability": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Scope Creep Probability",
+            "type": "number"
+          },
+          "stage_estimates": {
+            "items": {
+              "$ref": "#/components/schemas/StageEstimate"
+            },
+            "title": "Stage Estimates",
+            "type": "array"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "estimate_id",
+          "tenant_id",
+          "model_version",
+          "dataset_lineage",
+          "input_summary",
+          "cost_estimate",
+          "duration_estimate",
+          "scope_creep_probability",
+          "stage_estimates",
+          "fee_recommendation",
+          "decision_support_disclaimer",
+          "limitations"
+        ],
+        "title": "PredictionResponse",
+        "type": "object"
+      },
+      "ScopeUpdateRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "actual_associate_hours": {
+            "minimum": 0.0,
+            "title": "Actual Associate Hours",
+            "type": "number"
+          },
+          "actual_cost_hkd": {
+            "minimum": 0.0,
+            "title": "Actual Cost Hkd",
+            "type": "number"
+          },
+          "actual_partner_hours": {
+            "minimum": 0.0,
+            "title": "Actual Partner Hours",
+            "type": "number"
+          },
+          "stage_name": {
+            "minLength": 1,
+            "title": "Stage Name",
+            "type": "string"
+          },
+          "update_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Update Note"
+          }
+        },
+        "required": [
+          "stage_name",
+          "actual_partner_hours",
+          "actual_associate_hours",
+          "actual_cost_hkd"
+        ],
+        "title": "ScopeUpdateRequest",
+        "type": "object"
+      },
+      "ScopeUpdateResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "actual_hours": {
+            "title": "Actual Hours",
+            "type": "number"
+          },
+          "estimate_id": {
+            "title": "Estimate Id",
+            "type": "string"
+          },
+          "predicted_hours": {
+            "title": "Predicted Hours",
+            "type": "number"
+          },
+          "recommended_review_action": {
+            "title": "Recommended Review Action",
+            "type": "string"
+          },
+          "scope_creep_flag": {
+            "title": "Scope Creep Flag",
+            "type": "boolean"
+          },
+          "stage_name": {
+            "title": "Stage Name",
+            "type": "string"
+          },
+          "variance_pct": {
+            "title": "Variance Pct",
+            "type": "number"
+          }
+        },
+        "required": [
+          "estimate_id",
+          "stage_name",
+          "predicted_hours",
+          "actual_hours",
+          "variance_pct",
+          "scope_creep_flag",
+          "recommended_review_action"
+        ],
+        "title": "ScopeUpdateResponse",
+        "type": "object"
+      },
+      "StageEstimate": {
+        "additionalProperties": false,
+        "properties": {
+          "associate_hours": {
+            "minimum": 0.0,
+            "title": "Associate Hours",
+            "type": "number"
+          },
+          "cost_hkd": {
+            "minimum": 0.0,
+            "title": "Cost Hkd",
+            "type": "number"
+          },
+          "partner_hours": {
+            "minimum": 0.0,
+            "title": "Partner Hours",
+            "type": "number"
+          },
+          "stage_name": {
+            "title": "Stage Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "stage_name",
+          "partner_hours",
+          "associate_hours",
+          "cost_hkd"
+        ],
+        "title": "StageEstimate",
+        "type": "object"
+      },
+      "TaxonomyResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "billing_models": {
+            "items": {
+              "enum": [
+                "Hourly",
+                "Fixed Fee",
+                "Capped Fee",
+                "Retainer",
+                "Outcome Related"
+              ],
+              "type": "string"
+            },
+            "title": "Billing Models",
+            "type": "array"
+          },
+          "firm_tiers": {
+            "items": {
+              "enum": [
+                "Magic Circle / International",
+                "PRC Elite Firm in HK",
+                "Large Local (11+ partners)",
+                "Mid-tier (6-10 partners)",
+                "Small/Boutique (1-5 partners)"
+              ],
+              "type": "string"
+            },
+            "title": "Firm Tiers",
+            "type": "array"
+          },
+          "jurisdictions": {
+            "items": {
+              "enum": [
+                "HK Only",
+                "GBA Cross-Border (HK-PRC)",
+                "Multi-Jurisdictional (APAC)"
+              ],
+              "type": "string"
+            },
+            "title": "Jurisdictions",
+            "type": "array"
+          },
+          "matter_types": {
+            "items": {
+              "enum": [
+                "M&A",
+                "Litigation",
+                "Commercial Property",
+                "Employment",
+                "IP/Technology",
+                "Corporate Restructuring",
+                "Banking & Finance",
+                "Wills & Probate",
+                "Regulatory/Compliance",
+                "Arbitration"
+              ],
+              "type": "string"
+            },
+            "title": "Matter Types",
+            "type": "array"
+          },
+          "schema_version": {
+            "const": "proforma.matter.v1",
+            "default": "proforma.matter.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "stage_templates": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Stage Templates",
+            "type": "object"
+          },
+          "subtypes_by_matter_type": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Subtypes By Matter Type",
+            "type": "object"
+          }
+        },
+        "required": [
+          "source",
+          "matter_types",
+          "subtypes_by_matter_type",
+          "jurisdictions",
+          "firm_tiers",
+          "billing_models",
+          "stage_templates"
+        ],
+        "title": "TaxonomyResponse",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "ProForma API",
+    "version": "v1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/v1/estimates": {
+      "post": {
+        "operationId": "create_estimate_v1_estimates_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstimateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Estimate",
+        "tags": [
+          "estimates"
+        ]
+      }
+    },
+    "/v1/estimates/{estimate_id}/scope-updates": {
+      "post": {
+        "operationId": "create_scope_update_v1_estimates__estimate_id__scope_updates_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "estimate_id",
+            "required": true,
+            "schema": {
+              "title": "Estimate Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScopeUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScopeUpdateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Scope Update",
+        "tags": [
+          "scope-monitoring"
+        ]
+      }
+    },
+    "/v1/models/current": {
+      "get": {
+        "operationId": "current_model_v1_models_current_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Current Model V1 Models Current Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Current Model",
+        "tags": [
+          "models"
+        ]
+      }
+    },
+    "/v1/models/evaluation": {
+      "get": {
+        "operationId": "model_evaluation_v1_models_evaluation_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Model Evaluation V1 Models Evaluation Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Model Evaluation",
+        "tags": [
+          "models"
+        ]
+      }
+    },
+    "/v1/models/strategy-comparison": {
+      "get": {
+        "operationId": "strategy_comparison_v1_models_strategy_comparison_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Strategy Comparison V1 Models Strategy Comparison Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Strategy Comparison",
+        "tags": [
+          "models"
+        ]
+      }
+    },
+    "/v1/taxonomy": {
+      "get": {
+        "operationId": "get_taxonomy_v1_taxonomy_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaxonomyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Taxonomy",
+        "tags": [
+          "taxonomy"
+        ]
+      }
+    }
+  }
+}
