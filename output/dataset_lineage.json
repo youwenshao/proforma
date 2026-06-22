@@ -1,0 +1,11 @@
+{
+  "dataset_id": "proforma-hk-synthetic-mvp-v1",
+  "feature_version": "proforma.features.v1",
+  "generated_at": "2026-06-22T04:55:28.380975Z",
+  "generator_version": "synthetic-generator-v1",
+  "random_seed": 20260622,
+  "record_count": 4000,
+  "schema_version": "proforma.matter.v1",
+  "source_marker": "SYNTHETIC_MVP_V1",
+  "validation_report_path": "output/validation_report.md"
+}

@@ -1,1 +1,5 @@
 .worktrees/
+artifacts/models/*.joblib
+__pycache__/
+*.py[cod]
+.pytest_cache/

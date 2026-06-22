@@ -1,0 +1,46 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "dataset_id": {
+      "title": "Dataset Id",
+      "type": "string"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Metrics",
+      "type": "object"
+    },
+    "model_version": {
+      "title": "Model Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "proforma.matter.v1",
+      "default": "proforma.matter.v1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dataset_id",
+    "model_version",
+    "metrics",
+    "limitations"
+  ],
+  "title": "ModelEvaluation",
+  "type": "object"
+}

@@ -22,6 +22,18 @@ from pathlib import Path
 from statistics import NormalDist
 from typing import Any, Callable
 
+from proforma_data.domain import (
+    BILLING_MODELS,
+    CLIENT_TYPES,
+    FIRM_TIERS,
+    JURISDICTIONS,
+    MATTER_SUBTYPES,
+    MATTER_TYPES,
+    PARTNER_RATE_BANDS,
+    STAGE_TEMPLATES,
+)
+from proforma_data.lineage import write_dataset_lineage
+
 
 # ---------------------------------------------------------------------------
 # Reproducibility and output
@@ -36,25 +48,9 @@ ROOT_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = ROOT_DIR / "output"
 DATASET_PATH = OUTPUT_DIR / "proforma_hk_synthetic_mvp.csv"
 VALIDATION_REPORT_PATH = OUTPUT_DIR / "validation_report.md"
+DATASET_LINEAGE_PATH = OUTPUT_DIR / "dataset_lineage.json"
 DATA_DICTIONARY_PATH = ROOT_DIR / "docs" / "data_dictionary.md"
 
-
-# ---------------------------------------------------------------------------
-# Matter taxonomy and categorical distributions
-# ---------------------------------------------------------------------------
-
-MATTER_TYPES = [
-    "M&A",
-    "Litigation",
-    "Commercial Property",
-    "Employment",
-    "IP/Technology",
-    "Corporate Restructuring",
-    "Banking & Finance",
-    "Wills & Probate",
-    "Regulatory/Compliance",
-    "Arbitration",
-]
 
 MATTER_TYPE_WEIGHTS = {
     "M&A": 0.12,
@@ -68,87 +64,6 @@ MATTER_TYPE_WEIGHTS = {
     "Regulatory/Compliance": 0.08,
     "Arbitration": 0.08,
 }
-
-MATTER_SUBTYPES = {
-    "M&A": [
-        "Share Acquisition - Private",
-        "Asset Acquisition",
-        "Minority Investment",
-        "Joint Venture Formation",
-        "Due Diligence Only",
-    ],
-    "Litigation": [
-        "Commercial Contract Dispute",
-        "Shareholder Dispute",
-        "Debt Recovery",
-        "Injunction Application",
-        "Professional Negligence Claim",
-    ],
-    "Commercial Property": [
-        "Tenancy Agreement - Commercial",
-        "Sale and Purchase - Commercial",
-        "Lease Renewal",
-        "Landlord and Tenant Dispute",
-        "Mortgage and Security Review",
-    ],
-    "Employment": [
-        "Unfair Dismissal Claim",
-        "Employment Contract Review",
-        "Restrictive Covenant Advice",
-        "Redundancy Exercise",
-        "Discrimination Complaint",
-    ],
-    "IP/Technology": [
-        "Software Licensing",
-        "Trademark Filing and Opposition",
-        "Data Processing Agreement",
-        "Technology Services Contract",
-        "IP Ownership Dispute",
-    ],
-    "Corporate Restructuring": [
-        "Members Voluntary Liquidation",
-        "Debt Restructuring",
-        "Scheme of Arrangement",
-        "Corporate Reorganization",
-        "Distressed Asset Sale",
-    ],
-    "Banking & Finance": [
-        "Bilateral Facility Agreement",
-        "Syndicated Loan",
-        "Security Package Review",
-        "Trade Finance Facility",
-        "Refinancing",
-    ],
-    "Wills & Probate": [
-        "Simple Will",
-        "Complex Estate Planning",
-        "Probate Application",
-        "Letters of Administration",
-        "Contentious Probate",
-    ],
-    "Regulatory/Compliance": [
-        "SFC Licensing Advice",
-        "AML Compliance Review",
-        "Data Privacy Review",
-        "Listing Rules Advice",
-        "Internal Investigation",
-    ],
-    "Arbitration": [
-        "HKIAC Commercial Arbitration",
-        "Construction Arbitration",
-        "Shareholder Arbitration",
-        "Enforcement of Award",
-        "ORFSA Fee Assessment",
-    ],
-}
-
-FIRM_TIERS = [
-    "Magic Circle / International",
-    "PRC Elite Firm in HK",
-    "Large Local (11+ partners)",
-    "Mid-tier (6-10 partners)",
-    "Small/Boutique (1-5 partners)",
-]
 
 FIRM_TIER_ORDINAL = {
     "Small/Boutique (1-5 partners)": 1,
@@ -171,18 +86,6 @@ FIRM_TIER_WEIGHTS_BY_TYPE = {
     "Arbitration": [0.34, 0.10, 0.25, 0.21, 0.10],
 }
 
-JURISDICTIONS = ["HK Only", "GBA Cross-Border (HK-PRC)", "Multi-Jurisdictional (APAC)"]
-
-CLIENT_TYPES = [
-    "Mainland Enterprise",
-    "HK Listed Co.",
-    "SME/Local Business",
-    "Individual",
-    "Financial Institution",
-    "SOE",
-]
-
-BILLING_MODELS = ["Hourly", "Fixed Fee", "Capped Fee", "Retainer", "Outcome Related"]
 BILLING_MODEL_WEIGHTS = {
     "Hourly": 0.64,
     "Fixed Fee": 0.25,
@@ -202,14 +105,6 @@ TRANSACTIONAL_TYPES = {
 # ---------------------------------------------------------------------------
 # Numeric constants and validation targets
 # ---------------------------------------------------------------------------
-
-PARTNER_RATE_BANDS = {
-    "Magic Circle / International": (6000.0, 13000.0),
-    "PRC Elite Firm in HK": (4000.0, 8000.0),
-    "Large Local (11+ partners)": (3000.0, 6000.0),
-    "Mid-tier (6-10 partners)": (2200.0, 4500.0),
-    "Small/Boutique (1-5 partners)": (1900.0, 3600.0),
-}
 
 MIN_PARTNER_RATE = 1800.0
 MIN_ASSOCIATE_RATE = 800.0
@@ -299,23 +194,6 @@ VALIDATION_THRESHOLDS = {
     "extreme_overrun_max_share": 0.01,
 }
 
-
-# ---------------------------------------------------------------------------
-# Stage templates and operational assumptions
-# ---------------------------------------------------------------------------
-
-STAGE_TEMPLATES = {
-    "M&A": ["Scoping", "Due Diligence", "Drafting", "Negotiation", "Closing"],
-    "Litigation": ["Case Assessment", "Pleadings", "Discovery", "Interlocutory Applications", "Settlement/Trial"],
-    "Commercial Property": ["Instructions", "Title Review", "Drafting", "Negotiation", "Completion"],
-    "Employment": ["Initial Advice", "Document Review", "Negotiation", "Settlement/Tribunal"],
-    "IP/Technology": ["Scoping", "IP/Tech Review", "Drafting", "Negotiation", "Completion"],
-    "Corporate Restructuring": ["Scoping", "Due Diligence", "Scheme Design", "Creditor/Stakeholder Negotiation", "Implementation"],
-    "Banking & Finance": ["Term Sheet Review", "Due Diligence", "Facility Drafting", "Security Documentation", "Closing"],
-    "Wills & Probate": ["Client Intake", "Asset Review", "Drafting/Application", "Execution/Filing"],
-    "Regulatory/Compliance": ["Scoping", "Document Review", "Regulatory Analysis", "Remediation Advice", "Submission/Follow-up"],
-    "Arbitration": ["Case Assessment", "Pleadings", "Evidence", "Hearing Preparation", "Hearing/Settlement", "Award/Enforcement"],
-}
 
 BASE_DOCUMENT_VOLUME = {
     "M&A": 900,
@@ -451,6 +329,10 @@ def round_money(value: float | None) -> float | None:
 
 def round_hours(value: float) -> float:
     return round(value, 4)
+
+
+def deterministic_uuid(record_index: int) -> str:
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"proforma-{RANDOM_SEED}-{record_index}"))
 
 
 def allocate_counts(total: int, weights: dict[str, float]) -> dict[str, int]:
@@ -845,7 +727,7 @@ def generate_prc_cost_estimate(jurisdiction: str, total_cost: float, rng: random
     return round_money(total_cost * fx * prc_share)
 
 
-def generate_record(matter_type: str, rng: random.Random) -> dict[str, Any]:
+def generate_record(matter_type: str, rng: random.Random, record_index: int, matter_id: str | None = None) -> dict[str, Any]:
     firm_tier = choose_firm_tier(matter_type, rng)
     jurisdiction = choose_jurisdiction(matter_type, firm_tier, rng)
     client_type = choose_client_type(jurisdiction, matter_type, firm_tier, rng)
@@ -898,7 +780,7 @@ def generate_record(matter_type: str, rng: random.Random) -> dict[str, Any]:
     prc_cost_estimate = generate_prc_cost_estimate(jurisdiction, total_cost, rng)
 
     return {
-        "matter_id": str(uuid.uuid4()),
+        "matter_id": matter_id or deterministic_uuid(record_index),
         "matter_type": matter_type,
         "matter_subtype": rng.choice(MATTER_SUBTYPES[matter_type]),
         "jurisdiction": jurisdiction,
@@ -937,18 +819,20 @@ def generate_record(matter_type: str, rng: random.Random) -> dict[str, Any]:
 def generate_dataset(rng: random.Random) -> list[dict[str, Any]]:
     counts = allocate_counts(RECORD_COUNT, MATTER_TYPE_WEIGHTS)
     records: list[dict[str, Any]] = []
+    record_index = 0
     for matter_type, count in counts.items():
         for _ in range(count):
-            records.append(generate_record(matter_type, rng))
+            records.append(generate_record(matter_type, rng, record_index))
+            record_index += 1
     rng.shuffle(records)
     return records
 
 
 def regenerate_types(records: list[dict[str, Any]], matter_types: set[str], rng: random.Random) -> list[dict[str, Any]]:
     regenerated = []
-    for record in records:
+    for record_index, record in enumerate(records):
         if record["matter_type"] in matter_types:
-            regenerated.append(generate_record(record["matter_type"], rng))
+            regenerated.append(generate_record(record["matter_type"], rng, record_index, matter_id=record["matter_id"]))
         else:
             regenerated.append(record)
     rng.shuffle(regenerated)
@@ -1530,7 +1414,7 @@ This dictionary documents the synthetic ProForma HK MVP dataset. The data is gen
 
 | field | type | generation logic and assumptions |
 |---|---|---|
-| `matter_id` | UUID string | Unique UUID4 generated for every record. |
+| `matter_id` | UUID string | Deterministic UUID5 generated from the dataset seed and record index so regenerated synthetic datasets remain reproducible. |
 | `matter_type` | categorical | One of ten HK legal practice categories; counts use activity-weighted proportions with no category below roughly 320 records. |
 | `matter_subtype` | categorical | Sampled from a matter-type-specific subtype taxonomy such as private share acquisition, unfair dismissal, or HKIAC commercial arbitration. |
 | `jurisdiction` | categorical | Sampled from firm-tier and matter-type affinities: HK Only, GBA Cross-Border, or Multi-Jurisdictional APAC. |
@@ -1590,10 +1474,16 @@ def main() -> int:
     records, result, iteration_log = iterative_generate()
     write_dataset(records)
     write_validation_report(records, result, iteration_log)
+    write_dataset_lineage(
+        dataset_path=DATASET_PATH,
+        lineage_path=DATASET_LINEAGE_PATH,
+        validation_report_path=VALIDATION_REPORT_PATH,
+    )
     write_data_dictionary()
     print_summary(result, iteration_log)
     print(f"Dataset: {DATASET_PATH}")
     print(f"Validation report: {VALIDATION_REPORT_PATH}")
+    print(f"Dataset lineage: {DATASET_LINEAGE_PATH}")
     print(f"Data dictionary: {DATA_DICTIONARY_PATH}")
     return 0 if result.passed else 1
 

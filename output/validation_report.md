@@ -17,7 +17,7 @@
 
 ## Iteration Log
 
-- Iteration 0: PASS; failures=0
+- External validation command
 
 ## Residual Anomalies
 

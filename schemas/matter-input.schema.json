@@ -1,0 +1,118 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "billing_model": {
+      "enum": [
+        "Hourly",
+        "Fixed Fee",
+        "Capped Fee",
+        "Retainer",
+        "Outcome Related"
+      ],
+      "title": "Billing Model",
+      "type": "string"
+    },
+    "client_type": {
+      "enum": [
+        "Mainland Enterprise",
+        "HK Listed Co.",
+        "SME/Local Business",
+        "Individual",
+        "Financial Institution",
+        "SOE"
+      ],
+      "title": "Client Type",
+      "type": "string"
+    },
+    "complexity_score": {
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Complexity Score",
+      "type": "integer"
+    },
+    "cross_border_flag": {
+      "title": "Cross Border Flag",
+      "type": "boolean"
+    },
+    "document_volume": {
+      "exclusiveMinimum": 0,
+      "title": "Document Volume",
+      "type": "integer"
+    },
+    "firm_tier": {
+      "enum": [
+        "Magic Circle / International",
+        "PRC Elite Firm in HK",
+        "Large Local (11+ partners)",
+        "Mid-tier (6-10 partners)",
+        "Small/Boutique (1-5 partners)"
+      ],
+      "title": "Firm Tier",
+      "type": "string"
+    },
+    "jurisdiction": {
+      "enum": [
+        "HK Only",
+        "GBA Cross-Border (HK-PRC)",
+        "Multi-Jurisdictional (APAC)"
+      ],
+      "title": "Jurisdiction",
+      "type": "string"
+    },
+    "matter_subtype": {
+      "title": "Matter Subtype",
+      "type": "string"
+    },
+    "matter_type": {
+      "enum": [
+        "M&A",
+        "Litigation",
+        "Commercial Property",
+        "Employment",
+        "IP/Technology",
+        "Corporate Restructuring",
+        "Banking & Finance",
+        "Wills & Probate",
+        "Regulatory/Compliance",
+        "Arbitration"
+      ],
+      "title": "Matter Type",
+      "type": "string"
+    },
+    "party_count": {
+      "exclusiveMinimum": 0,
+      "title": "Party Count",
+      "type": "integer"
+    },
+    "risk_tolerance": {
+      "enum": [
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "title": "Risk Tolerance",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "proforma.matter.v1",
+      "default": "proforma.matter.v1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "matter_type",
+    "matter_subtype",
+    "jurisdiction",
+    "firm_tier",
+    "client_type",
+    "document_volume",
+    "complexity_score",
+    "party_count",
+    "cross_border_flag",
+    "billing_model",
+    "risk_tolerance"
+  ],
+  "title": "MatterInput",
+  "type": "object"
+}

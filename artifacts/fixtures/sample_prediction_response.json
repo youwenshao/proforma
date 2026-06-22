@@ -1,0 +1,79 @@
+{
+  "cost_estimate": {
+    "calibration_method": "residual_quantiles",
+    "confidence_level": 0.8,
+    "p10": 197021.33584432135,
+    "p50": 566875.5481284132,
+    "p90": 1080741.5828392874
+  },
+  "dataset_lineage": {
+    "dataset_id": "proforma-hk-synthetic-mvp-v1",
+    "schema_version": "proforma.matter.v1",
+    "source_marker": "SYNTHETIC_MVP_V1"
+  },
+  "decision_support_disclaimer": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
+  "duration_estimate": {
+    "calibration_method": "residual_quantiles",
+    "confidence_level": 0.8,
+    "p10": 163.63461216695265,
+    "p50": 363.5747361003132,
+    "p90": 563.5148600336738
+  },
+  "estimate_id": "2925d661-df83-4a93-a109-5557ef37bd0e",
+  "fee_recommendation": {
+    "billing_model": "Fixed Fee",
+    "confidence_interval_high_hkd": 802695.776149833,
+    "confidence_interval_low_hkd": 568576.1747727983,
+    "partner_decision_support_disclaimer": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
+    "recommended_fee_hkd": 668913.1467915275,
+    "schema_version": "proforma.matter.v1"
+  },
+  "input_summary": {
+    "billing_model": "Fixed Fee",
+    "client_type": "Financial Institution",
+    "complexity_score": 3,
+    "firm_tier": "Mid-tier (6-10 partners)",
+    "jurisdiction": "HK Only",
+    "matter_subtype": "Debt Recovery",
+    "matter_type": "Litigation"
+  },
+  "limitations": [
+    "Synthetic-data feasibility estimate only.",
+    "Partner review required before client use."
+  ],
+  "model_version": "proforma-baseline-v1",
+  "scope_creep_probability": 0.6540640046165398,
+  "stage_estimates": [
+    {
+      "associate_hours": 54.732389561165874,
+      "cost_hkd": 113375.10962568263,
+      "partner_hours": 27.43897319877781,
+      "stage_name": "Case Assessment"
+    },
+    {
+      "associate_hours": 54.732389561165874,
+      "cost_hkd": 113375.10962568263,
+      "partner_hours": 27.43897319877781,
+      "stage_name": "Pleadings"
+    },
+    {
+      "associate_hours": 54.732389561165874,
+      "cost_hkd": 113375.10962568263,
+      "partner_hours": 27.43897319877781,
+      "stage_name": "Discovery"
+    },
+    {
+      "associate_hours": 54.732389561165874,
+      "cost_hkd": 113375.10962568263,
+      "partner_hours": 27.43897319877781,
+      "stage_name": "Interlocutory Applications"
+    },
+    {
+      "associate_hours": 54.732389561165874,
+      "cost_hkd": 113375.10962568263,
+      "partner_hours": 27.43897319877781,
+      "stage_name": "Settlement/Trial"
+    }
+  ],
+  "tenant_id": "synthetic-demo-tenant"
+}

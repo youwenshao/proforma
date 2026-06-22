@@ -1,3 +1,7 @@
 numpy
 pandas
 scipy
+pydantic
+pytest
+scikit-learn
+joblib

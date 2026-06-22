@@ -1,0 +1,320 @@
+{
+  "$defs": {
+    "FeeRecommendation": {
+      "additionalProperties": false,
+      "properties": {
+        "billing_model": {
+          "enum": [
+            "Hourly",
+            "Fixed Fee",
+            "Capped Fee",
+            "Retainer",
+            "Outcome Related"
+          ],
+          "title": "Billing Model",
+          "type": "string"
+        },
+        "confidence_interval_high_hkd": {
+          "exclusiveMinimum": 0,
+          "title": "Confidence Interval High Hkd",
+          "type": "number"
+        },
+        "confidence_interval_low_hkd": {
+          "exclusiveMinimum": 0,
+          "title": "Confidence Interval Low Hkd",
+          "type": "number"
+        },
+        "partner_decision_support_disclaimer": {
+          "default": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
+          "title": "Partner Decision Support Disclaimer",
+          "type": "string"
+        },
+        "recommended_fee_hkd": {
+          "exclusiveMinimum": 0,
+          "title": "Recommended Fee Hkd",
+          "type": "number"
+        },
+        "schema_version": {
+          "const": "proforma.matter.v1",
+          "default": "proforma.matter.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "billing_model",
+        "recommended_fee_hkd",
+        "confidence_interval_low_hkd",
+        "confidence_interval_high_hkd"
+      ],
+      "title": "FeeRecommendation",
+      "type": "object"
+    },
+    "MatterInput": {
+      "additionalProperties": false,
+      "properties": {
+        "billing_model": {
+          "enum": [
+            "Hourly",
+            "Fixed Fee",
+            "Capped Fee",
+            "Retainer",
+            "Outcome Related"
+          ],
+          "title": "Billing Model",
+          "type": "string"
+        },
+        "client_type": {
+          "enum": [
+            "Mainland Enterprise",
+            "HK Listed Co.",
+            "SME/Local Business",
+            "Individual",
+            "Financial Institution",
+            "SOE"
+          ],
+          "title": "Client Type",
+          "type": "string"
+        },
+        "complexity_score": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Complexity Score",
+          "type": "integer"
+        },
+        "cross_border_flag": {
+          "title": "Cross Border Flag",
+          "type": "boolean"
+        },
+        "document_volume": {
+          "exclusiveMinimum": 0,
+          "title": "Document Volume",
+          "type": "integer"
+        },
+        "firm_tier": {
+          "enum": [
+            "Magic Circle / International",
+            "PRC Elite Firm in HK",
+            "Large Local (11+ partners)",
+            "Mid-tier (6-10 partners)",
+            "Small/Boutique (1-5 partners)"
+          ],
+          "title": "Firm Tier",
+          "type": "string"
+        },
+        "jurisdiction": {
+          "enum": [
+            "HK Only",
+            "GBA Cross-Border (HK-PRC)",
+            "Multi-Jurisdictional (APAC)"
+          ],
+          "title": "Jurisdiction",
+          "type": "string"
+        },
+        "matter_subtype": {
+          "title": "Matter Subtype",
+          "type": "string"
+        },
+        "matter_type": {
+          "enum": [
+            "M&A",
+            "Litigation",
+            "Commercial Property",
+            "Employment",
+            "IP/Technology",
+            "Corporate Restructuring",
+            "Banking & Finance",
+            "Wills & Probate",
+            "Regulatory/Compliance",
+            "Arbitration"
+          ],
+          "title": "Matter Type",
+          "type": "string"
+        },
+        "party_count": {
+          "exclusiveMinimum": 0,
+          "title": "Party Count",
+          "type": "integer"
+        },
+        "risk_tolerance": {
+          "enum": [
+            "Low",
+            "Medium",
+            "High"
+          ],
+          "title": "Risk Tolerance",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "proforma.matter.v1",
+          "default": "proforma.matter.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "matter_type",
+        "matter_subtype",
+        "jurisdiction",
+        "firm_tier",
+        "client_type",
+        "document_volume",
+        "complexity_score",
+        "party_count",
+        "cross_border_flag",
+        "billing_model",
+        "risk_tolerance"
+      ],
+      "title": "MatterInput",
+      "type": "object"
+    },
+    "ScopeVariance": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_variance_pct": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cost Variance Pct"
+        },
+        "scope_creep_flag": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Scope Creep Flag"
+        },
+        "scope_creep_pct": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope Creep Pct"
+        }
+      },
+      "required": [
+        "scope_creep_flag"
+      ],
+      "title": "ScopeVariance",
+      "type": "object"
+    },
+    "StageEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "associate_hours": {
+          "minimum": 0,
+          "title": "Associate Hours",
+          "type": "number"
+        },
+        "cost_hkd": {
+          "minimum": 0,
+          "title": "Cost Hkd",
+          "type": "number"
+        },
+        "partner_hours": {
+          "minimum": 0,
+          "title": "Partner Hours",
+          "type": "number"
+        },
+        "stage_name": {
+          "title": "Stage Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage_name",
+        "partner_hours",
+        "associate_hours",
+        "cost_hkd"
+      ],
+      "title": "StageEstimate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "confidence_interval_high_hkd": {
+      "exclusiveMinimum": 0,
+      "title": "Confidence Interval High Hkd",
+      "type": "number"
+    },
+    "confidence_interval_low_hkd": {
+      "exclusiveMinimum": 0,
+      "title": "Confidence Interval Low Hkd",
+      "type": "number"
+    },
+    "duration_days": {
+      "exclusiveMinimum": 0,
+      "title": "Duration Days",
+      "type": "integer"
+    },
+    "fee_recommendation": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FeeRecommendation"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "matter_input": {
+      "$ref": "#/$defs/MatterInput"
+    },
+    "predicted_cost_hkd": {
+      "exclusiveMinimum": 0,
+      "title": "Predicted Cost Hkd",
+      "type": "number"
+    },
+    "schema_version": {
+      "const": "proforma.matter.v1",
+      "default": "proforma.matter.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_variance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ScopeVariance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "stage_estimates": {
+      "items": {
+        "$ref": "#/$defs/StageEstimate"
+      },
+      "title": "Stage Estimates",
+      "type": "array"
+    }
+  },
+  "required": [
+    "matter_input",
+    "predicted_cost_hkd",
+    "confidence_interval_low_hkd",
+    "confidence_interval_high_hkd",
+    "duration_days",
+    "stage_estimates"
+  ],
+  "title": "MatterEstimate",
+  "type": "object"
+}

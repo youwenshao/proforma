@@ -15,7 +15,7 @@ This dictionary documents the synthetic ProForma HK MVP dataset. The data is gen
 
 | field | type | generation logic and assumptions |
 |---|---|---|
-| `matter_id` | UUID string | Unique UUID4 generated for every record. |
+| `matter_id` | UUID string | Deterministic UUID5 generated from the dataset seed and record index so regenerated synthetic datasets remain reproducible. |
 | `matter_type` | categorical | One of ten HK legal practice categories; counts use activity-weighted proportions with no category below roughly 320 records. |
 | `matter_subtype` | categorical | Sampled from a matter-type-specific subtype taxonomy such as private share acquisition, unfair dismissal, or HKIAC commercial arbitration. |
 | `jurisdiction` | categorical | Sampled from firm-tier and matter-type affinities: HK Only, GBA Cross-Border, or Multi-Jurisdictional APAC. |
