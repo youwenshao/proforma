@@ -2,6 +2,7 @@ import type {
   EstimateResponse,
   ModelCurrent,
   ModelEvaluation,
+  SimilarMatterEvidence,
   ScopeUpdateResponse,
   StrategyComparison,
   Taxonomy,
@@ -183,8 +184,15 @@ export const sampleEstimate: EstimateResponse = {
     billing_model: "Fixed Fee",
     confidence_interval_high_hkd: 802695.776149833,
     confidence_interval_low_hkd: 568576.1747727983,
+    downside_risk_hkd: 411828.43604775995,
+    expected_margin_hkd: 102037.59866311436,
+    margin_pct: 0.1525408760593573,
     partner_decision_support_disclaimer:
       "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
+    pricing_guardrails: [
+      "Partner final decision required before client sharing.",
+      "Confirm scope assumptions or reserve before accepting downside exposure.",
+    ],
     recommended_fee_hkd: 668913.1467915275,
     schema_version: "proforma.matter.v1",
   },
@@ -192,17 +200,37 @@ export const sampleEstimate: EstimateResponse = {
   model_version: "proforma-baseline-v1",
   scope_creep_probability: 0.6540640046165398,
   stage_estimates: [
-    "Case Assessment",
-    "Pleadings",
-    "Discovery",
-    "Interlocutory Applications",
-    "Settlement/Trial",
-  ].map((stage_name) => ({
-    associate_hours: 54.732389561165874,
-    cost_hkd: 113375.10962568263,
-    partner_hours: 27.43897319877781,
-    stage_name,
-  })),
+    {
+      associate_hours: 33.01734561990329,
+      cost_hkd: 91851.86126691838,
+      partner_hours: 27.892225258155428,
+      stage_name: "Case Assessment",
+    },
+    {
+      associate_hours: 54.64572933801361,
+      cost_hkd: 129180.1488174859,
+      partner_hours: 35.122409068019635,
+      stage_name: "Pleadings",
+    },
+    {
+      associate_hours: 71.90768947468914,
+      cost_hkd: 147870.51500348796,
+      partner_hours: 35.526292664215596,
+      stage_name: "Discovery",
+    },
+    {
+      associate_hours: 61.86913869723313,
+      cost_hkd: 112638.65290694854,
+      partner_hours: 23.514597791468184,
+      stage_name: "Interlocutory Applications",
+    },
+    {
+      associate_hours: 52.22204467599019,
+      cost_hkd: 85334.37013357237,
+      partner_hours: 15.139341212030189,
+      stage_name: "Settlement/Trial",
+    },
+  ],
   tenant_id: "synthetic-demo-tenant",
 };
 
@@ -211,8 +239,13 @@ export const sampleScopeUpdate: ScopeUpdateResponse = {
   stage_name: "Case Assessment",
   predicted_hours: 82.17136275994368,
   actual_hours: 95,
+  predicted_cost_hkd: 91851.86126691838,
+  actual_cost_hkd: 130000,
   variance_pct: 15.61,
   scope_creep_flag: true,
+  reforecast_final_cost_hkd: 636000,
+  reforecast_final_hours: 480,
+  overrun_probability: 0.3561,
   recommended_review_action:
     "Critical variance: partner review required before further fixed-fee work proceeds.",
 };
@@ -237,6 +270,7 @@ export const modelEvaluationFixture: ModelEvaluation = {
     rmse: 642075.0450747818,
     smape: 0.28429439090641284,
     empirical_coverage: 0.787,
+    calibration_method: "segment residual quantiles with global fallback",
   },
   metrics_by_matter_type: {
     Litigation: { mae: 277476.7744840992, rmse: 400069.56606423645 },
@@ -257,4 +291,14 @@ export const strategyComparisonFixture: StrategyComparison = {
       legal_gate_status: "legally_gated",
     },
   },
+};
+
+export const similarMatterEvidenceFixture: SimilarMatterEvidence = {
+  status: "gated",
+  legal_gate_status: "data_residency_approval_required",
+  retrieval_enabled: false,
+  description:
+    "Anonymized similar-matter retrieval requires approved real-firm data handling, residency, retention, and deletion controls before activation.",
+  allowed_inputs: ["structured matter taxonomy", "approved anonymized matter records"],
+  excluded_inputs: ["free-text matter narratives", "confidential client documents", "unapproved firm exports"],
 };

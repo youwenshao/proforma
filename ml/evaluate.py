@@ -109,6 +109,31 @@ def segment_residual_uncertainty(
     return results
 
 
+def segment_residual_quantiles(
+    frame: pd.DataFrame,
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    *,
+    group_field: str = "matter_type",
+    min_sample_size: int = 30,
+) -> dict[str, dict[str, float]]:
+    residuals = np.asarray(y_true, dtype=float) - np.asarray(y_pred, dtype=float)
+    results: dict[str, dict[str, float]] = {}
+    for group, indices in frame.groupby(group_field).groups.items():
+        idx = list(indices)
+        if len(idx) < min_sample_size:
+            continue
+        group_residuals = residuals[idx]
+        results[str(group)] = {
+            "p10": float(np.quantile(group_residuals, 0.10)),
+            "p50": float(np.quantile(group_residuals, 0.50)),
+            "p90": float(np.quantile(group_residuals, 0.90)),
+            "absolute_p90": float(np.quantile(np.abs(group_residuals), 0.90)),
+            "sample_size": float(len(idx)),
+        }
+    return results
+
+
 def prediction_interval(point: float, quantiles: dict[str, float]) -> dict[str, Any]:
     low = max(0.0, point + quantiles["p10"])
     median = max(0.0, point + quantiles["p50"])

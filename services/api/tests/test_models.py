@@ -43,3 +43,13 @@ def test_model_evaluation_returns_not_available_when_reports_are_missing(monkeyp
 
     assert response.status_code == 200
     assert response.json()["status"] == "not_available"
+
+
+def test_similar_matter_evidence_is_gated_before_data_residency_approval() -> None:
+    response = api_request("get", "/v1/models/similar-matter-evidence")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "gated"
+    assert payload["legal_gate_status"] == "data_residency_approval_required"
+    assert payload["retrieval_enabled"] is False

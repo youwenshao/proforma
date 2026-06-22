@@ -59,6 +59,28 @@ def test_estimate_endpoint_rejects_invalid_complexity_score() -> None:
     assert response.status_code == 422
 
 
+def test_estimate_endpoint_accepts_deal_value_for_transactional_matters(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("PROFORMA_AUDIT_LOG_PATH", str(tmp_path / "prediction_requests.jsonl"))
+    payload = valid_estimate_payload()
+    payload["matter_input"]["matter_type"] = "M&A"  # type: ignore[index]
+    payload["matter_input"]["matter_subtype"] = "Share Acquisition - Private"  # type: ignore[index]
+    payload["matter_input"]["deal_value_hkd"] = 50_000_000  # type: ignore[index]
+
+    response = api_request("post", "/v1/estimates", json=payload)
+
+    assert response.status_code == 200
+    assert response.json()["input_summary"]["deal_value_hkd"] == 50_000_000
+
+
+def test_estimate_endpoint_rejects_deal_value_for_non_transactional_matters() -> None:
+    payload = valid_estimate_payload()
+    payload["matter_input"]["deal_value_hkd"] = 50_000_000  # type: ignore[index]
+
+    response = api_request("post", "/v1/estimates", json=payload)
+
+    assert response.status_code == 422
+
+
 def test_pooled_research_estimate_includes_legal_gate_limitation(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("PROFORMA_AUDIT_LOG_PATH", str(tmp_path / "prediction_requests.jsonl"))
 
@@ -74,3 +96,18 @@ def test_firm_specific_strategy_returns_503_when_artifacts_are_missing() -> None
 
     assert response.status_code == 503
     assert "artifacts" in response.json()["detail"].lower()
+
+
+def test_estimate_endpoint_uses_request_aware_weighted_stage_breakdown(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("PROFORMA_AUDIT_LOG_PATH", str(tmp_path / "prediction_requests.jsonl"))
+    payload = valid_estimate_payload()
+    payload["matter_input"]["matter_type"] = "M&A"  # type: ignore[index]
+    payload["matter_input"]["matter_subtype"] = "Share Acquisition - Private"  # type: ignore[index]
+
+    response = api_request("post", "/v1/estimates", json=payload)
+
+    assert response.status_code == 200
+    stages = response.json()["stage_estimates"]
+    assert [stage["stage_name"] for stage in stages] == ["Scoping", "Due Diligence", "Drafting", "Negotiation", "Closing"]
+    assert len({stage["partner_hours"] for stage in stages}) > 1
+    assert len({stage["associate_hours"] for stage in stages}) > 1

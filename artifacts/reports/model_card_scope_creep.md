@@ -45,11 +45,11 @@ not prove production accuracy for any firm or client segment.
 
 ## Evaluation Metrics
 
-- `roc_auc`: 0.5930138826690551
-- `pr_auc`: 0.563992089071113
-- `precision`: 0.5758157389635317
-- `recall`: 0.6493506493506493
-- `calibration_error`: 0.060548366943279475
+- `roc_auc`: 0.4
+- `pr_auc`: 0.4729357023403462
+- `precision`: 0.4090909090909091
+- `recall`: 0.36
+- `calibration_error`: 0.3542933181524732
 
 ## Known Limitations
 

@@ -111,7 +111,6 @@
     "categorical__matter_subtype_Security Package Review",
     "categorical__matter_subtype_Share Acquisition - Private",
     "categorical__matter_subtype_Shareholder Arbitration",
-    "categorical__matter_subtype_Shareholder Dispute",
     "categorical__matter_subtype_Simple Will",
     "categorical__matter_subtype_Software Licensing",
     "categorical__matter_subtype_Syndicated Loan",
@@ -141,96 +140,97 @@
     "categorical__billing_model_Retainer"
   ],
   "metrics": {
-    "calibration_error": 0.060548366943279475,
-    "pr_auc": 0.563992089071113,
-    "precision": 0.5758157389635317,
-    "recall": 0.6493506493506493,
-    "roc_auc": 0.5930138826690551
+    "calibration_error": 0.3542933181524732,
+    "pr_auc": 0.4729357023403462,
+    "precision": 0.4090909090909091,
+    "recall": 0.36,
+    "roc_auc": 0.4
   },
   "model_name": "logistic",
   "model_version": "proforma-baseline-v1",
   "residual_quantiles": {},
+  "segment_residual_quantiles": {},
   "segment_uncertainty": {},
   "stratified_metrics": {
     "Arbitration": {
-      "calibration_error": 0.2329425873005728,
-      "pr_auc": 0.4869491600713997,
-      "precision": 0.5333333333333333,
+      "calibration_error": 0.5109671242943185,
+      "pr_auc": 0.45,
+      "precision": 0.4,
       "recall": 1.0,
-      "roc_auc": 0.42424242424242425,
-      "sample_size": 46.0
+      "roc_auc": 0.33333333333333337,
+      "sample_size": 5.0
     },
     "Banking & Finance": {
-      "calibration_error": 0.10863732893000252,
-      "pr_auc": 0.5303938190373534,
-      "precision": 0.52,
-      "recall": 0.4262295081967213,
-      "roc_auc": 0.4498738965952081,
-      "sample_size": 113.0
-    },
-    "Commercial Property": {
-      "calibration_error": 0.10707725262107831,
-      "pr_auc": 0.5187599816095535,
-      "precision": 0.46,
-      "recall": 0.46938775510204084,
-      "roc_auc": 0.5086034413765506,
-      "sample_size": 100.0
-    },
-    "Corporate Restructuring": {
-      "calibration_error": 0.10533352863969717,
-      "pr_auc": 0.5697396140006764,
-      "precision": 0.5555555555555556,
-      "recall": 0.75,
-      "roc_auc": 0.4951612903225806,
-      "sample_size": 71.0
-    },
-    "Employment": {
-      "calibration_error": 0.1150754195111856,
-      "pr_auc": 0.7231912280491025,
-      "precision": 0.8666666666666667,
-      "recall": 0.325,
-      "roc_auc": 0.7434210526315789,
-      "sample_size": 78.0
-    },
-    "IP/Technology": {
-      "calibration_error": 0.0897191069999726,
-      "pr_auc": 0.5403436590251806,
-      "precision": 0.5,
-      "recall": 0.4666666666666667,
-      "roc_auc": 0.5465721040189125,
-      "sample_size": 92.0
-    },
-    "Litigation": {
-      "calibration_error": 0.09391058615009482,
-      "pr_auc": 0.6473717639484265,
-      "precision": 0.6696428571428571,
-      "recall": 0.9868421052631579,
-      "roc_auc": 0.45006747638326583,
-      "sample_size": 115.0
-    },
-    "M&A": {
-      "calibration_error": 0.10003837330928911,
-      "pr_auc": 0.5569847863694813,
-      "precision": 0.6,
-      "recall": 0.8636363636363636,
-      "roc_auc": 0.5265866209262435,
-      "sample_size": 119.0
-    },
-    "Regulatory/Compliance": {
-      "calibration_error": 0.08872726951388565,
-      "pr_auc": 0.6166104745635738,
-      "precision": 0.5344827586206896,
-      "recall": 0.6595744680851063,
-      "roc_auc": 0.5212765957446809,
-      "sample_size": 85.0
-    },
-    "Wills & Probate": {
-      "calibration_error": 0.051790604223615436,
-      "pr_auc": 0.3337206292266577,
+      "calibration_error": 0.4496561992155742,
+      "pr_auc": 0.4303571428571429,
       "precision": 0.0,
       "recall": 0.0,
-      "roc_auc": 0.6082589285714286,
-      "sample_size": 78.0
+      "roc_auc": 0.0,
+      "sample_size": 7.0
+    },
+    "Commercial Property": {
+      "calibration_error": 0.3649790407383128,
+      "pr_auc": 0.7708333333333333,
+      "precision": 0.6,
+      "recall": 0.75,
+      "roc_auc": 0.6666666666666667,
+      "sample_size": 7.0
+    },
+    "Corporate Restructuring": {
+      "calibration_error": 0.3248204451106982,
+      "pr_auc": 1.0,
+      "precision": 0.5,
+      "recall": 1.0,
+      "roc_auc": 1.0,
+      "sample_size": 2.0
+    },
+    "Employment": {
+      "calibration_error": 0.5894116809405078,
+      "pr_auc": 1.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "roc_auc": 1.0,
+      "sample_size": 7.0
+    },
+    "IP/Technology": {
+      "calibration_error": 0.6427008937958348,
+      "pr_auc": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "roc_auc": 0.5,
+      "sample_size": 1.0
+    },
+    "Litigation": {
+      "calibration_error": 0.5446162547127233,
+      "pr_auc": 0.5059523809523809,
+      "precision": 0.3333333333333333,
+      "recall": 0.2,
+      "roc_auc": 0.48,
+      "sample_size": 10.0
+    },
+    "M&A": {
+      "calibration_error": 0.23330725346317416,
+      "pr_auc": 0.5,
+      "precision": 0.5,
+      "recall": 1.0,
+      "roc_auc": 0.0,
+      "sample_size": 2.0
+    },
+    "Regulatory/Compliance": {
+      "calibration_error": 0.3015441477746728,
+      "pr_auc": 0.5,
+      "precision": 0.3333333333333333,
+      "recall": 1.0,
+      "roc_auc": 0.5,
+      "sample_size": 3.0
+    },
+    "Wills & Probate": {
+      "calibration_error": 0.1365814471635485,
+      "pr_auc": 1.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "roc_auc": 1.0,
+      "sample_size": 3.0
     }
   },
   "target": "scope_creep_flag",

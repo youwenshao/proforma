@@ -14,6 +14,7 @@ export type RiskTolerance = "conservative" | "balanced" | "aggressive";
 export type ModelStrategy = "firm_specific" | "pooled_research" | "synthetic_baseline";
 
 export type MatterInput = {
+  schema_version?: "proforma.matter.v1";
   matter_type: MatterType;
   matter_subtype: string;
   jurisdiction: string;
@@ -62,6 +63,10 @@ export type FeeRecommendation = {
   confidence_interval_high_hkd: number;
   cap_amount_hkd?: number | null;
   expected_downside_hkd?: number | null;
+  downside_risk_hkd?: number | null;
+  expected_margin_hkd?: number | null;
+  margin_pct?: number | null;
+  pricing_guardrails?: string[];
   partner_decision_support_disclaimer: string;
   schema_version: string;
 };
@@ -89,8 +94,13 @@ export type ScopeUpdateResponse = {
   stage_name: string;
   predicted_hours: number;
   actual_hours: number;
+  predicted_cost_hkd: number;
+  actual_cost_hkd: number;
   variance_pct: number;
   scope_creep_flag: boolean;
+  reforecast_final_cost_hkd: number;
+  reforecast_final_hours: number;
+  overrun_probability: number;
   recommended_review_action: string;
 };
 
@@ -125,4 +135,13 @@ export type StrategyComparison = {
       legal_gate_status: string;
     };
   };
+};
+
+export type SimilarMatterEvidence = {
+  status: string;
+  legal_gate_status: string;
+  retrieval_enabled: boolean;
+  description: string;
+  allowed_inputs: string[];
+  excluded_inputs: string[];
 };

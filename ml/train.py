@@ -38,6 +38,7 @@ from ml.evaluate import (
     prediction_interval,
     regression_metrics,
     residual_quantiles,
+    segment_residual_quantiles,
     segment_residual_uncertainty,
     stratified_classification_metrics,
     stratified_regression_metrics,
@@ -131,6 +132,7 @@ def train_regression_model(
         target_transform=target_transform,
         residual_quantiles=quantiles,
         segment_uncertainty=segment_residual_uncertainty(model_frame.reset_index(drop=True), y_original, cv_pred),
+        segment_residual_quantiles=segment_residual_quantiles(model_frame.reset_index(drop=True), y_original, cv_pred),
     )
     return bundle
 

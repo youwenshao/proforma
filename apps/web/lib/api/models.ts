@@ -2,9 +2,15 @@ import { apiGet } from "./client";
 import {
   modelCurrentFixture,
   modelEvaluationFixture,
+  similarMatterEvidenceFixture,
   strategyComparisonFixture,
 } from "./fixtures";
-import type { ModelCurrent, ModelEvaluation, StrategyComparison } from "./types";
+import type {
+  ModelCurrent,
+  ModelEvaluation,
+  SimilarMatterEvidence,
+  StrategyComparison,
+} from "./types";
 
 export async function getCurrentModel(): Promise<ModelCurrent> {
   try {
@@ -27,5 +33,13 @@ export async function getStrategyComparison(): Promise<StrategyComparison> {
     return await apiGet<StrategyComparison>("/v1/models/strategy-comparison");
   } catch {
     return strategyComparisonFixture;
+  }
+}
+
+export async function getSimilarMatterEvidence(): Promise<SimilarMatterEvidence> {
+  try {
+    return await apiGet<SimilarMatterEvidence>("/v1/models/similar-matter-evidence");
+  } catch {
+    return similarMatterEvidenceFixture;
   }
 }

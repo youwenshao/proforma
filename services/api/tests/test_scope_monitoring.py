@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from conftest import api_request
 
 
@@ -22,6 +25,9 @@ def test_scope_update_flags_variance_above_threshold() -> None:
     assert payload["scope_creep_flag"] is True
     assert payload["variance_pct"] > 15
     assert payload["recommended_review_action"] == "critical_partner_review"
+    assert payload["reforecast_final_cost_hkd"] > payload["actual_cost_hkd"]
+    assert payload["reforecast_final_hours"] > payload["actual_hours"]
+    assert 0 <= payload["overrun_probability"] <= 1
 
 
 def test_scope_update_rejects_missing_stage() -> None:
@@ -46,9 +52,11 @@ def test_scope_update_rejects_free_text_notes_in_feasibility_mode() -> None:
 
 
 def test_scope_update_uses_stage_prediction_from_fixture() -> None:
-    partner_hours = 27.43897319877781
-    associate_hours = 54.732389561165874
-    cost_hkd = 113375.10962568263
+    fixture = json.loads(Path("artifacts/fixtures/sample_prediction_response.json").read_text(encoding="utf-8"))
+    stage = next(item for item in fixture["stage_estimates"] if item["stage_name"] == "Case Assessment")
+    partner_hours = stage["partner_hours"]
+    associate_hours = stage["associate_hours"]
+    cost_hkd = stage["cost_hkd"]
 
     response = api_request(
         "post",

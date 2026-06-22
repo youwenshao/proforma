@@ -14,7 +14,7 @@ router = APIRouter(prefix="/v1", tags=["estimates"])
 @router.post("/estimates", response_model=PredictionResponse)
 def create_estimate(request: EstimateRequest) -> PredictionResponse:
     settings = get_settings()
-    registry = ModelRegistry(settings.artifacts_dir)
+    registry = ModelRegistry(settings.artifacts_dir, serving_mode=settings.model_serving_mode)
 
     try:
         prediction, synthetic_mode = registry.predict(request)

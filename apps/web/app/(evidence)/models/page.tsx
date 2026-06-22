@@ -3,14 +3,16 @@ import { ModelEvidenceView } from "@/components/models/model-evidence-view";
 import {
   getCurrentModel,
   getModelEvaluation,
+  getSimilarMatterEvidence,
   getStrategyComparison,
 } from "@/lib/api/models";
 
 export default async function ModelsPage() {
-  const [current, evaluation, strategyComparison] = await Promise.all([
+  const [current, evaluation, strategyComparison, similarMatterEvidence] = await Promise.all([
     getCurrentModel(),
     getModelEvaluation(),
     getStrategyComparison(),
+    getSimilarMatterEvidence(),
   ]);
 
   return (
@@ -22,6 +24,7 @@ export default async function ModelsPage() {
         <ModelEvidenceView
           current={current}
           evaluation={evaluation}
+          similarMatterEvidence={similarMatterEvidence}
           strategyComparison={strategyComparison}
         />
       </div>

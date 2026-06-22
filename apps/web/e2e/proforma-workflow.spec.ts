@@ -81,15 +81,15 @@ test("completes the ProForma frontend workflow with mocked API responses", async
   await expect(page.getByRole("heading", { name: /create pricing estimate/i })).toBeVisible();
   await expect(page.getByLabel("Matter type")).toBeVisible();
 
-  await page.getByLabel("Matter type").selectOption("Litigation");
-  await page.getByLabel("Matter subtype").selectOption("Debt Recovery");
-  await page.getByLabel("Jurisdiction").selectOption("GBA Cross-Border (HK-PRC)");
+  await page.getByLabel("Matter type").selectOption("M&A");
+  await page.getByLabel("Matter subtype").selectOption("Share Acquisition - Private");
+  await page.getByLabel("Jurisdiction").selectOption("HK Only");
   await page.getByLabel("Firm tier").selectOption("Mid-tier (6-10 partners)");
   await page.getByLabel("Client type").selectOption("Financial Institution");
+  await page.getByLabel("Deal value HKD").fill("50000000");
   await page.getByLabel("Document volume").fill("120");
   await page.getByLabel("Complexity score").fill("3");
   await page.getByLabel("Party count").fill("3");
-  await page.getByLabel("Cross-border matter").check();
   await page.getByLabel("Billing model").selectOption("Fixed Fee");
   await page.getByRole("radio", { name: /balanced/i }).check();
   await page.getByRole("button", { name: /create estimate/i }).click();

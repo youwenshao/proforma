@@ -1,4 +1,4 @@
-import { apiGet } from "./client";
+import { apiGet, apiPost } from "./client";
 import { sampleEstimate } from "./fixtures";
 import type { EstimateResponse, MatterInput, ModelStrategy, RiskTolerance } from "./types";
 
@@ -10,20 +10,11 @@ export type EstimateRequest = {
 };
 
 export async function createEstimate(request: EstimateRequest): Promise<EstimateResponse> {
-  const response = await fetch("/v1/estimates", {
-    body: JSON.stringify(request),
-    headers: {
-      accept: "application/json",
-      "content-type": "application/json",
-    },
-    method: "POST",
-  });
-
-  if (!response.ok) {
+  try {
+    return await apiPost<EstimateResponse, EstimateRequest>("/v1/estimates", request);
+  } catch {
     throw new Error("Estimate request failed");
   }
-
-  return response.json() as Promise<EstimateResponse>;
 }
 
 export async function getEstimate(estimateId: string): Promise<EstimateResponse | null> {

@@ -45,10 +45,10 @@ not prove production accuracy for any firm or client segment.
 
 ## Evaluation Metrics
 
-- `mae`: 306089.2942781317
-- `rmse`: 642075.0450747818
-- `smape`: 0.28429439090641284
-- `empirical_coverage`: 0.787
+- `mae`: 416502.764204149
+- `rmse`: 882971.3155400621
+- `smape`: 0.31205443434414076
+- `empirical_coverage`: 0.78
 - `calibration_method`: cross_validated_residual_quantiles
 
 ## Known Limitations

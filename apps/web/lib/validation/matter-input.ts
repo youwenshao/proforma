@@ -19,6 +19,13 @@ export type MatterValidationResult =
   | { ok: true; value: MatterInput }
   | { ok: false; errors: Record<string, string> };
 
+const dealValueMatterTypes = new Set([
+  "M&A",
+  "Commercial Property",
+  "Corporate Restructuring",
+  "Banking & Finance",
+]);
+
 export function validateMatterInput(
   values: MatterFormValues,
   taxonomy: Taxonomy,
@@ -79,21 +86,24 @@ export function validateMatterInput(
     return { ok: false, errors };
   }
 
-  return {
-    ok: true,
-    value: {
-      billing_model: values.billing_model,
-      client_type: values.client_type,
-      complexity_score: complexityScore,
-      cross_border_flag: values.cross_border_flag,
-      deal_value_hkd: values.deal_value_hkd ? Number(values.deal_value_hkd) : null,
-      document_volume: documentVolume,
-      firm_tier: values.firm_tier,
-      jurisdiction: values.jurisdiction,
-      matter_subtype: values.matter_subtype,
-      matter_type: values.matter_type as MatterInput["matter_type"],
-      party_count: partyCount,
-      risk_tolerance: values.risk_tolerance,
-    },
+  const matterInput: MatterInput = {
+    billing_model: values.billing_model as MatterInput["billing_model"],
+    client_type: values.client_type as MatterInput["client_type"],
+    complexity_score: complexityScore,
+    cross_border_flag: values.cross_border_flag,
+    document_volume: documentVolume,
+    firm_tier: values.firm_tier as MatterInput["firm_tier"],
+    jurisdiction: values.jurisdiction as MatterInput["jurisdiction"],
+    matter_subtype: values.matter_subtype,
+    matter_type: values.matter_type as MatterInput["matter_type"],
+    party_count: partyCount,
+    risk_tolerance: values.risk_tolerance,
+    schema_version: "proforma.matter.v1",
   };
+
+  if (values.deal_value_hkd && dealValueMatterTypes.has(values.matter_type)) {
+    matterInput.deal_value_hkd = Number(values.deal_value_hkd);
+  }
+
+  return { ok: true, value: matterInput };
 }

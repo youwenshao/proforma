@@ -70,6 +70,18 @@ def strategy_comparison() -> dict[str, Any]:
     }
 
 
+@router.get("/similar-matter-evidence")
+def similar_matter_evidence() -> dict[str, Any]:
+    return {
+        "status": "gated",
+        "legal_gate_status": "data_residency_approval_required",
+        "retrieval_enabled": False,
+        "description": "Anonymized similar-matter retrieval requires approved real-firm data handling, residency, retention, and deletion controls before activation.",
+        "allowed_inputs": ["structured matter taxonomy", "approved anonymized matter records"],
+        "excluded_inputs": ["free-text matter narratives", "confidential client documents", "unapproved firm exports"],
+    }
+
+
 def _read_json_report(path: Path) -> dict[str, Any] | None:
     if not path.exists():
         return None

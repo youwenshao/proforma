@@ -2,8 +2,14 @@ from collections.abc import Awaitable, Callable
 
 import anyio
 import httpx
+import pytest
 
 from services.api.app.main import create_app
+
+
+@pytest.fixture(autouse=True)
+def fixture_model_serving(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("PROFORMA_MODEL_SERVING_MODE", "fixture")
 
 
 def api_request(method: str, url: str, **kwargs: object) -> httpx.Response:

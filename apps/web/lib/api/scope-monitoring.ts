@@ -1,3 +1,4 @@
+import { apiPost } from "./client";
 import type { ScopeUpdateResponse, StageEstimate } from "./types";
 
 export type ScopeUpdateRequest = {
@@ -11,20 +12,14 @@ export async function postScopeUpdate(
   estimateId: string,
   update: ScopeUpdateRequest,
 ): Promise<ScopeUpdateResponse> {
-  const response = await fetch(`/v1/estimates/${estimateId}/scope-updates`, {
-    body: JSON.stringify(update),
-    headers: {
-      accept: "application/json",
-      "content-type": "application/json",
-    },
-    method: "POST",
-  });
-
-  if (!response.ok) {
+  try {
+    return await apiPost<ScopeUpdateResponse, ScopeUpdateRequest>(
+      `/v1/estimates/${estimateId}/scope-updates`,
+      update,
+    );
+  } catch {
     throw new Error("Scope update request failed");
   }
-
-  return response.json() as Promise<ScopeUpdateResponse>;
 }
 
 export function totalPredictedHours(stage: StageEstimate) {

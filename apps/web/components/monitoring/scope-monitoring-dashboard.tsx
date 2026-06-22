@@ -1,5 +1,5 @@
 import type { EstimateResponse } from "@/lib/api/types";
-import { formatCurrency, formatNumber } from "@/lib/format";
+import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
 import { totalPredictedHours, variancePct as calculateVariancePct } from "@/lib/api/scope-monitoring";
 import {
   Card,
@@ -46,6 +46,16 @@ export function ScopeMonitoringDashboard({ estimate }: ScopeMonitoringDashboardP
       variancePct,
     };
   });
+  const predictedTotalCost = rows.reduce((total, row) => total + row.predictedCost, 0);
+  const predictedTotalHours = rows.reduce((total, row) => total + row.predictedHours, 0);
+  const actualTotalCost = rows.reduce((total, row) => total + row.actualCost, 0);
+  const actualTotalHours = rows.reduce((total, row) => total + row.actualHours, 0);
+  const costMultiplier = predictedTotalCost ? Math.max(actualTotalCost / predictedTotalCost, 1) : 1;
+  const hoursMultiplier = predictedTotalHours ? Math.max(actualTotalHours / predictedTotalHours, 1) : 1;
+  const reforecastFinalCost = predictedTotalCost * costMultiplier;
+  const reforecastFinalHours = predictedTotalHours * hoursMultiplier;
+  const maxVariancePct = Math.max(...rows.map((row) => row.variancePct));
+  const overrunProbability = Math.min(0.95, Math.max(0.1, 0.2 + maxVariancePct / 100));
 
   return (
     <Card>
@@ -55,7 +65,21 @@ export function ScopeMonitoringDashboard({ estimate }: ScopeMonitoringDashboardP
           Compares synthetic predicted stage effort against structured actual updates.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
+        <dl className="grid gap-3 text-sm md:grid-cols-3">
+          <div className="rounded-lg border border-border p-3">
+            <dt className="text-muted-foreground">Reforecast final cost</dt>
+            <dd className="text-lg font-semibold">{formatCurrency(reforecastFinalCost)}</dd>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <dt className="text-muted-foreground">Reforecast final hours</dt>
+            <dd className="text-lg font-semibold">{formatNumber(reforecastFinalHours, 1)}</dd>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <dt className="text-muted-foreground">Overrun probability</dt>
+            <dd className="text-lg font-semibold">{formatPercent(overrunProbability)}</dd>
+          </div>
+        </dl>
         <Table aria-label="Scope monitoring variance">
           <TableHeader>
             <TableRow>

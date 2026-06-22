@@ -21,6 +21,14 @@ export function EvaluationSummary({ evaluation }: EvaluationSummaryProps) {
         <CardTitle>Evaluation summary</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        <div className="rounded-lg border border-border bg-muted/40 p-3 text-sm">
+          <p className="font-medium">Calibration method</p>
+          <p className="text-muted-foreground">
+            {evaluation.metrics.calibration_method ?? "residual quantiles"}.
+            Segment residual quantiles are used when a matter type has enough
+            support; sparse segments fall back to global residual quantiles.
+          </p>
+        </div>
         <dl className="grid gap-3 text-sm md:grid-cols-4">
           {Object.entries(evaluation.metrics).map(([key, value]) => (
             <div key={key}>

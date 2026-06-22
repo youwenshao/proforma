@@ -14,8 +14,16 @@ export function getApiBaseUrl() {
   return process.env.NEXT_PUBLIC_PROFORMA_API_URL ?? DEFAULT_API_BASE_URL;
 }
 
+function getRequestUrl(path: string) {
+  if (typeof window !== "undefined") {
+    return path;
+  }
+
+  return `${getApiBaseUrl()}${path}`;
+}
+
 export async function apiGet<T>(path: string): Promise<T> {
-  const response = await fetch(`${getApiBaseUrl()}${path}`, {
+  const response = await fetch(getRequestUrl(path), {
     headers: {
       accept: "application/json",
     },
@@ -32,7 +40,7 @@ export async function apiGet<T>(path: string): Promise<T> {
 }
 
 export async function apiPost<TResponse, TBody>(path: string, body: TBody): Promise<TResponse> {
-  const response = await fetch(`${getApiBaseUrl()}${path}`, {
+  const response = await fetch(getRequestUrl(path), {
     body: JSON.stringify(body),
     headers: {
       accept: "application/json",

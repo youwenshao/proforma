@@ -142,91 +142,92 @@
   ],
   "metrics": {
     "calibration_method": "cross_validated_residual_quantiles",
-    "empirical_coverage": 0.802,
-    "mae": 59.89328950738304,
-    "rmse": 101.8067554280403,
-    "smape": 0.4863272462950026
+    "empirical_coverage": 0.72,
+    "mae": 92.47784079043927,
+    "rmse": 121.79111579349625,
+    "smape": 0.647587193344901
   },
   "model_name": "ridge",
   "model_version": "proforma-baseline-v1",
   "residual_quantiles": {
-    "absolute_p90": 147.93274237416293,
-    "p10": -97.789522610255,
-    "p50": -3.4238040441291773,
-    "p90": 77.53072794935203
+    "absolute_p90": 196.2548005780716,
+    "p10": -128.6917686101985,
+    "p50": -16.3307478791349,
+    "p90": 123.09111328763277
   },
+  "segment_residual_quantiles": {},
   "segment_uncertainty": {
-    "Arbitration": 259.510140730529,
-    "Banking & Finance": 162.4267183667776,
-    "Commercial Property": 40.11104335089453,
-    "Corporate Restructuring": 162.87250729637606,
-    "Employment": 36.68891301183491,
-    "IP/Technology": 44.49302654719128,
-    "Litigation": 138.66563978080006,
-    "M&A": 309.5005541362505,
-    "Regulatory/Compliance": 56.24314096775354,
-    "Wills & Probate": 30.77850847915431
+    "Arbitration": 352.2287251815817,
+    "Banking & Finance": 180.83329303760064,
+    "Commercial Property": 75.74478519153087,
+    "Corporate Restructuring": 182.8593575506841,
+    "Employment": 84.88944500255901,
+    "IP/Technology": 78.01488644761454,
+    "Litigation": 220.50039979614712,
+    "M&A": 245.95776490909716,
+    "Regulatory/Compliance": 85.9958205215059,
+    "Wills & Probate": 65.50838231969793
   },
   "stratified_metrics": {
     "Arbitration": {
-      "mae": 122.31757772231614,
-      "rmse": 174.0595213613224,
-      "sample_size": 79.0,
-      "smape": 0.3305914334957128
+      "mae": 224.9822551233011,
+      "rmse": 240.82812085926838,
+      "sample_size": 4.0,
+      "smape": 0.4959900942835828
     },
     "Banking & Finance": {
-      "mae": 77.75979940972215,
-      "rmse": 107.22511001892809,
-      "sample_size": 128.0,
-      "smape": 0.2505070182203391
+      "mae": 115.64830980517652,
+      "rmse": 128.00758827195165,
+      "sample_size": 9.0,
+      "smape": 0.39792331316202184
     },
     "Commercial Property": {
-      "mae": 18.55935095449454,
-      "rmse": 23.519242191799464,
-      "sample_size": 108.0,
-      "smape": 0.6927712571750818
+      "mae": 39.10909304790211,
+      "rmse": 41.33852573691339,
+      "sample_size": 5.0,
+      "smape": 0.7562757620081921
     },
     "Corporate Restructuring": {
-      "mae": 79.09252574655082,
-      "rmse": 108.79711790421307,
-      "sample_size": 83.0,
-      "smape": 0.30867757620662906
+      "mae": 65.09336261958686,
+      "rmse": 76.66247951230248,
+      "sample_size": 4.0,
+      "smape": 0.32793355512383304
     },
     "Employment": {
-      "mae": 18.443198417149578,
-      "rmse": 22.435936973923788,
-      "sample_size": 91.0,
-      "smape": 0.6211366060931868
+      "mae": 52.31189339180812,
+      "rmse": 61.70803986489285,
+      "sample_size": 5.0,
+      "smape": 0.8514378545416713
     },
     "IP/Technology": {
-      "mae": 22.21539233684472,
-      "rmse": 28.872867324325927,
-      "sample_size": 93.0,
-      "smape": 0.5529022267748317
+      "mae": 41.44382088970071,
+      "rmse": 42.48357525639418,
+      "sample_size": 3.0,
+      "smape": 0.6577669883696299
     },
     "Litigation": {
-      "mae": 61.525694250195,
-      "rmse": 81.09072030085808,
-      "sample_size": 144.0,
-      "smape": 0.35509143678448
+      "mae": 121.91613572995895,
+      "rmse": 149.1900547331603,
+      "sample_size": 6.0,
+      "smape": 0.6010172483273903
     },
     "M&A": {
-      "mae": 139.27088341357867,
-      "rmse": 193.26148858001358,
-      "sample_size": 114.0,
-      "smape": 0.28617952482825687
+      "mae": 162.10236510912438,
+      "rmse": 177.41707030159412,
+      "sample_size": 5.0,
+      "smape": 0.2466585058548123
     },
     "Regulatory/Compliance": {
-      "mae": 28.398675738228977,
-      "rmse": 35.54085749279171,
-      "sample_size": 83.0,
-      "smape": 0.4606880085062878
+      "mae": 46.02935758513245,
+      "rmse": 49.2647872182558,
+      "sample_size": 6.0,
+      "smape": 0.7751816973434295
     },
     "Wills & Probate": {
-      "mae": 11.296411585587961,
-      "rmse": 17.78474658765235,
-      "sample_size": 77.0,
-      "smape": 1.2697144732289767
+      "mae": 7.711199999999999,
+      "rmse": 7.9258202603894565,
+      "sample_size": 3.0,
+      "smape": 2.0
     }
   },
   "target": "associate_hours",

@@ -32,6 +32,8 @@ describe("scope monitoring dashboard", () => {
     expect(screen.getAllByText(/warning/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/critical/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/recommended review action/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/reforecast final cost/i)).toBeInTheDocument();
+    expect(screen.getByText(/overrun probability/i)).toBeInTheDocument();
   });
 
   it("does not render confidential free-text notes by default", () => {

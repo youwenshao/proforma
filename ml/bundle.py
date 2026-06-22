@@ -26,6 +26,7 @@ class ModelBundle:
     target_transform: str | None = None
     residual_quantiles: dict[str, float] = field(default_factory=dict)
     segment_uncertainty: dict[str, float] = field(default_factory=dict)
+    segment_residual_quantiles: dict[str, dict[str, float]] = field(default_factory=dict)
     dataset_id: str = DATASET_ID
 
     def public_metadata(self) -> dict[str, Any]:

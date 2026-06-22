@@ -40,7 +40,39 @@ export function FeeRecommendationPanel({ fee, riskTolerance }: FeeRecommendation
                 : "Review p90 exposure before client use"}
             </dd>
           </div>
+          <div>
+            <dt className="text-muted-foreground">Expected margin</dt>
+            <dd className="font-medium">
+              {fee.expected_margin_hkd != null
+                ? formatCurrency(fee.expected_margin_hkd)
+                : "Not available"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-muted-foreground">Downside risk</dt>
+            <dd className="font-medium">
+              {fee.downside_risk_hkd != null
+                ? formatCurrency(fee.downside_risk_hkd)
+                : "Not available"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-muted-foreground">Margin percent</dt>
+            <dd className="font-medium">
+              {fee.margin_pct != null ? `${Math.round(fee.margin_pct * 100)}%` : "Not available"}
+            </dd>
+          </div>
         </dl>
+        {fee.pricing_guardrails?.length ? (
+          <div className="rounded-lg border border-border bg-muted/40 p-3">
+            <p className="font-medium">Pricing guardrails</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+              {fee.pricing_guardrails.map((guardrail) => (
+                <li key={guardrail}>{guardrail}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
         <p className="text-muted-foreground">
           Recommendation uses the model interval from{" "}
           {formatCurrency(fee.confidence_interval_low_hkd)} to{" "}

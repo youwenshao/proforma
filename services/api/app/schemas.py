@@ -56,8 +56,13 @@ class ScopeUpdateResponse(ApiContractModel):
     stage_name: str
     predicted_hours: float
     actual_hours: float
+    predicted_cost_hkd: float
+    actual_cost_hkd: float
     variance_pct: float
     scope_creep_flag: bool
+    reforecast_final_cost_hkd: float
+    reforecast_final_hours: float
+    overrun_probability: float
     recommended_review_action: str
 
 

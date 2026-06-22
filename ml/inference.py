@@ -11,6 +11,7 @@ import pandas as pd
 from ml.config import MODEL_VERSION
 from ml.evaluate import prediction_interval
 from ml.features import LEAKAGE_FIELDS, parse_json_list, records_to_frame
+from ml.stage_allocation import allocate_stage_estimates
 from proforma_data.domain import PARTNER_RATE_BANDS, STAGE_TEMPLATES
 from proforma_data.lineage import DATASET_ID, SOURCE_MARKER
 from proforma_data.schemas import DEFAULT_DISCLAIMER, MatterInput, PredictionRequest, PredictionResponse
@@ -77,8 +78,20 @@ def normalize_prediction_request(payload: dict[str, Any]) -> tuple[str, MatterIn
     leaking = sorted(set(payload).intersection(LEAKAGE_FIELDS))
     if leaking:
         raise ValueError(f"Inference payload contains leakage fields: {leaking}")
-    public_input = MatterInput(**{field: payload[field] for field in MatterInput.model_fields if field in payload})
+    public_input = MatterInput(
+        **{
+            field: _none_if_nan(payload[field])
+            for field in MatterInput.model_fields
+            if field in payload
+        },
+    )
     return str(payload.get("tenant_id", "synthetic-demo-tenant")), public_input, str(payload.get("model_strategy", "synthetic_baseline"))
+
+
+def _none_if_nan(value: Any) -> Any:
+    if isinstance(value, float) and np.isnan(value):
+        return None
+    return value
 
 
 def public_input_to_model_features(matter_input: MatterInput) -> dict[str, Any]:
@@ -86,7 +99,7 @@ def public_input_to_model_features(matter_input: MatterInput) -> dict[str, Any]:
     partner_rate = (low + high) / 2.0
     return {
         **matter_input.model_dump(),
-        "deal_value_hkd": None,
+        "deal_value_hkd": matter_input.deal_value_hkd,
         "partner_rate_hkd": partner_rate,
         "associate_rate_hkd": partner_rate * 0.5,
         "stage_count": len(STAGE_TEMPLATES[matter_input.matter_type]),
@@ -113,7 +126,7 @@ def _predict_probability(bundle: Any, input_frame: pd.DataFrame) -> float:
 
 
 def _interval(bundle: Any, point: float, matter_input: dict[str, Any]) -> dict[str, Any]:
-    quantiles = getattr(bundle, "residual_quantiles", None) or {"p10": -0.10 * point, "p50": 0.0, "p90": 0.10 * point}
+    quantiles, calibration_method = select_residual_quantiles(bundle, matter_input)
     segment = str(matter_input.get("matter_type", ""))
     segment_uncertainty = getattr(bundle, "segment_uncertainty", {}).get(segment)
     if segment_uncertainty is not None and segment_uncertainty > quantiles.get("absolute_p90", 0.0):
@@ -123,10 +136,30 @@ def _interval(bundle: Any, point: float, matter_input: dict[str, Any]) -> dict[s
             "p90": max(quantiles["p90"], segment_uncertainty),
         }
     interval = prediction_interval(point, quantiles)
+    interval["calibration_method"] = calibration_method
     interval["p50"] = float(point)
     interval["p10"] = float(min(interval["p10"], interval["p50"]))
     interval["p90"] = float(max(interval["p90"], interval["p50"]))
     return interval
+
+
+def select_residual_quantiles(
+    bundle: Any,
+    matter_input: dict[str, Any],
+    *,
+    min_segment_size: int = 30,
+) -> tuple[dict[str, float], str]:
+    fallback = getattr(bundle, "residual_quantiles", None) or {
+        "p10": -0.10 * float(matter_input.get("cost_estimate", 0.0)),
+        "p50": 0.0,
+        "p90": 0.10 * float(matter_input.get("cost_estimate", 0.0)),
+        "absolute_p90": 0.0,
+    }
+    segment = str(matter_input.get("matter_type", ""))
+    segment_quantiles = getattr(bundle, "segment_residual_quantiles", {}).get(segment)
+    if segment_quantiles and float(segment_quantiles.get("sample_size", 0.0)) >= min_segment_size:
+        return segment_quantiles, "segment_residual_quantiles:matter_type"
+    return fallback, "residual_quantiles"
 
 
 def _input_summary(matter_input: dict[str, Any]) -> dict[str, Any]:
@@ -136,6 +169,7 @@ def _input_summary(matter_input: dict[str, Any]) -> dict[str, Any]:
         "jurisdiction",
         "firm_tier",
         "client_type",
+        "deal_value_hkd",
         "complexity_score",
         "billing_model",
     ]
@@ -148,17 +182,18 @@ def _stage_estimates(
     associate_hours: float,
     cost_estimate: float,
 ) -> list[dict[str, Any]]:
-    stage_names = parse_json_list(matter_input.get("stage_names")) or ["Matter Work"]
-    stage_count = max(len(stage_names), 1)
-    return [
-        {
-            "stage_name": stage_name,
-            "partner_hours": float(partner_hours / stage_count),
-            "associate_hours": float(associate_hours / stage_count),
-            "cost_hkd": float(cost_estimate / stage_count),
-        }
-        for stage_name in stage_names
-    ]
+    stage_names = parse_json_list(matter_input.get("stage_names"))
+    matter_type = str(matter_input.get("matter_type", ""))
+    if stage_names and matter_type not in STAGE_TEMPLATES:
+        matter_type = "Matter Work"
+    return allocate_stage_estimates(
+        matter_type=matter_type,
+        partner_hours=partner_hours,
+        associate_hours=associate_hours,
+        cost_estimate=cost_estimate,
+        partner_rate_hkd=float(matter_input.get("partner_rate_hkd", 0.0)),
+        associate_rate_hkd=float(matter_input.get("associate_rate_hkd", 0.0)),
+    )
 
 
 def _fee_recommendation(matter_input: dict[str, Any], cost_estimate: float) -> dict[str, Any]:

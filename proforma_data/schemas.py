@@ -57,6 +57,7 @@ ClientType = Literal[
 BillingModel = Literal["Hourly", "Fixed Fee", "Capped Fee", "Retainer", "Outcome Related"]
 RiskTolerance = Literal["Low", "Medium", "High"]
 ModelStrategy = Literal["firm_specific", "pooled_research", "synthetic_baseline"]
+DEAL_VALUE_MATTER_TYPES = {"M&A", "Commercial Property", "Corporate Restructuring", "Banking & Finance"}
 
 
 class ContractModel(BaseModel):
@@ -72,6 +73,7 @@ class MatterInput(ContractModel):
     jurisdiction: Jurisdiction
     firm_tier: FirmTier
     client_type: ClientType
+    deal_value_hkd: float | None = Field(default=None, gt=0)
     document_volume: int = Field(gt=0)
     complexity_score: int = Field(ge=1, le=5)
     party_count: int = Field(gt=0)
@@ -130,6 +132,8 @@ class MatterInput(ContractModel):
             raise ValueError("cross_border_flag must agree with jurisdiction")
         if self.billing_model == "Outcome Related" and self.matter_type != "Arbitration":
             raise ValueError("Outcome Related billing is arbitration-only")
+        if self.deal_value_hkd is not None and self.matter_type not in DEAL_VALUE_MATTER_TYPES:
+            raise ValueError("deal_value_hkd is only allowed for transactional matter types")
         return self
 
     @classmethod
@@ -158,6 +162,10 @@ class FeeRecommendation(ContractModel):
     confidence_interval_high_hkd: float = Field(gt=0)
     cap_amount_hkd: float | None = Field(default=None, gt=0)
     expected_downside_hkd: float | None = Field(default=None, ge=0)
+    expected_margin_hkd: float | None = None
+    downside_risk_hkd: float | None = Field(default=None, ge=0)
+    margin_pct: float | None = None
+    pricing_guardrails: list[str] = Field(default_factory=list)
     partner_decision_support_disclaimer: str = DEFAULT_DISCLAIMER
 
     @field_validator("billing_model")

@@ -3,6 +3,7 @@ import { ModelEvidenceView } from "@/components/models/model-evidence-view";
 import {
   modelCurrentFixture,
   modelEvaluationFixture,
+  similarMatterEvidenceFixture,
   strategyComparisonFixture,
 } from "@/lib/api/fixtures";
 
@@ -12,6 +13,7 @@ describe("model evidence view", () => {
       <ModelEvidenceView
         current={modelCurrentFixture}
         evaluation={modelEvaluationFixture}
+        similarMatterEvidence={similarMatterEvidenceFixture}
         strategyComparison={strategyComparisonFixture}
       />,
     );
@@ -24,5 +26,9 @@ describe("model evidence view", () => {
     expect(screen.getAllByText(/pooled/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/legally_gated/i)).toBeInTheDocument();
     expect(screen.getByRole("table", { name: /metrics by matter type/i })).toBeInTheDocument();
+    expect(screen.getByText(/calibration method/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/segment residual quantiles/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/similar matter evidence/i)).toBeInTheDocument();
+    expect(screen.getByText(/data_residency_approval_required/i)).toBeInTheDocument();
   });
 });

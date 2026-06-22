@@ -2,9 +2,9 @@
   "cost_estimate": {
     "calibration_method": "residual_quantiles",
     "confidence_level": 0.8,
-    "p10": 197021.33584432135,
-    "p50": 566875.5481284132,
-    "p90": 1080741.5828392874
+    "p10": 295709.5407759816,
+    "p50": 857275.9936940091,
+    "p90": 1526590.2534765112
   },
   "dataset_lineage": {
     "dataset_id": "proforma-hk-synthetic-mvp-v1",
@@ -15,23 +15,30 @@
   "duration_estimate": {
     "calibration_method": "residual_quantiles",
     "confidence_level": 0.8,
-    "p10": 163.63461216695265,
-    "p50": 363.5747361003132,
-    "p90": 563.5148600336738
+    "p10": 238.52744692354912,
+    "p50": 348.99527640491897,
+    "p90": 483.96579840393645
   },
   "estimate_id": "sample-estimate-v1",
   "fee_recommendation": {
     "billing_model": "Fixed Fee",
-    "confidence_interval_high_hkd": 802695.776149833,
-    "confidence_interval_low_hkd": 568576.1747727983,
+    "cap_amount_hkd": null,
+    "confidence_interval_high_hkd": 1213902.8070707167,
+    "confidence_interval_low_hkd": 859847.821675091,
+    "downside_risk_hkd": null,
+    "expected_downside_hkd": null,
+    "expected_margin_hkd": null,
+    "margin_pct": null,
     "partner_decision_support_disclaimer": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
-    "recommended_fee_hkd": 668913.1467915275,
+    "pricing_guardrails": [],
+    "recommended_fee_hkd": 1011585.6725589307,
     "schema_version": "proforma.matter.v1"
   },
   "input_summary": {
     "billing_model": "Fixed Fee",
     "client_type": "Financial Institution",
     "complexity_score": 3,
+    "deal_value_hkd": null,
     "firm_tier": "Mid-tier (6-10 partners)",
     "jurisdiction": "HK Only",
     "matter_subtype": "Debt Recovery",
@@ -42,36 +49,36 @@
     "Partner review required before client use."
   ],
   "model_version": "proforma-baseline-v1",
-  "scope_creep_probability": 0.6540640046165398,
+  "scope_creep_probability": 0.20862969981050217,
   "stage_estimates": [
     {
-      "associate_hours": 54.732389561165874,
-      "cost_hkd": 113375.10962568263,
-      "partner_hours": 27.43897319877781,
+      "associate_hours": 41.948177840587334,
+      "cost_hkd": 138832.58984366606,
+      "partner_hours": 35.29028502189758,
       "stage_name": "Case Assessment"
     },
     {
-      "associate_hours": 54.732389561165874,
-      "cost_hkd": 113375.10962568263,
-      "partner_hours": 27.43897319877781,
+      "associate_hours": 69.42680368338799,
+      "cost_hkd": 195306.88471819597,
+      "partner_hours": 44.43818358679291,
       "stage_name": "Pleadings"
     },
     {
-      "associate_hours": 54.732389561165874,
-      "cost_hkd": 113375.10962568263,
-      "partner_hours": 27.43897319877781,
+      "associate_hours": 91.3579359441804,
+      "cost_hkd": 223625.38329801947,
+      "partner_hours": 44.94919219558998,
       "stage_name": "Discovery"
     },
     {
-      "associate_hours": 54.732389561165874,
-      "cost_hkd": 113375.10962568263,
-      "partner_hours": 27.43897319877781,
+      "associate_hours": 78.6040665652729,
+      "cost_hkd": 170390.01333177878,
+      "partner_hours": 29.75154727009667,
       "stage_name": "Interlocutory Applications"
     },
     {
-      "associate_hours": 54.732389561165874,
-      "cost_hkd": 113375.10962568263,
-      "partner_hours": 27.43897319877781,
+      "associate_hours": 66.34753872967303,
+      "cost_hkd": 129121.12250234885,
+      "partner_hours": 19.154859874799342,
       "stage_name": "Settlement/Trial"
     }
   ],

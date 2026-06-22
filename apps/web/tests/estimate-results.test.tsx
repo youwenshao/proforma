@@ -28,6 +28,8 @@ describe("estimate results and fee recommendation", () => {
     expect(within(table).getByRole("columnheader", { name: /partner hours/i })).toBeInTheDocument();
     expect(within(table).getByRole("columnheader", { name: /associate hours/i })).toBeInTheDocument();
     expect(within(table).getByRole("columnheader", { name: /cost/i })).toBeInTheDocument();
+    expect(new Set(sampleEstimate.stage_estimates.map((stage) => stage.partner_hours)).size).toBeGreaterThan(1);
+    expect(new Set(sampleEstimate.stage_estimates.map((stage) => stage.associate_hours)).size).toBeGreaterThan(1);
   });
 
   it("keeps partner decision control and limitations visible", () => {
@@ -38,6 +40,8 @@ describe("estimate results and fee recommendation", () => {
     expect(screen.getByText(/Synthetic-data feasibility estimate only/i)).toBeInTheDocument();
     expect(screen.getByText(/Fixed Fee/i)).toBeInTheDocument();
     expect(screen.getAllByText(/risk tolerance/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/expected margin/i)).toBeInTheDocument();
+    expect(screen.getByText(/pricing guardrails/i)).toBeInTheDocument();
   });
 
   it("shows the pooled research legal gate", () => {

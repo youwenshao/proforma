@@ -24,3 +24,13 @@ def test_fee_recommendation_requires_partner_final_decision_and_is_not_legal_adv
     disclaimer = recommendation["partner_decision_support_disclaimer"].lower()
     assert "partner final decision" in disclaimer
     assert "legal advice" not in disclaimer
+
+
+def test_fee_recommendation_includes_margin_downside_and_guardrails() -> None:
+    recommendation = recommend_fee(billing_model="Fixed Fee", risk_tolerance="balanced", cost_estimate=INTERVAL)
+
+    assert recommendation["expected_margin_hkd"] == recommendation["recommended_fee_hkd"] - INTERVAL["p50"]
+    assert recommendation["downside_risk_hkd"] == max(INTERVAL["p90"] - recommendation["recommended_fee_hkd"], 0)
+    assert recommendation["margin_pct"] > 0
+    assert recommendation["pricing_guardrails"]
+    assert any("partner" in guardrail.lower() for guardrail in recommendation["pricing_guardrails"])

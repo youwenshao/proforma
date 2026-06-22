@@ -85,9 +85,35 @@ describe("matter intake workflow", () => {
         document_volume: 120,
         party_count: 3,
         cross_border_flag: true,
+        schema_version: "proforma.matter.v1",
       },
     });
+    expect(JSON.parse(String(init?.body)).matter_input).not.toHaveProperty("deal_value_hkd");
     expect(push).toHaveBeenCalledWith("/estimate/estimate-from-api");
+  });
+
+  it("sends deal value for transactional matter types", async () => {
+    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+
+    await userEvent.selectOptions(screen.getByLabelText(/matter type/i), "M&A");
+    await userEvent.selectOptions(screen.getByLabelText(/matter subtype/i), "Share Acquisition - Private");
+    await userEvent.selectOptions(screen.getByLabelText(/jurisdiction/i), "HK Only");
+    await userEvent.selectOptions(screen.getByLabelText(/firm tier/i), "Mid-tier (6-10 partners)");
+    await userEvent.selectOptions(screen.getByLabelText(/client type/i), "Financial Institution");
+    await userEvent.type(screen.getByLabelText(/deal value hkd/i), "50000000");
+    await userEvent.clear(screen.getByLabelText(/document volume/i));
+    await userEvent.type(screen.getByLabelText(/document volume/i), "120");
+    await userEvent.clear(screen.getByLabelText(/complexity score/i));
+    await userEvent.type(screen.getByLabelText(/complexity score/i), "3");
+    await userEvent.clear(screen.getByLabelText(/party count/i));
+    await userEvent.type(screen.getByLabelText(/party count/i), "3");
+    await userEvent.selectOptions(screen.getByLabelText(/billing model/i), "Fixed Fee");
+
+    await userEvent.click(screen.getByRole("button", { name: /create estimate/i }));
+
+    await waitFor(() => expect(fetch).toHaveBeenCalledWith("/v1/estimates", expect.any(Object)));
+    const [, init] = vi.mocked(fetch).mock.calls[0];
+    expect(JSON.parse(String(init?.body)).matter_input.deal_value_hkd).toBe(50_000_000);
   });
 });
 

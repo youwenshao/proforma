@@ -19,7 +19,7 @@ def create_scope_update(estimate_id: str, update: ScopeUpdateRequest) -> ScopeUp
             detail="Free text update notes are disabled in feasibility mode.",
         )
 
-    fixture_prediction = ModelRegistry(settings.artifacts_dir)._fixture_prediction()
+    fixture_prediction = ModelRegistry(settings.artifacts_dir, serving_mode="fixture")._fixture_prediction()
     try:
         return evaluate_scope_update(
             estimate_id=estimate_id,

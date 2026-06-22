@@ -1,18 +1,26 @@
-import type { ModelCurrent, ModelEvaluation, StrategyComparison } from "@/lib/api/types";
+import type {
+  ModelCurrent,
+  ModelEvaluation,
+  SimilarMatterEvidence,
+  StrategyComparison,
+} from "@/lib/api/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { EvaluationSummary } from "./evaluation-summary";
 import { ModelCurrentCard } from "./model-current-card";
+import { SimilarMatterEvidenceCard } from "./similar-matter-evidence-card";
 import { StrategyComparison as StrategyComparisonCard } from "./strategy-comparison";
 
 type ModelEvidenceViewProps = {
   current: ModelCurrent;
   evaluation: ModelEvaluation;
+  similarMatterEvidence: SimilarMatterEvidence;
   strategyComparison: StrategyComparison;
 };
 
 export function ModelEvidenceView({
   current,
   evaluation,
+  similarMatterEvidence,
   strategyComparison,
 }: ModelEvidenceViewProps) {
   return (
@@ -35,6 +43,7 @@ export function ModelEvidenceView({
       <ModelCurrentCard current={current} />
       <EvaluationSummary evaluation={evaluation} />
       <StrategyComparisonCard strategyComparison={strategyComparison} />
+      <SimilarMatterEvidenceCard evidence={similarMatterEvidence} />
     </div>
   );
 }
