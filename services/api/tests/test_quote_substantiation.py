@@ -82,9 +82,13 @@ def test_quote_substantiation_pdf_is_rendered_server_side(monkeypatch, tmp_path)
                 "generated_at": datetime.now(UTC).isoformat(),
                 "segments": [
                     {
-                        "dimensions": [],
-                        "filters": {},
-                        "segment_label": "All matters",
+                        "dimensions": ["matter_type", "jurisdiction", "billing_model"],
+                        "filters": {
+                            "matter_type": "Litigation",
+                            "jurisdiction": "HK Only",
+                            "billing_model": "Fixed Fee",
+                        },
+                        "segment_label": "Litigation / HK Only / Fixed Fee",
                         "sample_size": 4000,
                         "metrics": {
                             "material_creep_rate": 0.514,
@@ -119,7 +123,22 @@ def test_quote_substantiation_pdf_is_rendered_server_side(monkeypatch, tmp_path)
     assert f"quote-substantiation-{estimate_id}.pdf" in response.headers["content-disposition"]
     assert response.content.startswith(b"%PDF-")
     assert b"Quote Substantiation Pack" in response.content
+    assert estimate_id.encode("ascii") in response.content
+    assert b"Decision-support evidence for partner review" not in response.content
+    assert b"Matter Type" in response.content
+    assert b"Litigation" in response.content
+    assert b"Jurisdiction" in response.content
+    assert b"HK Only" in response.content
+    assert b"Billing Model" in response.content
+    assert b"Fixed Fee" in response.content
+    assert b"Matter Type + Jurisdiction + Billing Model" in response.content
+    assert b"/Count 2" in response.content
+    assert b"Comparable Matter Benchmarks" in response.content
     assert b"Material scope-creep rate" in response.content
+    assert b"/F2" in response.content
+    assert b"Benchmark Snapshot" in response.content
+    assert b"Risk Indicators" in response.content
+    assert b"re S" in response.content
 
 
 def test_quote_pack_render_stores_pdf_metadata_and_binary(monkeypatch, tmp_path) -> None:
