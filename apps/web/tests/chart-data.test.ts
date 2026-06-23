@@ -1,8 +1,10 @@
 import {
   buildEstimateIntervalData,
   buildModelPerformanceData,
+  buildStageCostShareData,
   buildStageEffortData,
   buildVarianceData,
+  buildVarianceDistributionData,
 } from "@/lib/chart-data";
 import { modelEvaluationFixture, sampleEstimate } from "@/lib/api/fixtures";
 
@@ -46,5 +48,31 @@ describe("dashboard chart data transforms", () => {
     expect(first.largeErrorSensitivity).toBe(
       modelEvaluationFixture.metrics_by_matter_type["M&A"].rmse,
     );
+  });
+
+  it("maps variance distribution spec data to bucket/sharePct pairs", () => {
+    const raw = [
+      { bucket: "<=0%", share_pct: 30.6 },
+      { bucket: "0-25%", share_pct: 44.0 },
+      { bucket: "25-50%", share_pct: 16.0 },
+      { bucket: ">50%", share_pct: 9.4 },
+    ];
+    const result = buildVarianceDistributionData(raw);
+
+    expect(result).toHaveLength(4);
+    expect(result[0]).toEqual({ bucket: "<=0%", sharePct: 30.6 });
+    expect(result[2]).toEqual({ bucket: "25-50%", sharePct: 16.0 });
+  });
+
+  it("maps stage cost share spec data to stage/avgSharePct pairs", () => {
+    const raw = [
+      { stage_name: "Asset Review", avg_share_pct: 30.7 },
+      { stage_name: "Drafting/Application", avg_share_pct: 29.4 },
+    ];
+    const result = buildStageCostShareData(raw);
+
+    expect(result).toHaveLength(2);
+    expect(result[0]).toEqual({ stage: "Asset Review", avgSharePct: 30.7 });
+    expect(result[1]).toEqual({ stage: "Drafting/Application", avgSharePct: 29.4 });
   });
 });

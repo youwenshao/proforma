@@ -133,6 +133,7 @@ describe("estimate results and fee recommendation", () => {
     expect(screen.getByText(/Historical Quote Variance/i)).toBeInTheDocument();
     expect(screen.getByText(/Stage Cost Share/i)).toBeInTheDocument();
     expect(screen.getAllByText(/Partner final decision required before client sharing/i).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: /download pdf/i })).toBeInTheDocument();
   });
 
   it("shows the pooled research legal gate", () => {

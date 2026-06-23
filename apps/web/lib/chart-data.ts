@@ -32,6 +32,16 @@ export type ModelPerformanceDatum = {
   matterType: string;
 };
 
+export type VarianceDistributionDatum = {
+  bucket: string;
+  sharePct: number;
+};
+
+export type StageCostShareDatum = {
+  stage: string;
+  avgSharePct: number;
+};
+
 export function buildEstimateIntervalData(
   interval: EstimateInterval,
   unit: string,
@@ -70,6 +80,24 @@ export function buildVarianceData(stages: StageEstimate[]): VarianceDatum[] {
       variancePct: stageVariancePct,
     };
   });
+}
+
+export function buildVarianceDistributionData(
+  data: Record<string, string | number | boolean | null>[],
+): VarianceDistributionDatum[] {
+  return data.map((point) => ({
+    bucket: String(point.bucket ?? ""),
+    sharePct: Number(point.share_pct ?? 0),
+  }));
+}
+
+export function buildStageCostShareData(
+  data: Record<string, string | number | boolean | null>[],
+): StageCostShareDatum[] {
+  return data.map((point) => ({
+    stage: String(point.stage_name ?? ""),
+    avgSharePct: Number(point.avg_share_pct ?? 0),
+  }));
 }
 
 export function buildModelPerformanceData(

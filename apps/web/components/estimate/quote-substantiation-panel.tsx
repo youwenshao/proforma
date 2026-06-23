@@ -1,6 +1,10 @@
 import type { QuoteSubstantiation } from "@/lib/api/types";
+import { formatCurrency } from "@/lib/format";
+import { StageCostShareChart } from "@/components/charts/stage-cost-share-chart";
+import { VarianceDistributionChart } from "@/components/charts/variance-distribution-chart";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { QuotePackActions } from "./quote-pack-actions";
 
 type QuoteSubstantiationPanelProps = {
   substantiation: QuoteSubstantiation;
@@ -9,73 +13,154 @@ type QuoteSubstantiationPanelProps = {
 export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiationPanelProps) {
   const segment = substantiation.benchmark_segment;
 
+  const riskMetrics = substantiation.metrics.filter((m) =>
+    ["Material scope-creep rate", "Any-overrun rate", "P75 quote variance", "P90 quote variance"].includes(m.label),
+  );
+  const benchmarkMetrics = substantiation.metrics.filter((m) =>
+    ["Median comparable cost", "Median duration"].includes(m.label),
+  );
+  const otherMetrics = substantiation.metrics.filter(
+    (m) => !riskMetrics.includes(m) && !benchmarkMetrics.includes(m),
+  );
+
+  const varianceSpec = substantiation.chart_specs.find((s) => s.chart_type === "variance_distribution");
+  const stageShareSpec = substantiation.chart_specs.find((s) => s.chart_type === "stage_cost_share");
+
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
-              Partner preview
-            </p>
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Partner preview</p>
             <CardTitle>
               <h2>Quote substantiation pack</h2>
             </CardTitle>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge>{segment.segment_label}</Badge>
             <Badge variant="outline">{segment.sample_size} comparable matters</Badge>
+            <QuotePackActions estimateId={substantiation.estimate_id} />
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-5 text-sm">
-        <dl className="grid gap-3 md:grid-cols-3">
-          {substantiation.metrics.map((metric) => (
-            <div key={`${metric.label}-${metric.segment_label}`} className="rounded-lg border border-border p-3">
-              <dt className="text-muted-foreground">{metric.label}</dt>
-              <dd className="mt-1 text-xl font-semibold">{metric.display_value}</dd>
-              <p className="mt-2 text-muted-foreground">{metric.description}</p>
-            </div>
-          ))}
-        </dl>
 
-        <div className="grid gap-3 md:grid-cols-2">
-          {substantiation.chart_specs.map((chart) => (
-            <div key={chart.chart_type} className="rounded-lg border border-border bg-muted/30 p-3">
-              <p className="font-medium">{chart.title}</p>
-              <p className="mt-1 text-muted-foreground">{chart.description}</p>
-              <ul className="mt-3 space-y-1 text-muted-foreground">
-                {chart.data.slice(0, 4).map((point, index) => (
-                  <li key={`${chart.chart_type}-${index}`}>{formatChartPoint(point)}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+      <CardContent className="space-y-6 text-sm">
+        {riskMetrics.length > 0 && (
+          <section aria-label="Risk metrics">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+              Historical risk indicators
+            </p>
+            <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {riskMetrics.map((metric) => (
+                <MetricCard key={metric.label} metric={metric} />
+              ))}
+            </dl>
+          </section>
+        )}
 
-        <div className="rounded-lg border border-border bg-muted/40 p-3">
-          <p className="font-medium">Assumptions and guardrails</p>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
-            {substantiation.assumptions_and_guardrails.map((guardrail) => (
-              <li key={guardrail}>{guardrail}</li>
+        {benchmarkMetrics.length > 0 && (
+          <section aria-label="Benchmark metrics">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+              Comparable matter benchmarks
+            </p>
+            <dl className="grid gap-3 sm:grid-cols-2">
+              {benchmarkMetrics.map((metric) => (
+                <MetricCard key={metric.label} metric={metric} prominent />
+              ))}
+            </dl>
+          </section>
+        )}
+
+        {otherMetrics.length > 0 && (
+          <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {otherMetrics.map((metric) => (
+              <MetricCard key={metric.label} metric={metric} />
             ))}
-          </ul>
-        </div>
+          </dl>
+        )}
 
-        <div className="text-xs text-muted-foreground">
-          <p>Evidence footer</p>
-          <p>{substantiation.evidence_footer.join(" | ")}</p>
-          {substantiation.snapshot_checksum ? <p>Snapshot checksum: {substantiation.snapshot_checksum}</p> : null}
+        {(varianceSpec || stageShareSpec) && (
+          <section aria-label="Historical charts">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+              Historical distribution
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              {varianceSpec && (
+                <div className="rounded-lg border border-border p-4">
+                  <p className="mb-1 font-medium">{varianceSpec.title}</p>
+                  <p className="mb-3 text-xs text-muted-foreground">{varianceSpec.description}</p>
+                  <VarianceDistributionChart spec={varianceSpec} />
+                </div>
+              )}
+              {stageShareSpec && (
+                <div className="rounded-lg border border-border p-4">
+                  <p className="mb-1 font-medium">{stageShareSpec.title}</p>
+                  <p className="mb-3 text-xs text-muted-foreground">{stageShareSpec.description}</p>
+                  <StageCostShareChart spec={stageShareSpec} />
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {substantiation.assumptions_and_guardrails.length > 0 && (
+          <div className="rounded-lg border border-border bg-muted/40 p-4">
+            <p className="font-medium">Assumptions and guardrails</p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+              {substantiation.assumptions_and_guardrails.map((guardrail) => (
+                <li key={guardrail}>{guardrail}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="space-y-1 text-xs text-muted-foreground">
+          {substantiation.evidence_footer.map((line) => (
+            <p key={line}>{line}</p>
+          ))}
+          {substantiation.snapshot_checksum && (
+            <p className="font-mono">Checksum: {substantiation.snapshot_checksum}</p>
+          )}
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function formatChartPoint(point: Record<string, string | number | boolean | null>) {
-  const entries = Object.entries(point).map(([key, value]) => `${humanize(key)}: ${value}`);
-  return entries.join(", ");
+type MetricCardProps = {
+  metric: {
+    label: string;
+    value: number | string;
+    unit?: string | null;
+    display_value: string;
+    description: string;
+    segment_label: string;
+    sample_size: number;
+  };
+  prominent?: boolean;
+};
+
+function MetricCard({ metric, prominent = false }: MetricCardProps) {
+  const formattedValue = formatMetricValue(metric);
+
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <dt className="text-xs text-muted-foreground">{metric.label}</dt>
+      <dd className={prominent ? "mt-1 text-2xl font-semibold" : "mt-1 text-xl font-semibold"}>
+        {formattedValue}
+      </dd>
+      <p className="mt-2 text-xs text-muted-foreground">{metric.description}</p>
+    </div>
+  );
 }
 
-function humanize(value: string) {
-  return value.replaceAll("_", " ");
+function formatMetricValue(metric: {
+  value: number | string;
+  unit?: string | null;
+  display_value: string;
+}): string {
+  if (metric.unit === "HKD" && typeof metric.value === "number") {
+    return formatCurrency(metric.value);
+  }
+  return metric.display_value;
 }
