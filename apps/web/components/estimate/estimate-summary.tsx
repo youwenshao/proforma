@@ -1,3 +1,5 @@
+"use client";
+
 import type { EstimateInterval } from "@/lib/api/types";
 import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
 import { EstimateIntervalChart } from "@/components/charts/estimate-interval-chart";
@@ -8,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 type EstimateSummaryProps = {
   cost: EstimateInterval;
@@ -22,35 +25,30 @@ export function EstimateSummary({
   modelVersion,
   scopeCreepProbability,
 }: EstimateSummaryProps) {
+  const t = useTranslations();
+
   return (
     <div className="grid gap-4 lg:grid-cols-3">
       <IntervalCard
-        ariaLabel="Cost uncertainty"
         formatValue={formatCurrency}
         interval={cost}
-        title="Cost uncertainty"
+        title={t("summary.costUncertainty")}
         unit="HKD"
       />
       <IntervalCard
-        ariaLabel="Duration uncertainty"
-        formatValue={(value) => `${formatNumber(value)} days`}
+        formatValue={(value) => `${formatNumber(value)} ${t("summary.daysUnit")}`}
         interval={duration}
-        title="Duration uncertainty"
-        unit="days"
+        title={t("summary.durationUncertainty")}
+        unit={t("summary.daysUnit")}
       />
       <Card>
         <CardHeader>
-          <CardTitle>Chance work grows</CardTitle>
-          <CardDescription>Model version {modelVersion}</CardDescription>
+          <CardTitle>{t("summary.chanceWorkGrows")}</CardTitle>
+          <CardDescription>{t("summary.modelVersion", { version: modelVersion })}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold">
-            {formatPercent(scopeCreepProbability)}
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            This is the estimated chance that effort grows beyond the original scope. It is
-            decision-support evidence, not autonomous legal or pricing advice.
-          </p>
+          <p className="text-3xl font-semibold">{formatPercent(scopeCreepProbability)}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t("summary.chanceWorkGrowsBody")}</p>
         </CardContent>
       </Card>
     </div>
@@ -58,26 +56,29 @@ export function EstimateSummary({
 }
 
 type IntervalCardProps = {
-  ariaLabel: string;
   formatValue: (value: number) => string;
   interval: EstimateInterval;
   title: string;
   unit: string;
 };
 
-function IntervalCard({ ariaLabel, formatValue, interval, title, unit }: IntervalCardProps) {
+function IntervalCard({ formatValue, interval, title, unit }: IntervalCardProps) {
+  const t = useTranslations();
+
   const intervalLabels: Array<{ key: "p10" | "p50" | "p90"; label: string }> = [
-    { key: "p10", label: "Low" },
-    { key: "p50", label: "Typical" },
-    { key: "p90", label: "High" },
+    { key: "p10", label: t("summary.low") },
+    { key: "p50", label: t("summary.typical") },
+    { key: "p90", label: t("summary.high") },
   ];
 
   return (
-    <Card aria-label={ariaLabel} role="region">
+    <Card aria-label={title} role="region">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>
-          Low, typical, and high estimates at {formatPercent(interval.confidence_level)} confidence
+          {t("summary.confidenceDescription", {
+            confidence: formatPercent(interval.confidence_level),
+          })}
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -1,3 +1,5 @@
+"use client";
+
 import type { StageEstimate } from "@/lib/api/types";
 import { formatCurrency, formatNumber } from "@/lib/format";
 import {
@@ -8,20 +10,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 type StageBreakdownTableProps = {
   stages: StageEstimate[];
 };
 
 export function StageBreakdownTable({ stages }: StageBreakdownTableProps) {
+  const t = useTranslations();
+
   return (
-    <Table aria-label="Stage-level estimate">
+    <Table aria-label={t("charts.stageLevelEstimate")}>
       <TableHeader>
         <TableRow>
-          <TableHead>Stage</TableHead>
-          <TableHead>Partner hours</TableHead>
-          <TableHead>Associate hours</TableHead>
-          <TableHead>Cost</TableHead>
+          <TableHead>{t("monitoring.stage")}</TableHead>
+          <TableHead>{t("charts.partnerHours")}</TableHead>
+          <TableHead>{t("charts.associateHours")}</TableHead>
+          <TableHead>{t("charts.cost")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

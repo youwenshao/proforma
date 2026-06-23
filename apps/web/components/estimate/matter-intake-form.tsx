@@ -13,6 +13,8 @@ import {
   sleep,
 } from "@/lib/estimate-processing";
 import { saveEstimateForUser, summarizeMatterInput } from "@/lib/estimate-history";
+import { useLocale, useTranslations } from "@/lib/i18n/locale-context";
+import type { TranslationKey } from "@/lib/i18n/en";
 import {
   type MatterFormValues,
   validateMatterInput,
@@ -55,8 +57,10 @@ export function MatterIntakeForm({
   taxonomy,
 }: MatterIntakeFormProps) {
   const router = useRouter();
+  const t = useTranslations();
+  const { locale } = useLocale();
   const [values, setValues] = useState(defaultValues);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, TranslationKey>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -140,10 +144,11 @@ export function MatterIntakeForm({
       }
 
       markEstimateForReveal(estimate.estimate_id);
-      router.push(`/estimate/${estimate.estimate_id}`);
+      const localeParam = locale !== "en" ? `?locale=${locale}` : "";
+      router.push(`/estimate/${estimate.estimate_id}${localeParam}`);
     } catch {
       onProcessingEnd?.();
-      setSubmitError("Unable to create estimate. Confirm the API is available or use mocked mode.");
+      setSubmitError(t("estimate.createFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -153,76 +158,82 @@ export function MatterIntakeForm({
     <form className="space-y-6" onSubmit={handleSubmit}>
       {submitError ? (
         <Alert variant="destructive">
-          <AlertTitle>Estimate request failed</AlertTitle>
+          <AlertTitle>{t("estimate.requestFailed")}</AlertTitle>
           <AlertDescription>{submitError}</AlertDescription>
         </Alert>
       ) : null}
 
       <div className="grid gap-4 md:grid-cols-2">
         <SelectField
-          error={errors.matter_type}
-          label="Matter type"
+          error={errors.matter_type ? t(errors.matter_type) : undefined}
+          label={t("intake.matterType")}
           name="matter_type"
           onChange={handleInputChange}
           options={taxonomy.matter_types}
+          placeholder={t("intake.selectPlaceholder", { label: t("intake.matterType") })}
           value={values.matter_type}
         />
         <SelectField
-          error={errors.matter_subtype}
-          label="Matter subtype"
+          error={errors.matter_subtype ? t(errors.matter_subtype) : undefined}
+          label={t("intake.matterSubtype")}
           name="matter_subtype"
           onChange={handleInputChange}
           options={subtypeOptions}
+          placeholder={t("intake.selectPlaceholder", { label: t("intake.matterSubtype") })}
           value={values.matter_subtype}
         />
         <SelectField
-          error={errors.jurisdiction}
-          label="Jurisdiction"
+          error={errors.jurisdiction ? t(errors.jurisdiction) : undefined}
+          label={t("intake.jurisdiction")}
           name="jurisdiction"
           onChange={handleInputChange}
           options={taxonomy.jurisdictions}
+          placeholder={t("intake.selectPlaceholder", { label: t("intake.jurisdiction") })}
           value={values.jurisdiction}
         />
         <SelectField
-          error={errors.firm_tier}
-          label="Firm tier"
+          error={errors.firm_tier ? t(errors.firm_tier) : undefined}
+          label={t("intake.firmTier")}
           name="firm_tier"
           onChange={handleInputChange}
           options={taxonomy.firm_tiers}
+          placeholder={t("intake.selectPlaceholder", { label: t("intake.firmTier") })}
           value={values.firm_tier}
         />
         <SelectField
-          error={errors.client_type}
-          label="Client type"
+          error={errors.client_type ? t(errors.client_type) : undefined}
+          label={t("intake.clientType")}
           name="client_type"
           onChange={handleInputChange}
           options={taxonomy.client_types}
+          placeholder={t("intake.selectPlaceholder", { label: t("intake.clientType") })}
           value={values.client_type}
         />
         <SelectField
-          error={errors.billing_model}
-          label="Billing model"
+          error={errors.billing_model ? t(errors.billing_model) : undefined}
+          label={t("intake.billingModel")}
           name="billing_model"
           onChange={handleInputChange}
           options={taxonomy.billing_models}
+          placeholder={t("intake.selectPlaceholder", { label: t("intake.billingModel") })}
           value={values.billing_model}
         />
         <NumberField
-          label="Deal value HKD (optional)"
+          label={t("intake.dealValue")}
           name="deal_value_hkd"
           onChange={handleInputChange}
           value={values.deal_value_hkd}
         />
         <NumberField
-          error={errors.document_volume}
-          label="Document volume"
+          error={errors.document_volume ? t(errors.document_volume) : undefined}
+          label={t("intake.documentVolume")}
           name="document_volume"
           onChange={handleInputChange}
           value={values.document_volume}
         />
         <NumberField
-          error={errors.complexity_score}
-          label="Complexity score"
+          error={errors.complexity_score ? t(errors.complexity_score) : undefined}
+          label={t("intake.complexityScore")}
           max={5}
           min={1}
           name="complexity_score"
@@ -230,8 +241,8 @@ export function MatterIntakeForm({
           value={values.complexity_score}
         />
         <NumberField
-          error={errors.party_count}
-          label="Party count"
+          error={errors.party_count ? t(errors.party_count) : undefined}
+          label={t("intake.partyCount")}
           name="party_count"
           onChange={handleInputChange}
           value={values.party_count}
@@ -246,10 +257,10 @@ export function MatterIntakeForm({
             onChange={handleInputChange}
             type="checkbox"
           />
-          Cross-border matter
+          {t("intake.crossBorder")}
         </label>
         {errors.cross_border_flag ? (
-          <p className="text-sm text-destructive">{errors.cross_border_flag}</p>
+          <p className="text-sm text-destructive">{t(errors.cross_border_flag)}</p>
         ) : null}
       </div>
 
@@ -259,7 +270,7 @@ export function MatterIntakeForm({
       />
 
       <Button disabled={isSubmitting} size="lg" type="submit">
-        {isSubmitting ? "Processing…" : "Create estimate"}
+        {isSubmitting ? t("common.processing") : t("intake.createEstimate")}
       </Button>
     </form>
   );
@@ -271,10 +282,11 @@ type SelectFieldProps = {
   name: keyof MatterFormValues;
   onChange: (event: ChangeEvent<HTMLSelectElement>) => void;
   options: readonly string[];
+  placeholder: string;
   value: string;
 };
 
-function SelectField({ error, label, name, onChange, options, value }: SelectFieldProps) {
+function SelectField({ error, label, name, onChange, options, placeholder, value }: SelectFieldProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
@@ -286,7 +298,7 @@ function SelectField({ error, label, name, onChange, options, value }: SelectFie
           onChange={onChange}
           value={value}
         >
-          <option value="">Select {label.toLowerCase()}</option>
+          <option value="">{placeholder}</option>
           {options.map((option) => (
             <option key={option} value={option}>
               {option}

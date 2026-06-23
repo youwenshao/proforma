@@ -1,6 +1,7 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { SavedResultsView } from "@/components/results/saved-results-view";
 import { sampleEstimate } from "@/lib/api/fixtures";
+import { renderWithLocale } from "./render-with-locale";
 
 describe("saved results view", () => {
   beforeEach(() => {
@@ -8,7 +9,7 @@ describe("saved results view", () => {
   });
 
   it("asks users to sign in before showing browser-local history", () => {
-    render(<SavedResultsView />);
+    renderWithLocale(<SavedResultsView />);
 
     expect(screen.getByRole("heading", { name: /sign in to view saved results/i })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /sign in/i })).toHaveAttribute("href", "/login");
@@ -36,7 +37,7 @@ describe("saved results view", () => {
       ]),
     );
 
-    render(<SavedResultsView />);
+    renderWithLocale(<SavedResultsView />);
 
     const card = screen.getByRole("article", { name: /litigation estimate/i });
     expect(within(card).getByText(/debt recovery/i)).toBeInTheDocument();

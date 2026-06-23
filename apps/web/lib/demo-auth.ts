@@ -5,7 +5,7 @@ export type DemoSession = {
 
 export type EmailValidationResult =
   | { ok: true }
-  | { ok: false; message: string; suggestion?: string };
+  | { ok: false; messageKey: "validation.emailInvalid" | "validation.emailDomainTypo"; suggestion?: string };
 
 export type PasswordStrength = {
   feedback: string;
@@ -44,7 +44,7 @@ export function validateDemoEmail(email: string): EmailValidationResult {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
     return {
       ok: false,
-      message: "Enter an email address with an @ sign and a domain.",
+      messageKey: "validation.emailInvalid",
     };
   }
 
@@ -52,7 +52,7 @@ export function validateDemoEmail(email: string): EmailValidationResult {
   if (suggestion) {
     return {
       ok: false,
-      message: "That email domain looks mistyped.",
+      messageKey: "validation.emailDomainTypo",
       suggestion,
     };
   }

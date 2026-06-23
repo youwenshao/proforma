@@ -11,7 +11,7 @@ describe("demo auth helpers", () => {
     expect(validateDemoEmail("partner@example.com")).toEqual({ ok: true });
     expect(validateDemoEmail("partner.example.com")).toEqual({
       ok: false,
-      message: "Enter an email address with an @ sign and a domain.",
+      messageKey: "validation.emailInvalid",
     });
   });
 

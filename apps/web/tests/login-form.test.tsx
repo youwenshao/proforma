@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LoginForm } from "@/components/auth/login-form";
+import { renderWithLocale } from "./render-with-locale";
 
 describe("demo login form", () => {
   beforeEach(() => {
@@ -8,7 +9,7 @@ describe("demo login form", () => {
   });
 
   it("catches common email domain typos before sign in", async () => {
-    render(<LoginForm />);
+    renderWithLocale(<LoginForm />);
 
     await userEvent.type(screen.getByLabelText(/email/i), "alex@gmai.com");
     await userEvent.type(screen.getByLabelText(/password/i), "CorrectHorseStaple42!");
@@ -19,7 +20,7 @@ describe("demo login form", () => {
   });
 
   it("stores only the demo email session after successful sign in", async () => {
-    render(<LoginForm />);
+    renderWithLocale(<LoginForm />);
 
     await userEvent.type(screen.getByLabelText(/email/i), "Partner@Example.COM");
     await userEvent.type(screen.getByLabelText(/password/i), "CorrectHorseStaple42!");

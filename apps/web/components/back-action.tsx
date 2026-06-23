@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { LocalizedLink } from "@/components/localized-link";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -10,10 +12,10 @@ type BackActionProps = {
 export function BackAction({ href, label }: BackActionProps) {
   return (
     <Button asChild variant="ghost">
-      <Link href={href}>
+      <LocalizedLink href={href}>
         <ArrowLeft aria-hidden="true" />
         {label}
-      </Link>
+      </LocalizedLink>
     </Button>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { LocalizedLink } from "@/components/localized-link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
@@ -13,8 +13,8 @@ import {
   PanelTopClose,
 } from "lucide-react";
 import { useMemo } from "react";
-import { estimatePasswordStrength, validateDemoEmail } from "@/lib/demo-auth";
 import { signOutAppSession, useAppSession } from "@/lib/auth/session";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
@@ -28,12 +28,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const navItems = [
-  { href: "/estimate/new", icon: FilePlus2, label: "New estimate" },
-  { href: "/results", icon: History, label: "Results" },
-  { href: "/models", icon: Brain, label: "Model evidence" },
-];
-
 type AppShellProps = {
   children: React.ReactNode;
 };
@@ -41,6 +35,16 @@ type AppShellProps = {
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const session = useAppSession();
+  const t = useTranslations();
+
+  const navItems = useMemo(
+    () => [
+      { href: "/estimate/new", icon: FilePlus2, label: t("nav.newEstimate") },
+      { href: "/results", icon: History, label: t("nav.results") },
+      { href: "/models", icon: Brain, label: t("nav.modelEvidence") },
+    ],
+    [t],
+  );
 
   const userLabel = useMemo(() => {
     if (!session) {
@@ -54,7 +58,7 @@ export function AppShell({ children }: AppShellProps) {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link aria-label="ProForma home" className="flex items-center gap-3" href="/">
+          <LocalizedLink aria-label={t("nav.proformaHome")} className="flex items-center gap-3" href="/">
             <span className="flex h-9 w-9 items-center justify-center">
               <Image
                 alt="ProForma"
@@ -64,9 +68,9 @@ export function AppShell({ children }: AppShellProps) {
                 width={24}
               />
             </span>
-          </Link>
+          </LocalizedLink>
 
-          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+          <nav aria-label={t("nav.primary")} className="hidden items-center gap-1 md:flex">
             {navItems.map((item) => {
               const Icon = item.icon;
 
@@ -77,10 +81,10 @@ export function AppShell({ children }: AppShellProps) {
                   key={item.href}
                   variant="ghost"
                 >
-                  <Link href={item.href}>
+                  <LocalizedLink href={item.href}>
                     <Icon aria-hidden="true" />
                     {item.label}
-                  </Link>
+                  </LocalizedLink>
                 </Button>
               );
             })}
@@ -99,22 +103,22 @@ export function AppShell({ children }: AppShellProps) {
                   variant="outline"
                 >
                   <LogOut aria-hidden="true" />
-                  Sign out
+                  {t("nav.signOut")}
                 </Button>
               </>
             ) : (
               <Button asChild variant="outline">
-                <Link href="/login">
+                <LocalizedLink href="/login">
                   <LogIn aria-hidden="true" />
-                  Sign in
-                </Link>
+                  {t("nav.signIn")}
+                </LocalizedLink>
               </Button>
             )}
           </div>
 
           <Sheet>
             <SheetTrigger asChild>
-              <Button aria-label="Open navigation" className="md:hidden" size="icon" variant="outline">
+              <Button aria-label={t("nav.openNavigation")} className="md:hidden" size="icon" variant="outline">
                 <Menu />
               </Button>
             </SheetTrigger>
@@ -122,21 +126,21 @@ export function AppShell({ children }: AppShellProps) {
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
                   <PanelTopClose className="h-4 w-4" />
-                  Navigation
+                  {t("nav.navigation")}
                 </SheetTitle>
-                <SheetDescription>Move between the main ProForma workflows.</SheetDescription>
+                <SheetDescription>{t("nav.navigationDescription")}</SheetDescription>
               </SheetHeader>
-              <nav aria-label="Mobile primary" className="grid gap-2 px-4">
+              <nav aria-label={t("nav.mobilePrimary")} className="grid gap-2 px-4">
                 {navItems.map((item) => {
                   const Icon = item.icon;
 
                   return (
                     <SheetClose asChild key={item.href}>
                       <Button asChild className="justify-start" variant="ghost">
-                        <Link href={item.href}>
+                        <LocalizedLink href={item.href}>
                           <Icon aria-hidden="true" />
                           {item.label}
-                        </Link>
+                        </LocalizedLink>
                       </Button>
                     </SheetClose>
                   );
@@ -151,14 +155,14 @@ export function AppShell({ children }: AppShellProps) {
                       variant="outline"
                     >
                       <LogOut aria-hidden="true" />
-                      Sign out
+                      {t("nav.signOut")}
                     </Button>
                   ) : (
                     <Button asChild className="justify-start" variant="outline">
-                      <Link href="/login">
+                      <LocalizedLink href="/login">
                         <LogIn aria-hidden="true" />
-                        Sign in
-                      </Link>
+                        {t("nav.signIn")}
+                      </LocalizedLink>
                     </Button>
                   )}
                 </SheetClose>

@@ -1,23 +1,21 @@
-const steps = [
-  {
-    label: "Structured facts",
-    text: "Matter type, jurisdiction, complexity, parties, documents, and billing model.",
-  },
-  {
-    label: "Model version",
-    text: "The current feasibility model applies synthetic-data patterns and calibration.",
-  },
-  {
-    label: "Estimate range",
-    text: "Users see low, typical, and high outcomes instead of a single false-precision number.",
-  },
-  {
-    label: "Partner decision",
-    text: "A responsible partner reviews the evidence before any client-facing price.",
-  },
-];
+"use client";
+
+import { useMemo } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export function ModelFlowDiagram() {
+  const t = useTranslations();
+
+  const steps = useMemo(
+    () => [
+      { label: t("charts.structuredFacts"), text: t("charts.structuredFactsText") },
+      { label: t("charts.modelVersionStep"), text: t("charts.modelVersionText") },
+      { label: t("charts.estimateRange"), text: t("charts.estimateRangeText") },
+      { label: t("charts.partnerDecision"), text: t("charts.partnerDecisionText") },
+    ],
+    [t],
+  );
+
   return (
     <ol className="grid gap-3 md:grid-cols-4">
       {steps.map((step, index) => (

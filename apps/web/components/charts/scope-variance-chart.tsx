@@ -9,23 +9,31 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-const chartConfig = {
-  predictedHours: {
-    label: "Predicted hours",
-    color: "var(--chart-2)",
-  },
-  actualHours: {
-    label: "Actual hours",
-    color: "var(--chart-4)",
-  },
-} satisfies ChartConfig;
+import { useTranslations } from "@/lib/i18n/locale-context";
+import { useMemo } from "react";
 
 type ScopeVarianceChartProps = {
   stages: StageEstimate[];
 };
 
 export function ScopeVarianceChart({ stages }: ScopeVarianceChartProps) {
+  const t = useTranslations();
+
+  const chartConfig = useMemo(
+    () =>
+      ({
+        predictedHours: {
+          label: t("charts.predictedHours"),
+          color: "var(--chart-2)",
+        },
+        actualHours: {
+          label: t("charts.actualHours"),
+          color: "var(--chart-4)",
+        },
+      }) satisfies ChartConfig,
+    [t],
+  );
+
   return (
     <ChartContainer config={chartConfig} className="h-72 w-full">
       <BarChart accessibilityLayer data={buildVarianceData(stages)} margin={{ left: 8, right: 8 }}>

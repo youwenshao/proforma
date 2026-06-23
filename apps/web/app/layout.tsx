@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppShell } from "@/components/app-shell";
+import { LocaleRoot } from "@/components/locale-root";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
@@ -39,7 +40,9 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col">
         <TooltipProvider>
-          <AppShell>{children}</AppShell>
+          <LocaleRoot>
+            <AppShell>{children}</AppShell>
+          </LocaleRoot>
         </TooltipProvider>
       </body>
     </html>

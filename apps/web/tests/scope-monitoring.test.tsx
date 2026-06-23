@@ -1,8 +1,9 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ScopeMonitoringDashboard } from "@/components/monitoring/scope-monitoring-dashboard";
 import { StageUpdateForm } from "@/components/monitoring/stage-update-form";
 import { sampleEstimate } from "@/lib/api/fixtures";
+import { renderWithLocale } from "./render-with-locale";
 
 describe("scope monitoring dashboard", () => {
   beforeEach(() => {
@@ -27,7 +28,7 @@ describe("scope monitoring dashboard", () => {
   });
 
   it("shows warning and critical variance states", () => {
-    render(<ScopeMonitoringDashboard estimate={sampleEstimate} />);
+    renderWithLocale(<ScopeMonitoringDashboard estimate={sampleEstimate} />);
 
     expect(screen.getAllByText(/warning/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/critical/i).length).toBeGreaterThan(0);
@@ -37,13 +38,13 @@ describe("scope monitoring dashboard", () => {
   });
 
   it("does not render confidential free-text notes by default", () => {
-    render(<StageUpdateForm estimateId={sampleEstimate.estimate_id} stages={sampleEstimate.stage_estimates} />);
+    renderWithLocale(<StageUpdateForm estimateId={sampleEstimate.estimate_id} stages={sampleEstimate.stage_estimates} />);
 
     expect(screen.queryByLabelText(/notes/i)).not.toBeInTheDocument();
   });
 
   it("posts structured updates to the scope monitoring endpoint", async () => {
-    render(<StageUpdateForm estimateId={sampleEstimate.estimate_id} stages={sampleEstimate.stage_estimates} />);
+    renderWithLocale(<StageUpdateForm estimateId={sampleEstimate.estimate_id} stages={sampleEstimate.stage_estimates} />);
 
     await userEvent.selectOptions(screen.getByLabelText(/stage name/i), "Case Assessment");
     await userEvent.clear(screen.getByLabelText(/actual partner hours/i));

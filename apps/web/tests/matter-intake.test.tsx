@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MatterIntakeForm } from "@/components/estimate/matter-intake-form";
 import { syntheticTaxonomy } from "@/lib/api/fixtures";
@@ -6,6 +6,7 @@ import {
   REVEAL_ESTIMATE_SESSION_KEY,
   getRandomProcessingDelayMs,
 } from "@/lib/estimate-processing";
+import { renderWithLocale } from "./render-with-locale";
 
 const push = vi.fn();
 
@@ -19,13 +20,12 @@ vi.mock("@/lib/estimate-processing", async (importOriginal) => {
 });
 
 vi.mock("next/navigation", async () => {
-  const actual =
-    await vi.importActual<typeof import("next/navigation")>("next/navigation");
+  const { testSearchParams } = await import("./setup");
 
   return {
-    ...actual,
     useRouter: () => ({ push, replace: vi.fn() }),
-    useSearchParams: () => new URLSearchParams(),
+    usePathname: () => "/",
+    useSearchParams: () => testSearchParams,
   };
 });
 
@@ -50,7 +50,7 @@ describe("matter intake workflow", () => {
   });
 
   it("shows required field errors", async () => {
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await userEvent.click(screen.getByRole("button", { name: /create estimate/i }));
 
@@ -60,7 +60,7 @@ describe("matter intake workflow", () => {
   });
 
   it("updates matter subtype options after matter type selection", async () => {
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await userEvent.selectOptions(screen.getByLabelText(/matter type/i), "Litigation");
 
@@ -71,7 +71,7 @@ describe("matter intake workflow", () => {
   });
 
   it("rejects an HK-only matter marked as cross-border", async () => {
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await userEvent.selectOptions(screen.getByLabelText(/matter type/i), "Litigation");
     await userEvent.selectOptions(screen.getByLabelText(/matter subtype/i), "Debt Recovery");
@@ -94,7 +94,7 @@ describe("matter intake workflow", () => {
   });
 
   it("auto-marks cross-border matters when a cross-border jurisdiction is selected", async () => {
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await userEvent.selectOptions(screen.getByLabelText(/matter type/i), "Litigation");
     await userEvent.selectOptions(screen.getByLabelText(/matter subtype/i), "Debt Recovery");
@@ -107,7 +107,7 @@ describe("matter intake workflow", () => {
   });
 
   it("posts a valid matter to the estimates API", async () => {
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await fillValidMatter();
     await userEvent.click(screen.getByRole("button", { name: /create estimate/i }));
@@ -136,7 +136,7 @@ describe("matter intake workflow", () => {
   });
 
   it("waits for dissolve and processing before navigating", async () => {
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await fillValidMatter();
 
@@ -158,7 +158,7 @@ describe("matter intake workflow", () => {
     const onProcessingStart = vi.fn();
     const onDissolveComplete = vi.fn();
 
-    render(
+    renderWithLocale(
       <MatterIntakeForm
         onDissolveComplete={onDissolveComplete}
         onProcessingStart={onProcessingStart}
@@ -181,7 +181,7 @@ describe("matter intake workflow", () => {
         signedInAt: "2026-06-22T08:00:00.000Z",
       }),
     );
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await fillValidMatter();
     await userEvent.click(screen.getByRole("button", { name: /create estimate/i }));
@@ -199,7 +199,7 @@ describe("matter intake workflow", () => {
   });
 
   it("sends deal value for transactional matter types", async () => {
-    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+    renderWithLocale(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
     await userEvent.selectOptions(screen.getByLabelText(/matter type/i), "M&A");
     await userEvent.selectOptions(screen.getByLabelText(/matter subtype/i), "Share Acquisition - Private");

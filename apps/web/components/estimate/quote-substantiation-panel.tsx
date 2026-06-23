@@ -1,9 +1,12 @@
+"use client";
+
 import type { QuoteSubstantiation } from "@/lib/api/types";
 import { formatCurrency } from "@/lib/format";
 import { StageCostShareChart } from "@/components/charts/stage-cost-share-chart";
 import { VarianceDistributionChart } from "@/components/charts/variance-distribution-chart";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { QuotePackActions } from "./quote-pack-actions";
 
 type QuoteSubstantiationPanelProps = {
@@ -11,6 +14,7 @@ type QuoteSubstantiationPanelProps = {
 };
 
 export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiationPanelProps) {
+  const t = useTranslations();
   const segment = substantiation.benchmark_segment;
 
   const riskMetrics = substantiation.metrics.filter((m) =>
@@ -31,14 +35,18 @@ export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiation
       <CardHeader>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">Partner preview</p>
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
+              {t("quote.partnerPreview")}
+            </p>
             <CardTitle>
-              <h2>Quote substantiation pack</h2>
+              <h2>{t("quote.title")}</h2>
             </CardTitle>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge>{segment.segment_label}</Badge>
-            <Badge variant="outline">{segment.sample_size} comparable matters</Badge>
+            <Badge variant="outline">
+              {t("quote.comparableMatters", { count: segment.sample_size })}
+            </Badge>
             <QuotePackActions estimateId={substantiation.estimate_id} />
           </div>
         </div>
@@ -46,9 +54,9 @@ export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiation
 
       <CardContent className="space-y-6 text-sm">
         {riskMetrics.length > 0 && (
-          <section aria-label="Risk metrics">
+          <section aria-label={t("quote.riskMetricsAria")}>
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-              Historical risk indicators
+              {t("quote.riskMetrics")}
             </p>
             <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {riskMetrics.map((metric) => (
@@ -59,9 +67,9 @@ export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiation
         )}
 
         {benchmarkMetrics.length > 0 && (
-          <section aria-label="Benchmark metrics">
+          <section aria-label={t("quote.benchmarkMetricsAria")}>
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-              Comparable matter benchmarks
+              {t("quote.benchmarkMetrics")}
             </p>
             <dl className="grid gap-3 sm:grid-cols-2">
               {benchmarkMetrics.map((metric) => (
@@ -80,9 +88,9 @@ export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiation
         )}
 
         {(varianceSpec || stageShareSpec) && (
-          <section aria-label="Historical charts">
+          <section aria-label={t("quote.historicalChartsAria")}>
             <p className="mb-3 text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-              Historical distribution
+              {t("quote.historicalDistribution")}
             </p>
             <div className="grid gap-4 md:grid-cols-2">
               {varianceSpec && (
@@ -105,7 +113,7 @@ export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiation
 
         {substantiation.assumptions_and_guardrails.length > 0 && (
           <div className="rounded-lg border border-border bg-muted/40 p-4">
-            <p className="font-medium">Assumptions and guardrails</p>
+            <p className="font-medium">{t("quote.assumptionsGuardrails")}</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
               {substantiation.assumptions_and_guardrails.map((guardrail) => (
                 <li key={guardrail}>{guardrail}</li>
@@ -119,7 +127,9 @@ export function QuoteSubstantiationPanel({ substantiation }: QuoteSubstantiation
             <p key={line}>{line}</p>
           ))}
           {substantiation.snapshot_checksum && (
-            <p className="font-mono">Checksum: {substantiation.snapshot_checksum}</p>
+            <p className="font-mono">
+              {t("quote.checksum", { value: substantiation.snapshot_checksum })}
+            </p>
           )}
         </div>
       </CardContent>

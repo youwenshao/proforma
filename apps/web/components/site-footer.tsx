@@ -1,21 +1,17 @@
 "use client";
 
-import Link from "next/link";
+import { LocalizedLink } from "@/components/localized-link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { resolveLocale, type Locale } from "@/lib/i18n/locales";
-
-const footerLinks = [
-  { href: "/estimate/new", label: "New estimate" },
-  { href: "/results", label: "Results" },
-  { href: "/models", label: "Model evidence" },
-];
 
 function LanguageToggle() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeLocale = resolveLocale(searchParams.get("locale"));
+  const t = useTranslations();
 
   function selectLocale(locale: Locale) {
     const nextParams = new URLSearchParams(searchParams.toString());
@@ -24,7 +20,7 @@ function LanguageToggle() {
   }
 
   return (
-    <span aria-label="Interface language" className="inline-flex items-center gap-1.5 text-sm">
+    <span aria-label={t("language.label")} className="inline-flex items-center gap-1.5 text-sm">
       <button
         aria-pressed={activeLocale === "en"}
         className={`transition-colors ${activeLocale === "en" ? "text-white" : "text-white/50 hover:text-white/80"}`}
@@ -46,7 +42,18 @@ function LanguageToggle() {
   );
 }
 
-export function SiteFooter() {
+function SiteFooterContent() {
+  const t = useTranslations();
+
+  const footerLinks = useMemo(
+    () => [
+      { href: "/estimate/new", label: t("nav.newEstimate") },
+      { href: "/results", label: t("nav.results") },
+      { href: "/models", label: t("nav.modelEvidence") },
+    ],
+    [t],
+  );
+
   return (
     <footer className="bg-[#0f1117] text-white/70" role="contentinfo">
       <div className="mx-auto max-w-7xl px-6 py-10">
@@ -65,8 +72,7 @@ export function SiteFooter() {
               </span>
             </div>
             <p className="max-w-md text-sm leading-relaxed">
-              Feasibility-stage pricing intelligence for Hong Kong legal teams.
-              This demo does not approve legal, regulatory, or client-facing fee decisions.
+              {t("footer.tagline")} {t("footer.disclaimer")}
             </p>
             <div className="flex items-center gap-4 text-sm">
               <span className="text-white/50">Sentimento Technologies Limited</span>
@@ -82,13 +88,13 @@ export function SiteFooter() {
           <div className="flex flex-col items-start gap-4 sm:items-end">
             <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
               {footerLinks.map((link) => (
-                <Link
+                <LocalizedLink
                   className="text-white/50 transition-colors hover:text-white"
                   href={link.href}
                   key={link.href}
                 >
                   {link.label}
-                </Link>
+                </LocalizedLink>
               ))}
             </nav>
             <Suspense fallback={null}>
@@ -98,5 +104,13 @@ export function SiteFooter() {
         </div>
       </div>
     </footer>
+  );
+}
+
+export function SiteFooter() {
+  return (
+    <Suspense fallback={null}>
+      <SiteFooterContent />
+    </Suspense>
   );
 }

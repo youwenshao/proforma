@@ -9,19 +9,27 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-const chartConfig = {
-  sharePct: {
-    label: "Share of matters (%)",
-    color: "var(--chart-3)",
-  },
-} satisfies ChartConfig;
+import { useTranslations } from "@/lib/i18n/locale-context";
+import { useMemo } from "react";
 
 type VarianceDistributionChartProps = {
   spec: QuotePackChartSpec;
 };
 
 export function VarianceDistributionChart({ spec }: VarianceDistributionChartProps) {
+  const t = useTranslations();
+
+  const chartConfig = useMemo(
+    () =>
+      ({
+        sharePct: {
+          label: t("charts.shareOfMatters"),
+          color: "var(--chart-3)",
+        },
+      }) satisfies ChartConfig,
+    [t],
+  );
+
   return (
     <ChartContainer config={chartConfig} className="h-48 w-full">
       <BarChart

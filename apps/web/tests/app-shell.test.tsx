@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { AppShell } from "@/components/app-shell";
+import { renderWithLocale } from "./render-with-locale";
 
 describe("app shell navigation", () => {
   beforeEach(() => {
@@ -7,7 +8,7 @@ describe("app shell navigation", () => {
   });
 
   it("exposes every primary workflow through navigation", () => {
-    render(
+    renderWithLocale(
       <AppShell>
         <main>Dashboard content</main>
       </AppShell>,
@@ -28,8 +29,25 @@ describe("app shell navigation", () => {
     expect(screen.getByRole("link", { name: /sign in/i })).toHaveAttribute("href", "/login");
   });
 
+  it("renders Traditional Chinese navigation when locale is zh-Hant", () => {
+    renderWithLocale(
+      <AppShell>
+        <main>Dashboard content</main>
+      </AppShell>,
+      "zh-Hant",
+    );
+
+    const nav = screen.getByRole("navigation", { name: "主要導覽" });
+
+    expect(within(nav).getByRole("link", { name: /新增估算/i })).toHaveAttribute(
+      "href",
+      "/estimate/new?locale=zh-Hant",
+    );
+    expect(within(nav).queryByRole("link", { name: /new estimate/i })).not.toBeInTheDocument();
+  });
+
   it("keeps the nav logo minimal without a bordered container", () => {
-    render(
+    renderWithLocale(
       <AppShell>
         <main>Dashboard content</main>
       </AppShell>,
@@ -41,7 +59,7 @@ describe("app shell navigation", () => {
   });
 
   it("renders the Sentimento company footer", () => {
-    render(
+    renderWithLocale(
       <AppShell>
         <main>Dashboard content</main>
       </AppShell>,

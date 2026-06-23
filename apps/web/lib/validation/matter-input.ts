@@ -1,4 +1,5 @@
 import type { MatterInput, Taxonomy } from "@/lib/api/types";
+import type { TranslationKey } from "@/lib/i18n/en";
 
 export type MatterFormValues = {
   matter_type: string;
@@ -17,7 +18,7 @@ export type MatterFormValues = {
 
 export type MatterValidationResult =
   | { ok: true; value: MatterInput }
-  | { ok: false; errors: Record<string, string> };
+  | { ok: false; errors: Record<string, TranslationKey> };
 
 const dealValueMatterTypes = new Set([
   "M&A",
@@ -30,61 +31,59 @@ export function validateMatterInput(
   values: MatterFormValues,
   taxonomy: Taxonomy,
 ): MatterValidationResult {
-  const errors: Record<string, string> = {};
+  const errors: Record<string, TranslationKey> = {};
 
   if (!values.matter_type) {
-    errors.matter_type = "Matter type is required.";
+    errors.matter_type = "validation.matterTypeRequired";
   }
 
   if (!values.matter_subtype) {
-    errors.matter_subtype = "Matter subtype is required.";
+    errors.matter_subtype = "validation.matterSubtypeRequired";
   }
 
   if (!values.jurisdiction) {
-    errors.jurisdiction = "Jurisdiction is required.";
+    errors.jurisdiction = "validation.jurisdictionRequired";
   }
 
   if (!values.firm_tier) {
-    errors.firm_tier = "Firm tier is required.";
+    errors.firm_tier = "validation.firmTierRequired";
   }
 
   if (!values.client_type) {
-    errors.client_type = "Client type is required.";
+    errors.client_type = "validation.clientTypeRequired";
   }
 
   if (!values.billing_model) {
-    errors.billing_model = "Billing model is required.";
+    errors.billing_model = "validation.billingModelRequired";
   }
 
   const documentVolume = Number(values.document_volume);
   if (!Number.isFinite(documentVolume) || documentVolume <= 0) {
-    errors.document_volume = "Document volume must be positive.";
+    errors.document_volume = "validation.documentVolumePositive";
   }
 
   const partyCount = Number(values.party_count);
   if (!Number.isFinite(partyCount) || partyCount <= 0) {
-    errors.party_count = "Party count must be positive.";
+    errors.party_count = "validation.partyCountPositive";
   }
 
   const complexityScore = Number(values.complexity_score);
   if (!Number.isInteger(complexityScore) || complexityScore < 1 || complexityScore > 5) {
-    errors.complexity_score = "Complexity score must be between 1 and 5.";
+    errors.complexity_score = "validation.complexityScoreRange";
   }
 
   if (values.jurisdiction === "HK Only" && values.cross_border_flag) {
-    errors.cross_border_flag =
-      "Cross-border matters must use a cross-border jurisdiction.";
+    errors.cross_border_flag = "validation.crossBorderJurisdiction";
   }
 
   if (values.jurisdiction && values.jurisdiction !== "HK Only" && !values.cross_border_flag) {
-    errors.cross_border_flag =
-      "This jurisdiction requires the matter to be marked as cross-border.";
+    errors.cross_border_flag = "validation.crossBorderRequired";
   }
 
   const allowedSubtypes =
     taxonomy.subtypes_by_matter_type[values.matter_type as keyof Taxonomy["subtypes_by_matter_type"]] ?? [];
   if (values.matter_subtype && !allowedSubtypes.includes(values.matter_subtype)) {
-    errors.matter_subtype = "Matter subtype must belong to the selected matter type.";
+    errors.matter_subtype = "validation.matterSubtypeMismatch";
   }
 
   if (Object.keys(errors).length > 0) {

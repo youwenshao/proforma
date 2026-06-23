@@ -3,12 +3,14 @@
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 type EstimateReferenceProps = {
   referenceId: string;
 };
 
 export function EstimateReference({ referenceId }: EstimateReferenceProps) {
+  const t = useTranslations();
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -23,9 +25,9 @@ export function EstimateReference({ referenceId }: EstimateReferenceProps) {
 
   return (
     <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
-      <span>Reference {referenceId}</span>
+      <span>{t("reference.label", { id: referenceId })}</span>
       <Button
-        aria-label={copied ? "Reference code copied" : "Copy reference code"}
+        aria-label={copied ? t("reference.copied") : t("reference.copy")}
         className="text-muted-foreground"
         onClick={handleCopy}
         size="icon-xs"

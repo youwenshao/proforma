@@ -44,6 +44,16 @@ describe("bilingual translation catalog", () => {
     }
   });
 
+  it("has no empty Traditional Chinese values", async () => {
+    expectI18nFilesToExist();
+
+    const { zhHant } = await loadI18nModules();
+
+    for (const [key, value] of Object.entries(zhHant.zhHantMessages)) {
+      expect(value.trim(), key).not.toBe("");
+    }
+  });
+
   it("marks Traditional Chinese strings as draft pending legal proofreading", async () => {
     expectI18nFilesToExist();
 
@@ -63,5 +73,15 @@ describe("bilingual translation catalog", () => {
     expect(() =>
       translator.translate("en", "missing.key", { allowFallback: false }),
     ).toThrow(/Missing translation/);
+  });
+
+  it("interpolates template values", async () => {
+    expectI18nFilesToExist();
+
+    const { en } = await loadI18nModules();
+
+    expect(
+      en.interpolate("Hello {name}", { name: "World" }),
+    ).toBe("Hello World");
   });
 });

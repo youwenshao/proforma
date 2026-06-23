@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import LoginPage from "@/app/login/page";
+import { renderWithLocale } from "./render-with-locale";
 
 describe("login page layout", () => {
   it("uses a desktop two-column login layout with the sign-in panel on the right", () => {
-    render(<LoginPage />);
+    renderWithLocale(<LoginPage />);
 
     const layout = screen.getByTestId("login-page-layout");
     expect(layout).toHaveClass("md:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]");
@@ -19,7 +20,7 @@ describe("login page layout", () => {
   });
 
   it("uses the fixed login aurora background", () => {
-    render(<LoginPage />);
+    renderWithLocale(<LoginPage />);
 
     expect(screen.getByTestId("login-aurora-background")).toHaveStyle({
       "--aurora-image": 'url("/auroras/background-4.jpg")',

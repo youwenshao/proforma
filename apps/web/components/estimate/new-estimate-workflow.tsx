@@ -7,6 +7,7 @@ import { EstimateProcessingOverlay } from "@/components/estimate/estimate-proces
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Taxonomy } from "@/lib/api/types";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { cn } from "@/lib/utils";
 
 type ProcessingPhase = "idle" | "dissolving" | "processing";
@@ -16,6 +17,7 @@ type NewEstimateWorkflowProps = {
 };
 
 export function NewEstimateWorkflow({ taxonomy }: NewEstimateWorkflowProps) {
+  const t = useTranslations();
   const [phase, setPhase] = useState<ProcessingPhase>("idle");
 
   function handleProcessingStart() {
@@ -39,22 +41,19 @@ export function NewEstimateWorkflow({ taxonomy }: NewEstimateWorkflowProps) {
             (phase === "dissolving" || phase === "processing") && "animate-dissolve-out",
           )}
         >
-          <BackAction href="/" label="Home" />
+          <BackAction href="/" label={t("nav.home")} />
           <div className="space-y-3">
             <p className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
-              Matter intake
+              {t("estimate.matterIntake")}
             </p>
             <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">
-              Describe the matter in structured facts.
+              {t("estimate.describeMatter")}
             </h1>
-            <p className="max-w-3xl text-muted-foreground">
-              Use dropdowns and numbers instead of confidential free text. These facts become the
-              basis for the cost range, duration range, fee guardrails, and scope-growth warning.
-            </p>
+            <p className="max-w-3xl text-muted-foreground">{t("estimate.describeMatterBody")}</p>
           </div>
           <Card>
             <CardHeader>
-              <CardTitle>Structured matter facts</CardTitle>
+              <CardTitle>{t("estimate.structuredFacts")}</CardTitle>
             </CardHeader>
             <CardContent>
               <MatterIntakeForm
@@ -66,11 +65,8 @@ export function NewEstimateWorkflow({ taxonomy }: NewEstimateWorkflowProps) {
             </CardContent>
           </Card>
           <Alert>
-            <AlertTitle>Decision-support only</AlertTitle>
-            <AlertDescription>
-              This workflow uses synthetic feasibility data. Partner review remains required before
-              any client-facing fee decision.
-            </AlertDescription>
+            <AlertTitle>{t("estimate.decisionSupportOnly")}</AlertTitle>
+            <AlertDescription>{t("estimate.decisionSupportBody")}</AlertDescription>
           </Alert>
         </div>
       </div>

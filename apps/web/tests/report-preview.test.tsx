@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { ReportPreview } from "@/components/marketing/report-preview";
+import { renderWithLocale } from "./render-with-locale";
 
 describe("marketing report preview", () => {
   it("presents a generated report document mockup with pricing evidence", () => {
-    render(<ReportPreview />);
+    renderWithLocale(<ReportPreview />);
 
     expect(screen.getByText(/Generated report preview/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Quote substantiation pack/i })).toBeInTheDocument();

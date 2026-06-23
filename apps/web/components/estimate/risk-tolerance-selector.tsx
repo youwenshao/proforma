@@ -1,28 +1,32 @@
-import type { ChangeEvent } from "react";
+"use client";
 
-const options = [
+import type { ChangeEvent } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
+import type { TranslationKey } from "@/lib/i18n/en";
+
+const optionKeys = [
   {
     apiValue: "conservative",
     formValue: "Low",
-    label: "Conservative",
-    description: "Favor wider downside protection and partner review.",
+    labelKey: "riskTolerance.conservative" as TranslationKey,
+    descriptionKey: "riskTolerance.conservativeDesc" as TranslationKey,
   },
   {
     apiValue: "balanced",
     formValue: "Medium",
-    label: "Balanced",
-    description: "Use the central interval for a feasibility recommendation.",
+    labelKey: "riskTolerance.balanced" as TranslationKey,
+    descriptionKey: "riskTolerance.balancedDesc" as TranslationKey,
   },
   {
     apiValue: "aggressive",
     formValue: "High",
-    label: "Aggressive",
-    description: "Accept more downside risk for price competitiveness.",
+    labelKey: "riskTolerance.aggressive" as TranslationKey,
+    descriptionKey: "riskTolerance.aggressiveDesc" as TranslationKey,
   },
 ] as const;
 
-export type FormRiskTolerance = (typeof options)[number]["formValue"];
-export type ApiRiskTolerance = (typeof options)[number]["apiValue"];
+export type FormRiskTolerance = (typeof optionKeys)[number]["formValue"];
+export type ApiRiskTolerance = (typeof optionKeys)[number]["apiValue"];
 
 type RiskToleranceSelectorProps = {
   value: FormRiskTolerance;
@@ -30,19 +34,21 @@ type RiskToleranceSelectorProps = {
 };
 
 export function toApiRiskTolerance(value: FormRiskTolerance): ApiRiskTolerance {
-  return options.find((option) => option.formValue === value)?.apiValue ?? "balanced";
+  return optionKeys.find((option) => option.formValue === value)?.apiValue ?? "balanced";
 }
 
 export function RiskToleranceSelector({ value, onChange }: RiskToleranceSelectorProps) {
+  const t = useTranslations();
+
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     onChange(event.target.value as FormRiskTolerance);
   }
 
   return (
     <fieldset className="space-y-3">
-      <legend className="text-sm font-medium">Risk tolerance</legend>
+      <legend className="text-sm font-medium">{t("riskTolerance.label")}</legend>
       <div className="grid gap-3 md:grid-cols-3">
-        {options.map((option) => (
+        {optionKeys.map((option) => (
           <label
             className="rounded-lg border border-border p-3 text-sm has-[:checked]:border-primary has-[:checked]:bg-muted"
             key={option.apiValue}
@@ -55,8 +61,8 @@ export function RiskToleranceSelector({ value, onChange }: RiskToleranceSelector
               type="radio"
               value={option.formValue}
             />
-            <span className="font-medium">{option.label}</span>
-            <span className="mt-1 block text-muted-foreground">{option.description}</span>
+            <span className="font-medium">{t(option.labelKey)}</span>
+            <span className="mt-1 block text-muted-foreground">{t(option.descriptionKey)}</span>
           </label>
         ))}
       </div>

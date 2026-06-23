@@ -1,8 +1,9 @@
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EstimateResultsView } from "@/components/estimate/estimate-results-view";
 import { sampleEstimate } from "@/lib/api/fixtures";
 import type { QuoteSubstantiation } from "@/lib/api/types";
+import { renderWithLocale } from "./render-with-locale";
 
 const sampleSubstantiation: QuoteSubstantiation = {
   schema_version: "proforma.quote_pack.v1",
@@ -64,7 +65,7 @@ describe("estimate results and fee recommendation", () => {
       clipboard: { writeText },
     });
 
-    render(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
+    renderWithLocale(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
 
     expect(screen.getByText(`Reference ${sampleEstimate.estimate_id}`)).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: /copy reference code/i }));
@@ -76,7 +77,7 @@ describe("estimate results and fee recommendation", () => {
   });
 
   it("renders low, typical, and high values in order for cost and duration", () => {
-    render(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
+    renderWithLocale(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
 
     const cost = screen.getByRole("region", { name: /cost uncertainty/i });
     expect(within(cost).getAllByText(/low/i).length).toBeGreaterThan(0);
@@ -93,7 +94,7 @@ describe("estimate results and fee recommendation", () => {
   });
 
   it("renders stage estimates in an accessible table", () => {
-    render(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
+    renderWithLocale(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
 
     const table = screen.getByRole("table", { name: /stage-level estimate/i });
     expect(within(table).getByRole("columnheader", { name: /stage/i })).toBeInTheDocument();
@@ -105,7 +106,7 @@ describe("estimate results and fee recommendation", () => {
   });
 
   it("keeps partner decision control and limitations visible", () => {
-    render(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
+    renderWithLocale(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
 
     expect(screen.getAllByText(/decision-support only/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Partner final decision required/i).length).toBeGreaterThan(0);
@@ -117,7 +118,7 @@ describe("estimate results and fee recommendation", () => {
   });
 
   it("renders quote substantiation metrics and chart summaries for partner review", () => {
-    render(
+    renderWithLocale(
       <EstimateResultsView
         estimate={sampleEstimate}
         modelStrategy="synthetic_baseline"
@@ -137,14 +138,14 @@ describe("estimate results and fee recommendation", () => {
   });
 
   it("shows the pooled research legal gate", () => {
-    render(<EstimateResultsView estimate={sampleEstimate} modelStrategy="pooled_research" />);
+    renderWithLocale(<EstimateResultsView estimate={sampleEstimate} modelStrategy="pooled_research" />);
 
     expect(screen.getByText(/legal-gate notice/i)).toBeInTheDocument();
     expect(screen.getByText(/pooled model/i)).toBeInTheDocument();
   });
 
   it("renders a designed missing estimate state", () => {
-    render(<EstimateResultsView estimate={null} modelStrategy="synthetic_baseline" />);
+    renderWithLocale(<EstimateResultsView estimate={null} modelStrategy="synthetic_baseline" />);
 
     expect(screen.getByRole("heading", { name: /estimate not found/i })).toBeInTheDocument();
   });

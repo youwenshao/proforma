@@ -1,13 +1,13 @@
+export const PROCESSING_STATUS_MESSAGE_KEYS = [
+  "processing.analyzing",
+  "processing.calibrating",
+  "processing.building",
+  "processing.preparing",
+] as const;
+
 export const REVEAL_ESTIMATE_SESSION_KEY = "proforma.estimate-reveal";
 
 export const DISSOLVE_DURATION_MS = 500;
-
-export const PROCESSING_STATUS_MESSAGES = [
-  "Analyzing matter facts…",
-  "Calibrating cost ranges…",
-  "Building stage breakdown…",
-  "Preparing fee guardrails…",
-] as const;
 
 export function getRandomProcessingDelayMs(): number {
   return 3000 + Math.floor(Math.random() * 2001);

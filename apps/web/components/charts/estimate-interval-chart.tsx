@@ -9,13 +9,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-const chartConfig = {
-  value: {
-    label: "Estimate",
-    color: "var(--chart-1)",
-  },
-} satisfies ChartConfig;
+import { useTranslations } from "@/lib/i18n/locale-context";
+import { useMemo } from "react";
 
 type EstimateIntervalChartProps = {
   interval: EstimateInterval;
@@ -23,6 +18,19 @@ type EstimateIntervalChartProps = {
 };
 
 export function EstimateIntervalChart({ interval, unit }: EstimateIntervalChartProps) {
+  const t = useTranslations();
+
+  const chartConfig = useMemo(
+    () =>
+      ({
+        value: {
+          label: t("charts.estimate"),
+          color: "var(--chart-1)",
+        },
+      }) satisfies ChartConfig,
+    [t],
+  );
+
   return (
     <ChartContainer config={chartConfig} className="h-44 w-full">
       <LineChart accessibilityLayer data={buildEstimateIntervalData(interval, unit)}>

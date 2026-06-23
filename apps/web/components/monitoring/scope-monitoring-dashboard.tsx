@@ -1,3 +1,5 @@
+"use client";
+
 import type { EstimateResponse } from "@/lib/api/types";
 import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
 import { totalPredictedHours, variancePct as calculateVariancePct } from "@/lib/api/scope-monitoring";
@@ -17,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { VarianceBadge, varianceStatus } from "./variance-badge";
 
 type ScopeMonitoringDashboardProps = {
@@ -24,6 +27,8 @@ type ScopeMonitoringDashboardProps = {
 };
 
 export function ScopeMonitoringDashboard({ estimate }: ScopeMonitoringDashboardProps) {
+  const t = useTranslations();
+
   const rows = estimate.stage_estimates.map((stage, index) => {
     const predictedHours = totalPredictedHours(stage);
     const multiplier = index === 0 ? 1.08 : index === 1 ? 1.18 : 0.98;
@@ -39,10 +44,10 @@ export function ScopeMonitoringDashboard({ estimate }: ScopeMonitoringDashboardP
       predictedHours,
       recommendedReviewAction:
         status === "Critical"
-          ? "Critical variance: partner review required before further fixed-fee work proceeds."
+          ? t("monitoring.actionCritical")
           : status === "Warning"
-            ? "Recommended review action: pricing support should review scope assumptions."
-            : "Continue monitoring against the current estimate.",
+            ? t("monitoring.actionWarning")
+            : t("monitoring.actionOnTrack"),
       stageName: stage.stage_name,
       variancePct,
     };
@@ -61,40 +66,38 @@ export function ScopeMonitoringDashboard({ estimate }: ScopeMonitoringDashboardP
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Scope monitoring dashboard</CardTitle>
-        <CardDescription>
-          Compares synthetic predicted stage effort against structured actual updates.
-        </CardDescription>
+        <CardTitle>{t("monitoring.dashboardTitle")}</CardTitle>
+        <CardDescription>{t("monitoring.dashboardDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <dl className="grid gap-3 text-sm md:grid-cols-3">
           <div className="rounded-lg border border-border p-3">
-            <dt className="text-muted-foreground">Reforecast final cost</dt>
+            <dt className="text-muted-foreground">{t("monitoring.reforecastCost")}</dt>
             <dd className="text-lg font-semibold">{formatCurrency(reforecastFinalCost)}</dd>
           </div>
           <div className="rounded-lg border border-border p-3">
-            <dt className="text-muted-foreground">Reforecast final hours</dt>
+            <dt className="text-muted-foreground">{t("monitoring.reforecastHours")}</dt>
             <dd className="text-lg font-semibold">{formatNumber(reforecastFinalHours, 1)}</dd>
           </div>
           <div className="rounded-lg border border-border p-3">
-            <dt className="text-muted-foreground">Overrun probability</dt>
+            <dt className="text-muted-foreground">{t("monitoring.overrunProbability")}</dt>
             <dd className="text-lg font-semibold">{formatPercent(overrunProbability)}</dd>
           </div>
         </dl>
         <div>
-          <p className="mb-2 text-sm font-medium">Predicted vs actual stage effort</p>
+          <p className="mb-2 text-sm font-medium">{t("monitoring.predictedVsActual")}</p>
           <ScopeVarianceChart stages={estimate.stage_estimates} />
         </div>
-        <Table aria-label="Scope monitoring variance">
+        <Table aria-label={t("monitoring.varianceTable")}>
           <TableHeader>
             <TableRow>
-              <TableHead>Stage</TableHead>
-              <TableHead>Predicted hours</TableHead>
-              <TableHead>Actual hours</TableHead>
-              <TableHead>Predicted cost</TableHead>
-              <TableHead>Actual cost</TableHead>
-              <TableHead>Variance</TableHead>
-              <TableHead>Recommended review action</TableHead>
+              <TableHead>{t("monitoring.stage")}</TableHead>
+              <TableHead>{t("monitoring.predictedHours")}</TableHead>
+              <TableHead>{t("monitoring.actualHours")}</TableHead>
+              <TableHead>{t("monitoring.predictedCost")}</TableHead>
+              <TableHead>{t("monitoring.actualCost")}</TableHead>
+              <TableHead>{t("monitoring.variance")}</TableHead>
+              <TableHead>{t("monitoring.recommendedAction")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

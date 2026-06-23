@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { ModelEvidenceView } from "@/components/models/model-evidence-view";
 import {
   modelCurrentFixture,
@@ -6,9 +6,10 @@ import {
   similarMatterEvidenceFixture,
   strategyComparisonFixture,
 } from "@/lib/api/fixtures";
+import { renderWithLocale } from "./render-with-locale";
 
 function renderModelEvidenceView() {
-  render(
+  renderWithLocale(
     <ModelEvidenceView
       current={modelCurrentFixture}
       evaluation={modelEvaluationFixture}

@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import Home from "@/app/page";
+import { renderWithLocale } from "./render-with-locale";
 
 describe("ProForma dashboard smoke test", () => {
   it("renders the core feasibility dashboard entry points", () => {
-    render(<Home />);
+    renderWithLocale(<Home />);
 
     expect(
       screen.getByRole("heading", { name: /Price legal work with evidence, not guesswork/i }),

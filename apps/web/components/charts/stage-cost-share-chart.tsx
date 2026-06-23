@@ -9,19 +9,27 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-const chartConfig = {
-  avgSharePct: {
-    label: "Avg cost share (%)",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig;
+import { useTranslations } from "@/lib/i18n/locale-context";
+import { useMemo } from "react";
 
 type StageCostShareChartProps = {
   spec: QuotePackChartSpec;
 };
 
 export function StageCostShareChart({ spec }: StageCostShareChartProps) {
+  const t = useTranslations();
+
+  const chartConfig = useMemo(
+    () =>
+      ({
+        avgSharePct: {
+          label: t("charts.avgCostShare"),
+          color: "var(--chart-2)",
+        },
+      }) satisfies ChartConfig,
+    [t],
+  );
+
   return (
     <ChartContainer config={chartConfig} className="h-48 w-full">
       <BarChart

@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { LocalizedLink } from "@/components/localized-link";
 import { Activity, ArrowRight, Brain, History, LogIn, PlusCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getDemoSession, type DemoSession } from "@/lib/demo-auth";
 import { getSavedEstimates, type SavedEstimate } from "@/lib/estimate-history";
 import { formatCurrency, formatPercent } from "@/lib/format";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/card";
 
 export function DashboardOverview() {
+  const t = useTranslations();
   const [session, setSession] = useState<DemoSession | null>(null);
   const [saved, setSaved] = useState<SavedEstimate[]>([]);
 
@@ -57,32 +59,30 @@ export function DashboardOverview() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History aria-hidden="true" className="h-4 w-4 text-primary" />
-            Saved results
+            {t("dashboard.savedResults")}
           </CardTitle>
           <CardDescription>
             {session
-              ? `Browser-local history for ${session.email}.`
-              : "Sign in to keep a local list of predictions."}
+              ? t("dashboard.savedResultsSignedIn", { email: session.email })
+              : t("dashboard.savedResultsSignedOut")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-4xl font-semibold">{saved.length}</p>
-          <p className="text-sm text-muted-foreground">
-            Previously created predictions available from this browser.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("dashboard.savedResultsCount")}</p>
           <div className="flex flex-wrap gap-2">
             <Button asChild>
-              <Link href="/results">
+              <LocalizedLink href="/results">
                 <History aria-hidden="true" />
-                View saved results
-              </Link>
+                {t("dashboard.viewSavedResults")}
+              </LocalizedLink>
             </Button>
             {!session ? (
               <Button asChild variant="outline">
-                <Link href="/login">
+                <LocalizedLink href="/login">
                   <LogIn aria-hidden="true" />
-                  Sign in
-                </Link>
+                  {t("nav.signIn")}
+                </LocalizedLink>
               </Button>
             ) : null}
           </div>
@@ -93,16 +93,16 @@ export function DashboardOverview() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity aria-hidden="true" className="h-4 w-4 text-primary" />
-            Average growth risk
+            {t("dashboard.averageGrowthRisk")}
           </CardTitle>
-          <CardDescription>Plain-English scope-growth signal.</CardDescription>
+          <CardDescription>{t("dashboard.averageGrowthRiskDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-3xl font-semibold">
-            {averageScopeGrowth == null ? "No data" : formatPercent(averageScopeGrowth)}
+            {averageScopeGrowth == null ? t("common.noData") : formatPercent(averageScopeGrowth)}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Chance the work grows beyond the original assumptions.
+            {t("dashboard.averageGrowthRiskBody")}
           </p>
         </CardContent>
       </Card>
@@ -111,24 +111,20 @@ export function DashboardOverview() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Brain aria-hidden="true" className="h-4 w-4 text-primary" />
-            Model status
+            {t("dashboard.modelStatus")}
           </CardTitle>
-          <CardDescription>Synthetic feasibility model.</CardDescription>
+          <CardDescription>{t("dashboard.modelStatusDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold">Ready</p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Evidence is available, but production use still needs review.
-          </p>
+          <p className="text-3xl font-semibold">{t("dashboard.modelStatusReady")}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t("dashboard.modelStatusBody")}</p>
         </CardContent>
       </Card>
 
       <Card className="lg:col-span-4">
         <CardHeader>
-          <CardTitle>Most recent prediction</CardTitle>
-          <CardDescription>
-            The fastest path back into an active estimate, if you have one saved.
-          </CardDescription>
+          <CardTitle>{t("dashboard.mostRecent")}</CardTitle>
+          <CardDescription>{t("dashboard.mostRecentDescription")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center justify-between gap-4">
           {recent ? (
@@ -138,34 +134,34 @@ export function DashboardOverview() {
                   {recent.matterSummary.matterType} · {recent.matterSummary.subtitle}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Typical cost {formatCurrency(recent.estimate.cost_estimate.p50)}
+                  {t("dashboard.typicalCost", {
+                    amount: formatCurrency(recent.estimate.cost_estimate.p50),
+                  })}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button asChild>
-                  <Link href={`/estimate/${recent.estimate.estimate_id}`}>
-                    Open result
+                  <LocalizedLink href={`/estimate/${recent.estimate.estimate_id}`}>
+                    {t("dashboard.openResult")}
                     <ArrowRight aria-hidden="true" />
-                  </Link>
+                  </LocalizedLink>
                 </Button>
                 <Button asChild variant="outline">
-                  <Link href={`/monitoring/${recent.estimate.estimate_id}`}>
+                  <LocalizedLink href={`/monitoring/${recent.estimate.estimate_id}`}>
                     <Activity aria-hidden="true" />
-                    Monitoring
-                  </Link>
+                    {t("common.monitoring")}
+                  </LocalizedLink>
                 </Button>
               </div>
             </>
           ) : (
             <>
-              <p className="text-sm text-muted-foreground">
-                Create a prediction to see the most recent result here.
-              </p>
+              <p className="text-sm text-muted-foreground">{t("dashboard.createPrediction")}</p>
               <Button asChild>
-                <Link href="/estimate/new">
+                <LocalizedLink href="/estimate/new">
                   <PlusCircle aria-hidden="true" />
-                  Start estimate
-                </Link>
+                  {t("dashboard.startEstimate")}
+                </LocalizedLink>
               </Button>
             </>
           )}

@@ -4,6 +4,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { ScopeUpdateResponse, StageEstimate } from "@/lib/api/types";
 import { postScopeUpdate } from "@/lib/api/scope-monitoring";
 import { formatNumber } from "@/lib/format";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,7 @@ const initialValues = {
 };
 
 export function StageUpdateForm({ estimateId, stages }: StageUpdateFormProps) {
+  const t = useTranslations();
   const [values, setValues] = useState(initialValues);
   const [result, setResult] = useState<ScopeUpdateResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export function StageUpdateForm({ estimateId, stages }: StageUpdateFormProps) {
       });
       setResult(update);
     } catch {
-      setError("Unable to post stage update.");
+      setError(t("monitoring.updateFailedBody"));
     } finally {
       setIsSubmitting(false);
     }
@@ -59,7 +61,7 @@ export function StageUpdateForm({ estimateId, stages }: StageUpdateFormProps) {
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="stage_name">Stage name</Label>
+          <Label htmlFor="stage_name">{t("monitoring.stageName")}</Label>
           <select
             className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm"
             id="stage_name"
@@ -67,7 +69,7 @@ export function StageUpdateForm({ estimateId, stages }: StageUpdateFormProps) {
             onChange={handleChange}
             value={values.stage_name}
           >
-            <option value="">Select stage</option>
+            <option value="">{t("monitoring.selectStage")}</option>
             {stages.map((stage) => (
               <option key={stage.stage_name} value={stage.stage_name}>
                 {stage.stage_name}
@@ -76,36 +78,34 @@ export function StageUpdateForm({ estimateId, stages }: StageUpdateFormProps) {
           </select>
         </div>
         <NumberField
-          label="Actual partner hours"
+          label={t("monitoring.actualPartnerHours")}
           name="actual_partner_hours"
           onChange={handleChange}
           value={values.actual_partner_hours}
         />
         <NumberField
-          label="Actual associate hours"
+          label={t("monitoring.actualAssociateHours")}
           name="actual_associate_hours"
           onChange={handleChange}
           value={values.actual_associate_hours}
         />
         <NumberField
-          label="Actual cost"
+          label={t("monitoring.actualCostLabel")}
           name="actual_cost_hkd"
           onChange={handleChange}
           value={values.actual_cost_hkd}
         />
       </div>
 
-      <p className="text-sm text-muted-foreground">
-        Confidential free-text notes are disabled in feasibility mode.
-      </p>
+      <p className="text-sm text-muted-foreground">{t("monitoring.freeTextDisabled")}</p>
 
       <Button disabled={isSubmitting} type="submit">
-        {isSubmitting ? "Posting update..." : "Post stage update"}
+        {isSubmitting ? t("monitoring.postingUpdate") : t("monitoring.postStageUpdateBtn")}
       </Button>
 
       {result ? (
         <Alert role="status">
-          <AlertTitle>Stage update posted</AlertTitle>
+          <AlertTitle>{t("monitoring.updatePosted")}</AlertTitle>
           <AlertDescription>
             {result.stage_name}: {formatNumber(result.variance_pct, 1)}% variance.{" "}
             {result.recommended_review_action}
@@ -115,7 +115,7 @@ export function StageUpdateForm({ estimateId, stages }: StageUpdateFormProps) {
 
       {error ? (
         <Alert variant="destructive">
-          <AlertTitle>Scope update failed</AlertTitle>
+          <AlertTitle>{t("monitoring.updateFailed")}</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       ) : null}

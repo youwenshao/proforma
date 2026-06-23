@@ -8,25 +8,36 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-
-const chartConfig = {
-  value: {
-    label: "HKD",
-    color: "var(--chart-3)",
-  },
-} satisfies ChartConfig;
+import { useTranslations } from "@/lib/i18n/locale-context";
+import { useMemo } from "react";
 
 type FeeGuardrailChartProps = {
   fee: FeeRecommendation;
 };
 
 export function FeeGuardrailChart({ fee }: FeeGuardrailChartProps) {
-  const data = [
-    { label: "Low bound", value: fee.confidence_interval_low_hkd },
-    { label: "Recommended", value: fee.recommended_fee_hkd },
-    { label: "High bound", value: fee.confidence_interval_high_hkd },
-    { label: "Downside", value: fee.downside_risk_hkd ?? fee.expected_downside_hkd ?? 0 },
-  ];
+  const t = useTranslations();
+
+  const chartConfig = useMemo(
+    () =>
+      ({
+        value: {
+          label: "HKD",
+          color: "var(--chart-3)",
+        },
+      }) satisfies ChartConfig,
+    [],
+  );
+
+  const data = useMemo(
+    () => [
+      { label: t("charts.lowBound"), value: fee.confidence_interval_low_hkd },
+      { label: t("charts.recommended"), value: fee.recommended_fee_hkd },
+      { label: t("charts.highBound"), value: fee.confidence_interval_high_hkd },
+      { label: t("charts.downside"), value: fee.downside_risk_hkd ?? fee.expected_downside_hkd ?? 0 },
+    ],
+    [fee, t],
+  );
 
   return (
     <ChartContainer config={chartConfig} className="h-56 w-full">
