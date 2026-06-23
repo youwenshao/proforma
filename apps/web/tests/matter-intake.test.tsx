@@ -73,13 +73,37 @@ describe("matter intake workflow", () => {
   it("rejects an HK-only matter marked as cross-border", async () => {
     render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
 
-    await fillValidMatter();
+    await userEvent.selectOptions(screen.getByLabelText(/matter type/i), "Litigation");
+    await userEvent.selectOptions(screen.getByLabelText(/matter subtype/i), "Debt Recovery");
     await userEvent.selectOptions(screen.getByLabelText(/jurisdiction/i), "HK Only");
+    await userEvent.selectOptions(screen.getByLabelText(/firm tier/i), "Mid-tier (6-10 partners)");
+    await userEvent.selectOptions(screen.getByLabelText(/client type/i), "Financial Institution");
+    await userEvent.clear(screen.getByLabelText(/document volume/i));
+    await userEvent.type(screen.getByLabelText(/document volume/i), "120");
+    await userEvent.clear(screen.getByLabelText(/complexity score/i));
+    await userEvent.type(screen.getByLabelText(/complexity score/i), "3");
+    await userEvent.clear(screen.getByLabelText(/party count/i));
+    await userEvent.type(screen.getByLabelText(/party count/i), "3");
+    await userEvent.selectOptions(screen.getByLabelText(/billing model/i), "Fixed Fee");
+    await userEvent.click(screen.getByLabelText(/cross-border matter/i));
     await userEvent.click(screen.getByRole("button", { name: /create estimate/i }));
 
     expect(
       await screen.findByText(/cross-border matters must use a cross-border jurisdiction/i),
     ).toBeInTheDocument();
+  });
+
+  it("auto-marks cross-border matters when a cross-border jurisdiction is selected", async () => {
+    render(<MatterIntakeForm taxonomy={syntheticTaxonomy} />);
+
+    await userEvent.selectOptions(screen.getByLabelText(/matter type/i), "Litigation");
+    await userEvent.selectOptions(screen.getByLabelText(/matter subtype/i), "Debt Recovery");
+    await userEvent.selectOptions(
+      screen.getByLabelText(/jurisdiction/i),
+      "GBA Cross-Border (HK-PRC)",
+    );
+
+    expect(screen.getByLabelText(/cross-border matter/i)).toBeChecked();
   });
 
   it("posts a valid matter to the estimates API", async () => {
@@ -216,7 +240,6 @@ async function fillValidMatter() {
   await userEvent.type(screen.getByLabelText(/complexity score/i), "3");
   await userEvent.clear(screen.getByLabelText(/party count/i));
   await userEvent.type(screen.getByLabelText(/party count/i), "3");
-  await userEvent.click(screen.getByLabelText(/cross-border matter/i));
   await userEvent.selectOptions(screen.getByLabelText(/billing model/i), "Fixed Fee");
   await userEvent.click(screen.getByRole("radio", { name: /balanced/i }));
 }

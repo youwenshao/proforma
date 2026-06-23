@@ -71,9 +71,14 @@ export function validateMatterInput(
     errors.complexity_score = "Complexity score must be between 1 and 5.";
   }
 
-  if (values.cross_border_flag && values.jurisdiction === "HK Only") {
+  if (values.jurisdiction === "HK Only" && values.cross_border_flag) {
     errors.cross_border_flag =
       "Cross-border matters must use a cross-border jurisdiction.";
+  }
+
+  if (values.jurisdiction && values.jurisdiction !== "HK Only" && !values.cross_border_flag) {
+    errors.cross_border_flag =
+      "This jurisdiction requires the matter to be marked as cross-border.";
   }
 
   const allowedSubtypes =

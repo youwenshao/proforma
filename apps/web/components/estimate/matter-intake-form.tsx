@@ -74,11 +74,19 @@ export function MatterIntakeForm({
     field: keyof MatterFormValues,
     value: MatterFormValues[keyof MatterFormValues],
   ) {
-    setValues((current) => ({
-      ...current,
-      [field]: value,
-      ...(field === "matter_type" ? { matter_subtype: "" } : {}),
-    }));
+    setValues((current) => {
+      const next: MatterFormValues = {
+        ...current,
+        [field]: value,
+        ...(field === "matter_type" ? { matter_subtype: "" } : {}),
+      };
+
+      if (field === "jurisdiction" && typeof value === "string") {
+        next.cross_border_flag = value !== "HK Only" && value !== "";
+      }
+
+      return next;
+    });
     setErrors((current) => {
       const next = { ...current };
       delete next[field];
