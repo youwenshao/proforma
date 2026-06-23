@@ -12,8 +12,9 @@ import {
   Menu,
   PanelTopClose,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { clearDemoSession, getDemoSession, type DemoSession } from "@/lib/demo-auth";
+import { useMemo } from "react";
+import { estimatePasswordStrength, validateDemoEmail } from "@/lib/demo-auth";
+import { signOutAppSession, useAppSession } from "@/lib/auth/session";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site-footer";
@@ -39,22 +40,7 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
-  const [session, setSession] = useState<DemoSession | null>(null);
-
-  useEffect(() => {
-    function syncSession() {
-      setSession(getDemoSession());
-    }
-
-    syncSession();
-    window.addEventListener("storage", syncSession);
-    window.addEventListener("proforma-demo-session", syncSession);
-
-    return () => {
-      window.removeEventListener("storage", syncSession);
-      window.removeEventListener("proforma-demo-session", syncSession);
-    };
-  }, []);
+  const session = useAppSession();
 
   const userLabel = useMemo(() => {
     if (!session) {
@@ -106,7 +92,12 @@ export function AppShell({ children }: AppShellProps) {
                 <span className="rounded-full border border-border bg-muted px-3 py-1 text-xs text-muted-foreground">
                   {userLabel}
                 </span>
-                <Button onClick={clearDemoSession} variant="outline">
+                <Button
+                  onClick={() => {
+                    void signOutAppSession();
+                  }}
+                  variant="outline"
+                >
                   <LogOut aria-hidden="true" />
                   Sign out
                 </Button>
@@ -152,7 +143,13 @@ export function AppShell({ children }: AppShellProps) {
                 })}
                 <SheetClose asChild>
                   {session ? (
-                    <Button className="justify-start" onClick={clearDemoSession} variant="outline">
+                    <Button
+                      className="justify-start"
+                      onClick={() => {
+                        void signOutAppSession();
+                      }}
+                      variant="outline"
+                    >
                       <LogOut aria-hidden="true" />
                       Sign out
                     </Button>

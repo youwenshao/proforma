@@ -17,6 +17,12 @@ class ApiSettings(BaseModel):
     quote_pack_storage_dir: Path = Path("artifacts/quote_packs")
     allow_scope_update_notes: bool = False
     model_serving_mode: Literal["auto", "fixture", "live"] = "auto"
+    supabase_url: str | None = None
+    supabase_service_role_key: str | None = None
+
+    @property
+    def supabase_enabled(self) -> bool:
+        return bool(self.supabase_url and self.supabase_service_role_key)
 
 
 def get_settings() -> ApiSettings:
@@ -26,6 +32,8 @@ def get_settings() -> ApiSettings:
     quote_benchmarks_path = os.environ.get("PROFORMA_QUOTE_BENCHMARKS_PATH")
     quote_pack_storage_dir = os.environ.get("PROFORMA_QUOTE_PACK_STORAGE_DIR")
     model_serving_mode = os.environ.get("PROFORMA_MODEL_SERVING_MODE", "auto")
+    supabase_url = os.environ.get("SUPABASE_URL")
+    supabase_service_role_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
     return ApiSettings(
         artifacts_dir=Path(artifacts_dir) if artifacts_dir else Path("artifacts"),
         audit_log_path=Path(audit_log_path) if audit_log_path else Path("artifacts/audit/prediction_requests.jsonl"),
@@ -37,4 +45,6 @@ def get_settings() -> ApiSettings:
         if quote_pack_storage_dir
         else Path("artifacts/quote_packs"),
         model_serving_mode=model_serving_mode,
+        supabase_url=supabase_url,
+        supabase_service_role_key=supabase_service_role_key,
     )

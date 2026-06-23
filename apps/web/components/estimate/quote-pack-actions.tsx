@@ -1,7 +1,6 @@
 "use client";
 
 import { Download } from "lucide-react";
-import { getApiBaseUrl } from "@/lib/api/client";
 import { Button } from "@/components/ui/button";
 
 type QuotePackActionsProps = {
@@ -9,7 +8,7 @@ type QuotePackActionsProps = {
 };
 
 export function QuotePackActions({ estimateId }: QuotePackActionsProps) {
-  const pdfUrl = `${getApiBaseUrl()}/v1/estimates/${estimateId}/quote-substantiation.pdf`;
+  const pdfUrl = `/v1/estimates/${estimateId}/quote-substantiation.pdf`;
 
   return (
     <Button asChild variant="outline" size="sm">

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# ProForma local dev and Vercel build bootstrap.
+# ProForma local dev bootstrap.
 #
 # Local:   ./start.sh dev          # FastAPI :8000 + Next.js :3000
-# Vercel:  installCommand/buildCommand -> ./start.sh install-web && ./start.sh build
-#
-# The ML/API service is not started on Vercel. Deploy FastAPI separately and set
-# PROFORMA_API_URL to that host so Next.js rewrites can proxy /v1/* requests.
+# Deploy:  web on Vercel (apps/web), API on Fly.io (fly.toml at repo root).
+# Set PROFORMA_API_URL to the Fly API host so Next.js rewrites can proxy /v1/* requests.
 
 set -euo pipefail
 

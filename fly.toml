@@ -1,0 +1,29 @@
+app = "proforma-api-youwen"
+primary_region = "sin"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PROFORMA_ARTIFACTS_DIR = "/app/artifacts"
+  PROFORMA_AUDIT_LOG_PATH = "/data/audit/prediction_requests.jsonl"
+  PROFORMA_ESTIMATE_STORE_DIR = "/data/estimates"
+  PROFORMA_MODEL_SERVING_MODE = "fixture"
+  PROFORMA_QUOTE_PACK_STORAGE_DIR = "/data/quote_packs"
+
+[mounts]
+  source = "proforma_api_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1

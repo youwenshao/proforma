@@ -5,3 +5,4 @@ artifacts/quote_packs/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.vercel

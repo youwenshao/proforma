@@ -4,9 +4,8 @@ from fastapi import APIRouter, HTTPException, Response, status
 
 from proforma_data.schemas import PredictionResponse, QuotePackRenderResponse, QuoteSubstantiationResponse
 from services.api.app.audit import write_prediction_audit_event
-from services.api.app.estimate_store import EstimateStore
 from services.api.app.model_registry import ModelRegistry, ModelUnavailableError
-from services.api.app.quote_pack_storage import LocalQuotePackStorage
+from services.api.app.storage_factory import get_estimate_store, get_quote_pack_storage
 from services.api.app.quote_benchmarks import QuoteBenchmarkService, QuoteBenchmarkUnavailableError
 from services.api.app.quote_pdf import render_quote_pack_pdf
 from services.api.app.schemas import EstimateRequest
@@ -26,7 +25,7 @@ def create_estimate(request: EstimateRequest) -> PredictionResponse:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
 
     response = PredictionResponse(**prediction)
-    EstimateStore(settings.estimate_store_dir).save(request=request, prediction=response)
+    get_estimate_store(settings).save(request=request, prediction=response)
     write_prediction_audit_event(
         audit_log_path=settings.audit_log_path,
         request=request,
@@ -39,7 +38,7 @@ def create_estimate(request: EstimateRequest) -> PredictionResponse:
 @router.get("/estimates/{estimate_id}", response_model=PredictionResponse)
 def get_estimate(estimate_id: str) -> PredictionResponse:
     settings = get_settings()
-    prediction = EstimateStore(settings.estimate_store_dir).get_prediction(estimate_id)
+    prediction = get_estimate_store(settings).get_prediction(estimate_id)
     if prediction is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Estimate not found")
     return prediction
@@ -66,12 +65,12 @@ def render_quote_pack(estimate_id: str) -> QuotePackRenderResponse:
     settings = get_settings()
     snapshot = _build_quote_substantiation(estimate_id)
     pdf = render_quote_pack_pdf(snapshot)
-    return LocalQuotePackStorage(settings.quote_pack_storage_dir).store_rendered_pdf(snapshot=snapshot, pdf=pdf)
+    return get_quote_pack_storage(settings).store_rendered_pdf(snapshot=snapshot, pdf=pdf)
 
 
 def _build_quote_substantiation(estimate_id: str) -> QuoteSubstantiationResponse:
     settings = get_settings()
-    prediction = EstimateStore(settings.estimate_store_dir).get_prediction(estimate_id)
+    prediction = get_estimate_store(settings).get_prediction(estimate_id)
     if prediction is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Estimate not found")
     try:

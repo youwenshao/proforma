@@ -18,6 +18,13 @@ export const metadata: Metadata = {
   title: "ProForma HK",
   description:
     "Bilingual feasibility-stage matter pricing decision support for Hong Kong law firms.",
+  icons: {
+    apple: "/apple-icon.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+  },
 };
 
 export default function RootLayout({

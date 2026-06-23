@@ -4,10 +4,13 @@ import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   estimatePasswordStrength,
-  saveDemoSession,
+  signInDemo,
+  signInWithPassword,
+  signUpWithPassword,
   validateDemoEmail,
   type PasswordStrength,
-} from "@/lib/demo-auth";
+} from "@/lib/auth/session";
+import { isSupabaseAuthEnabled } from "@/lib/supabase/config";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -37,7 +40,10 @@ export function LoginForm() {
 
   const strength = useMemo(() => estimatePasswordStrength(password), [password]);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const [submitting, setSubmitting] = useState(false);
+  const supabaseAuthEnabled = isSupabaseAuthEnabled();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setSuggestion(null);
@@ -49,7 +55,37 @@ export function LoginForm() {
       return;
     }
 
-    saveDemoSession(email);
+    if (supabaseAuthEnabled) {
+      if (password.length < 8) {
+        setError("Use at least 8 characters for your password.");
+        return;
+      }
+
+      setSubmitting(true);
+      try {
+        await signInWithPassword(email, password);
+      } catch {
+        try {
+          await signUpWithPassword(email, password);
+        } catch (signUpError) {
+          setError(
+            signUpError instanceof Error
+              ? signUpError.message
+              : "Unable to sign in with Supabase.",
+          );
+          setSubmitting(false);
+          return;
+        }
+      } finally {
+        setSubmitting(false);
+      }
+
+      router.push("/");
+      router.refresh();
+      return;
+    }
+
+    signInDemo(email);
     router.push("/");
   }
 
@@ -60,7 +96,9 @@ export function LoginForm() {
           <h2>Sign in to the demo</h2>
         </CardTitle>
         <CardDescription>
-          Any email works. Your session stays in this browser only.
+          {supabaseAuthEnabled
+            ? "Sign in with your Supabase account. New users are registered on first sign-in."
+            : "Any email works. Your session stays in this browser only."}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -122,14 +160,16 @@ export function LoginForm() {
           </div>
 
           <Alert className="border-foreground/8 bg-white/40 backdrop-blur-sm dark:bg-card/40">
-            <AlertTitle>Demo login only</AlertTitle>
+            <AlertTitle>{supabaseAuthEnabled ? "Hosted auth" : "Demo login only"}</AlertTitle>
             <AlertDescription>
-              Passwords are checked for strength but never stored or sent to the API.
+              {supabaseAuthEnabled
+                ? "Credentials are verified by Supabase Auth. Passwords are never stored in the browser."
+                : "Passwords are checked for strength but never stored or sent to the API."}
             </AlertDescription>
           </Alert>
 
-          <Button className="w-full" size="lg" type="submit">
-            Sign in
+          <Button className="w-full" disabled={submitting} size="lg" type="submit">
+            {submitting ? "Signing in..." : "Sign in"}
           </Button>
         </form>
       </CardContent>
