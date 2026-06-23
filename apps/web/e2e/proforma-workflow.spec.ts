@@ -72,13 +72,23 @@ test("completes the ProForma frontend workflow with mocked API responses", async
 
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "ProForma HK" })).toBeVisible();
-  await expect(page.getByRole("alert").first()).toContainText("synthetic data");
+  await expect(page.getByRole("heading", { name: /legal pricing intelligence/i })).toBeVisible();
+  await expect(page.getByRole("alert").first()).toContainText("Synthetic");
   await page.getByRole("button", { name: "English" }).press("Tab");
   await expect(page.getByRole("button", { name: "繁體中文" })).toBeFocused();
 
-  await page.getByRole("link", { name: /start estimate/i }).click();
-  await expect(page.getByRole("heading", { name: /create pricing estimate/i })).toBeVisible();
+  await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: /sign in/i }).click();
+  await expect(page.getByRole("heading", { name: /keep your prediction results/i })).toBeVisible();
+  await page.getByLabel("Email").fill("partner@gmai.com");
+  await page.getByLabel("Password").fill("CorrectHorseStaple42!");
+  await page.getByRole("button", { name: /sign in/i }).click();
+  await expect(page.getByText(/domain looks mistyped/i)).toBeVisible();
+  await page.getByRole("button", { name: /use partner@gmail.com/i }).click();
+  await page.getByRole("button", { name: /sign in/i }).click();
+  await expect(page).toHaveURL("/");
+
+  await page.getByRole("link", { name: /start estimate/i }).first().click();
+  await expect(page.getByRole("heading", { name: /describe the matter/i })).toBeVisible();
   await expect(page.getByLabel("Matter type")).toBeVisible();
 
   await page.getByLabel("Matter type").selectOption("M&A");
@@ -94,13 +104,21 @@ test("completes the ProForma frontend workflow with mocked API responses", async
   await page.getByRole("radio", { name: /balanced/i }).check();
   await page.getByRole("button", { name: /create estimate/i }).click();
 
-  await expect(page).toHaveURL(/\/estimate\/e2e-estimate/);
+  await expect(page.getByRole("status")).toContainText(/generating your estimate/i);
+  await expect(page).toHaveURL(/\/estimate\/e2e-estimate/, { timeout: 7000 });
   await expect(page.getByRole("heading", { name: /prediction result/i })).toBeVisible();
   await expect(page.getByRole("table", { name: /stage-level estimate/i })).toBeVisible();
   await expect(page.getByRole("columnheader", { name: /partner hours/i })).toBeVisible();
 
+  await page.getByRole("link", { name: /view saved results/i }).click();
+  await expect(page).toHaveURL(/\/results/);
+  await expect(page.getByRole("heading", { name: /revisit estimates/i })).toBeVisible();
+  await expect(page.getByRole("article", { name: /m&a estimate/i })).toBeVisible();
+  await page.getByRole("link", { name: /open result/i }).click();
+  await expect(page).toHaveURL(/\/estimate\/e2e-estimate/);
+
   await page.getByRole("link", { name: /open scope monitoring/i }).click();
-  await expect(page.getByRole("heading", { name: /stage variance/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /still tracking to plan/i })).toBeVisible();
   await expect(page.getByRole("table", { name: /scope monitoring variance/i })).toBeVisible();
   await page.getByLabel("Stage name").selectOption("Case Assessment");
   await page.getByLabel("Actual partner hours").fill("35");

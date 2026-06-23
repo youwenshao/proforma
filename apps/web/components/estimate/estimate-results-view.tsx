@@ -1,7 +1,9 @@
 import Link from "next/link";
 import type { EstimateResponse, ModelStrategy, QuoteSubstantiation } from "@/lib/api/types";
+import { StageEffortChart } from "@/components/charts/stage-effort-chart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EstimateReference } from "./estimate-reference";
 import { EstimateSummary } from "./estimate-summary";
 import { FeeRecommendationPanel } from "./fee-recommendation-panel";
 import { LimitationsAlert } from "./limitations-alert";
@@ -44,9 +46,8 @@ export function EstimateResultsView({
           <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground">
             Estimate review
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Prediction result {estimate.estimate_id}
-          </h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Prediction result</h1>
+          <EstimateReference referenceId={estimate.estimate_id} />
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline">
@@ -84,7 +85,8 @@ export function EstimateResultsView({
         <CardHeader>
           <CardTitle>Stage breakdown</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <StageEffortChart stages={estimate.stage_estimates} />
           <StageBreakdownTable stages={estimate.stage_estimates} />
         </CardContent>
       </Card>

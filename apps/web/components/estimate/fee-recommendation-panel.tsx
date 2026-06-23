@@ -1,5 +1,6 @@
 import type { FeeRecommendation } from "@/lib/api/types";
 import { formatCurrency } from "@/lib/format";
+import { FeeGuardrailChart } from "@/components/charts/fee-guardrail-chart";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -19,6 +20,7 @@ export function FeeRecommendationPanel({ fee, riskTolerance }: FeeRecommendation
           <Badge>{fee.billing_model}</Badge>
           <Badge variant="outline">Risk tolerance: {riskTolerance}</Badge>
         </div>
+        <FeeGuardrailChart fee={fee} />
         <dl className="grid gap-3 md:grid-cols-3">
           <div>
             <dt className="text-muted-foreground">Fixed-fee suggestion</dt>

@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { PlusCircle } from "lucide-react";
+import { BackAction } from "@/components/back-action";
 import { ModelEvidenceView } from "@/components/models/model-evidence-view";
+import { Button } from "@/components/ui/button";
 import {
   getCurrentModel,
   getModelEvaluation,
@@ -16,11 +19,17 @@ export default async function ModelsPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-background px-6 py-10 text-foreground">
+    <main className="min-h-[calc(100vh-4rem)] bg-muted/20 px-6 py-10 text-foreground">
       <div className="mx-auto max-w-6xl space-y-8">
-        <Link className="text-sm text-muted-foreground underline-offset-4 hover:underline" href="/">
-          Back to dashboard
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <BackAction href="/" label="Home" />
+          <Button asChild variant="outline">
+            <Link href="/estimate/new">
+              <PlusCircle aria-hidden="true" />
+              New
+            </Link>
+          </Button>
+        </div>
         <ModelEvidenceView
           current={current}
           evaluation={evaluation}

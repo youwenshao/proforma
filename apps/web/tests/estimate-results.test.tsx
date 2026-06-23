@@ -1,4 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { EstimateResultsView } from "@/components/estimate/estimate-results-view";
 import { sampleEstimate } from "@/lib/api/fixtures";
 import type { QuoteSubstantiation } from "@/lib/api/types";
@@ -56,13 +57,31 @@ const sampleSubstantiation: QuoteSubstantiation = {
 };
 
 describe("estimate results and fee recommendation", () => {
-  it("renders p10, p50, and p90 values in order for cost and duration", () => {
+  it("renders a copy button for the estimate reference code", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", {
+      ...navigator,
+      clipboard: { writeText },
+    });
+
+    render(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
+
+    expect(screen.getByText(`Reference ${sampleEstimate.estimate_id}`)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: /copy reference code/i }));
+
+    expect(writeText).toHaveBeenCalledWith(sampleEstimate.estimate_id);
+    expect(screen.getByRole("button", { name: /reference code copied/i })).toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("renders low, typical, and high values in order for cost and duration", () => {
     render(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
 
     const cost = screen.getByRole("region", { name: /cost uncertainty/i });
-    expect(within(cost).getByText(/p10/i)).toBeInTheDocument();
-    expect(within(cost).getByText(/p50/i)).toBeInTheDocument();
-    expect(within(cost).getByText(/p90/i)).toBeInTheDocument();
+    expect(within(cost).getAllByText(/low/i).length).toBeGreaterThan(0);
+    expect(within(cost).getAllByText(/typical/i).length).toBeGreaterThan(0);
+    expect(within(cost).getAllByText(/high/i).length).toBeGreaterThan(0);
     expect(within(cost).getByText(/HK\$197,021/i)).toBeInTheDocument();
     expect(within(cost).getByText(/HK\$566,876/i)).toBeInTheDocument();
     expect(within(cost).getByText(/HK\$1,080,742/i)).toBeInTheDocument();

@@ -4,7 +4,9 @@ import type {
   SimilarMatterEvidence,
   StrategyComparison,
 } from "@/lib/api/types";
+import { ModelFlowDiagram } from "@/components/charts/model-flow-diagram";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EvaluationSummary } from "./evaluation-summary";
 import { ModelCurrentCard } from "./model-current-card";
 import { SimilarMatterEvidenceCard } from "./similar-matter-evidence-card";
@@ -41,6 +43,14 @@ export function ModelEvidenceView({
         </AlertDescription>
       </Alert>
       <ModelCurrentCard current={current} />
+      <Card>
+        <CardHeader>
+          <CardTitle>How the estimate evidence flows</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ModelFlowDiagram />
+        </CardContent>
+      </Card>
       <EvaluationSummary evaluation={evaluation} />
       <StrategyComparisonCard strategyComparison={strategyComparison} />
       <SimilarMatterEvidenceCard evidence={similarMatterEvidence} />

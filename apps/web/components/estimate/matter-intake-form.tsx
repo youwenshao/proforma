@@ -1,9 +1,18 @@
 "use client";
 
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createEstimate } from "@/lib/api/estimates";
 import type { Taxonomy } from "@/lib/api/types";
+import { getDemoSession } from "@/lib/demo-auth";
+import {
+  DISSOLVE_DURATION_MS,
+  getRandomProcessingDelayMs,
+  markEstimateForReveal,
+  sleep,
+} from "@/lib/estimate-processing";
+import { saveEstimateForUser, summarizeMatterInput } from "@/lib/estimate-history";
 import {
   type MatterFormValues,
   validateMatterInput,
@@ -33,10 +42,18 @@ const defaultValues: MatterFormValues = {
 };
 
 type MatterIntakeFormProps = {
+  onDissolveComplete?: () => void;
+  onProcessingEnd?: () => void;
+  onProcessingStart?: () => void;
   taxonomy: Taxonomy;
 };
 
-export function MatterIntakeForm({ taxonomy }: MatterIntakeFormProps) {
+export function MatterIntakeForm({
+  onDissolveComplete,
+  onProcessingEnd,
+  onProcessingStart,
+  taxonomy,
+}: MatterIntakeFormProps) {
   const router = useRouter();
   const [values, setValues] = useState(defaultValues);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -88,15 +105,36 @@ export function MatterIntakeForm({ taxonomy }: MatterIntakeFormProps) {
     }
 
     setIsSubmitting(true);
+    onProcessingStart?.();
+
     try {
-      const estimate = await createEstimate({
-        matter_input: result.value,
-        model_strategy: "synthetic_baseline",
-        risk_tolerance: toApiRiskTolerance(values.risk_tolerance),
-        tenant_id: "synthetic-demo-tenant",
-      });
+      await sleep(DISSOLVE_DURATION_MS);
+      onDissolveComplete?.();
+
+      const [estimate] = await Promise.all([
+        createEstimate({
+          matter_input: result.value,
+          model_strategy: "synthetic_baseline",
+          risk_tolerance: toApiRiskTolerance(values.risk_tolerance),
+          tenant_id: "synthetic-demo-tenant",
+        }),
+        sleep(getRandomProcessingDelayMs()),
+      ]);
+
+      const session = getDemoSession();
+      if (session) {
+        saveEstimateForUser(session.email, {
+          createdAt: new Date().toISOString(),
+          estimate,
+          matterSummary: summarizeMatterInput(result.value),
+          modelStrategy: "synthetic_baseline",
+        });
+      }
+
+      markEstimateForReveal(estimate.estimate_id);
       router.push(`/estimate/${estimate.estimate_id}`);
     } catch {
+      onProcessingEnd?.();
       setSubmitError("Unable to create estimate. Confirm the API is available or use mocked mode.");
     } finally {
       setIsSubmitting(false);
@@ -213,7 +251,7 @@ export function MatterIntakeForm({ taxonomy }: MatterIntakeFormProps) {
       />
 
       <Button disabled={isSubmitting} size="lg" type="submit">
-        {isSubmitting ? "Creating estimate..." : "Create estimate"}
+        {isSubmitting ? "Processing…" : "Create estimate"}
       </Button>
     </form>
   );
@@ -232,20 +270,26 @@ function SelectField({ error, label, name, onChange, options, value }: SelectFie
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
-      <select
-        className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm"
-        id={name}
-        name={name}
-        onChange={onChange}
-        value={value}
-      >
-        <option value="">Select {label.toLowerCase()}</option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+      <div className="relative">
+        <select
+          className="h-10 w-full appearance-none rounded-lg border border-input bg-background px-3 text-sm"
+          id={name}
+          name={name}
+          onChange={onChange}
+          value={value}
+        >
+          <option value="">Select {label.toLowerCase()}</option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+        />
+      </div>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </div>
   );

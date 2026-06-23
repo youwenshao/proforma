@@ -26,7 +26,7 @@ describe("model evidence view", () => {
     expect(screen.getAllByText(/pooled/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/legally_gated/i)).toBeInTheDocument();
     expect(screen.getByRole("table", { name: /metrics by matter type/i })).toBeInTheDocument();
-    expect(screen.getByText(/calibration method/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/calibration method/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/segment residual quantiles/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/similar matter evidence/i)).toBeInTheDocument();
     expect(screen.getByText(/data_residency_approval_required/i)).toBeInTheDocument();

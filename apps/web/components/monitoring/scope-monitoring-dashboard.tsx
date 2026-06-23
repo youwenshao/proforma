@@ -1,6 +1,7 @@
 import type { EstimateResponse } from "@/lib/api/types";
 import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
 import { totalPredictedHours, variancePct as calculateVariancePct } from "@/lib/api/scope-monitoring";
+import { ScopeVarianceChart } from "@/components/charts/scope-variance-chart";
 import {
   Card,
   CardContent,
@@ -80,6 +81,10 @@ export function ScopeMonitoringDashboard({ estimate }: ScopeMonitoringDashboardP
             <dd className="text-lg font-semibold">{formatPercent(overrunProbability)}</dd>
           </div>
         </dl>
+        <div>
+          <p className="mb-2 text-sm font-medium">Predicted vs actual stage effort</p>
+          <ScopeVarianceChart stages={estimate.stage_estimates} />
+        </div>
         <Table aria-label="Scope monitoring variance">
           <TableHeader>
             <TableRow>

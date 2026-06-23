@@ -1,5 +1,6 @@
 import type { EstimateInterval } from "@/lib/api/types";
 import { formatCurrency, formatNumber, formatPercent } from "@/lib/format";
+import { EstimateIntervalChart } from "@/components/charts/estimate-interval-chart";
 import {
   Card,
   CardContent,
@@ -28,16 +29,18 @@ export function EstimateSummary({
         formatValue={formatCurrency}
         interval={cost}
         title="Cost uncertainty"
+        unit="HKD"
       />
       <IntervalCard
         ariaLabel="Duration uncertainty"
         formatValue={(value) => `${formatNumber(value)} days`}
         interval={duration}
         title="Duration uncertainty"
+        unit="days"
       />
       <Card>
         <CardHeader>
-          <CardTitle>Scope-creep signal</CardTitle>
+          <CardTitle>Chance work grows</CardTitle>
           <CardDescription>Model version {modelVersion}</CardDescription>
         </CardHeader>
         <CardContent>
@@ -45,7 +48,8 @@ export function EstimateSummary({
             {formatPercent(scopeCreepProbability)}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Probability is feasibility evidence, not autonomous legal or pricing advice.
+            This is the estimated chance that effort grows beyond the original scope. It is
+            decision-support evidence, not autonomous legal or pricing advice.
           </p>
         </CardContent>
       </Card>
@@ -58,26 +62,36 @@ type IntervalCardProps = {
   formatValue: (value: number) => string;
   interval: EstimateInterval;
   title: string;
+  unit: string;
 };
 
-function IntervalCard({ ariaLabel, formatValue, interval, title }: IntervalCardProps) {
+function IntervalCard({ ariaLabel, formatValue, interval, title, unit }: IntervalCardProps) {
+  const intervalLabels: Array<{ key: "p10" | "p50" | "p90"; label: string }> = [
+    { key: "p10", label: "Low" },
+    { key: "p50", label: "Typical" },
+    { key: "p90", label: "High" },
+  ];
+
   return (
     <Card aria-label={ariaLabel} role="region">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>
-          {interval.calibration_method}, {formatPercent(interval.confidence_level)} confidence
+          Low, typical, and high estimates at {formatPercent(interval.confidence_level)} confidence
         </CardDescription>
       </CardHeader>
       <CardContent>
         <dl className="grid grid-cols-3 gap-3 text-sm">
-          {(["p10", "p50", "p90"] as const).map((key) => (
+          {intervalLabels.map(({ key, label }) => (
             <div key={key}>
-              <dt className="text-muted-foreground">{key.toUpperCase()}</dt>
+              <dt className="text-muted-foreground">{label}</dt>
               <dd className="font-semibold">{formatValue(interval[key])}</dd>
             </div>
           ))}
         </dl>
+        <div className="mt-4">
+          <EstimateIntervalChart interval={interval} unit={unit} />
+        </div>
       </CardContent>
     </Card>
   );

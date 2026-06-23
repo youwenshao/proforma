@@ -1,5 +1,6 @@
 import type { ModelEvaluation } from "@/lib/api/types";
 import { formatNumber } from "@/lib/format";
+import { ModelPerformanceChart } from "@/components/charts/model-performance-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -12,6 +13,14 @@ import {
 
 type EvaluationSummaryProps = {
   evaluation: ModelEvaluation;
+};
+
+const metricLabels: Record<string, string> = {
+  calibration_method: "Calibration method",
+  empirical_coverage: "Range coverage",
+  mae: "Average error",
+  rmse: "Large-error sensitivity",
+  smape: "Relative error",
 };
 
 export function EvaluationSummary({ evaluation }: EvaluationSummaryProps) {
@@ -32,13 +41,19 @@ export function EvaluationSummary({ evaluation }: EvaluationSummaryProps) {
         <dl className="grid gap-3 text-sm md:grid-cols-4">
           {Object.entries(evaluation.metrics).map(([key, value]) => (
             <div key={key}>
-              <dt className="text-muted-foreground">{key}</dt>
+              <dt className="text-muted-foreground">{metricLabels[key] ?? key}</dt>
               <dd className="font-medium">
                 {typeof value === "number" ? formatNumber(value, 3) : value}
               </dd>
             </div>
           ))}
         </dl>
+        <div>
+          <p className="mb-2 text-sm font-medium">
+            Error by matter type: average error vs large-error sensitivity
+          </p>
+          <ModelPerformanceChart metricsByMatterType={evaluation.metrics_by_matter_type} />
+        </div>
         <Table aria-label="Metrics by matter type">
           <TableHeader>
             <TableRow>
