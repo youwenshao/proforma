@@ -89,6 +89,43 @@ export type EstimateResponse = {
   limitations: string[];
 };
 
+export type QuotePackMetric = {
+  label: string;
+  value: number | string;
+  unit?: string | null;
+  display_value: string;
+  description: string;
+  segment_label: string;
+  sample_size: number;
+};
+
+export type QuotePackChartSpec = {
+  chart_type: string;
+  title: string;
+  description: string;
+  data: Record<string, string | number | boolean | null>[];
+};
+
+export type QuoteSubstantiation = {
+  schema_version: "proforma.quote_pack.v1";
+  estimate_id: string;
+  tenant_id: string;
+  generated_at: string;
+  benchmark_segment: {
+    segment_label: string;
+    dimensions: string[];
+    sample_size: number;
+    fallback_level: string;
+  };
+  metrics: QuotePackMetric[];
+  chart_specs: QuotePackChartSpec[];
+  assumptions_and_guardrails: string[];
+  evidence_footer: string[];
+  limitations: string[];
+  snapshot_checksum?: string | null;
+  status: "draft" | "approved" | "rendering" | "rendered" | "shared" | "revoked" | "failed";
+};
+
 export type ScopeUpdateResponse = {
   estimate_id: string;
   stage_name: string;

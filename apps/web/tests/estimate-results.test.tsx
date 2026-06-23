@@ -1,6 +1,59 @@
 import { render, screen, within } from "@testing-library/react";
 import { EstimateResultsView } from "@/components/estimate/estimate-results-view";
 import { sampleEstimate } from "@/lib/api/fixtures";
+import type { QuoteSubstantiation } from "@/lib/api/types";
+
+const sampleSubstantiation: QuoteSubstantiation = {
+  schema_version: "proforma.quote_pack.v1",
+  estimate_id: sampleEstimate.estimate_id,
+  tenant_id: sampleEstimate.tenant_id,
+  generated_at: "2026-06-23T00:00:00Z",
+  benchmark_segment: {
+    segment_label: "Litigation / HK Only / Fixed Fee",
+    dimensions: ["matter_type", "jurisdiction", "billing_model"],
+    sample_size: 77,
+    fallback_level: "matter_type+jurisdiction+billing_model",
+  },
+  metrics: [
+    {
+      label: "Material scope-creep rate",
+      value: 64,
+      unit: "percent",
+      display_value: "64.0%",
+      description: "Comparable matters over quote by more than 5%.",
+      segment_label: "Litigation / HK Only / Fixed Fee",
+      sample_size: 77,
+    },
+    {
+      label: "P90 quote variance",
+      value: 50.5,
+      unit: "percent",
+      display_value: "50.5%",
+      description: "90th percentile uplift from quote to WIP.",
+      segment_label: "Litigation / HK Only / Fixed Fee",
+      sample_size: 77,
+    },
+  ],
+  chart_specs: [
+    {
+      chart_type: "variance_distribution",
+      title: "Historical Quote Variance",
+      description: "Distribution of realized WIP variance.",
+      data: [{ bucket: "25-50%", share_pct: 24 }],
+    },
+    {
+      chart_type: "stage_cost_share",
+      title: "Stage Cost Share",
+      description: "Average cost contribution by matter stage.",
+      data: [{ stage_name: "Discovery", avg_share_pct: 26 }],
+    },
+  ],
+  assumptions_and_guardrails: ["Partner final decision required before client sharing."],
+  evidence_footer: ["Model version: proforma-baseline-v1"],
+  limitations: ["Synthetic feasibility data only."],
+  snapshot_checksum: "abc123",
+  status: "draft",
+};
 
 describe("estimate results and fee recommendation", () => {
   it("renders p10, p50, and p90 values in order for cost and duration", () => {
@@ -42,6 +95,25 @@ describe("estimate results and fee recommendation", () => {
     expect(screen.getAllByText(/risk tolerance/i).length).toBeGreaterThan(0);
     expect(screen.getByText(/expected margin/i)).toBeInTheDocument();
     expect(screen.getByText(/pricing guardrails/i)).toBeInTheDocument();
+  });
+
+  it("renders quote substantiation metrics and chart summaries for partner review", () => {
+    render(
+      <EstimateResultsView
+        estimate={sampleEstimate}
+        modelStrategy="synthetic_baseline"
+        quoteSubstantiation={sampleSubstantiation}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: /quote substantiation pack/i })).toBeInTheDocument();
+    expect(screen.getByText(/Litigation \/ HK Only \/ Fixed Fee/i)).toBeInTheDocument();
+    expect(screen.getByText(/77 comparable matters/i)).toBeInTheDocument();
+    expect(screen.getByText(/Material scope-creep rate/i)).toBeInTheDocument();
+    expect(screen.getByText(/64.0%/i)).toBeInTheDocument();
+    expect(screen.getByText(/Historical Quote Variance/i)).toBeInTheDocument();
+    expect(screen.getByText(/Stage Cost Share/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Partner final decision required before client sharing/i).length).toBeGreaterThan(0);
   });
 
   it("shows the pooled research legal gate", () => {

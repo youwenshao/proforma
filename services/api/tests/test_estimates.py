@@ -50,6 +50,34 @@ def test_estimate_endpoint_returns_decision_support_response(monkeypatch, tmp_pa
     assert "matter_input" not in audit_event
 
 
+def test_created_estimate_can_be_retrieved_from_durable_store(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("PROFORMA_AUDIT_LOG_PATH", str(tmp_path / "prediction_requests.jsonl"))
+    monkeypatch.setenv("PROFORMA_ESTIMATE_STORE_DIR", str(tmp_path / "estimates"))
+
+    create_response = api_request("post", "/v1/estimates", json=valid_estimate_payload())
+
+    assert create_response.status_code == 200
+    created = create_response.json()
+
+    get_response = api_request("get", f"/v1/estimates/{created['estimate_id']}")
+
+    assert get_response.status_code == 200
+    retrieved = get_response.json()
+    assert retrieved["estimate_id"] == created["estimate_id"]
+    assert retrieved["tenant_id"] == "tenant-hk-001"
+    assert retrieved["cost_estimate"] == created["cost_estimate"]
+    assert retrieved["fee_recommendation"] == created["fee_recommendation"]
+
+
+def test_unknown_estimate_returns_404(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("PROFORMA_ESTIMATE_STORE_DIR", str(tmp_path / "estimates"))
+
+    response = api_request("get", "/v1/estimates/missing-estimate")
+
+    assert response.status_code == 404
+    assert "not found" in response.json()["detail"].lower()
+
+
 def test_estimate_endpoint_rejects_invalid_complexity_score() -> None:
     payload = valid_estimate_payload()
     payload["matter_input"]["complexity_score"] = 6  # type: ignore[index]

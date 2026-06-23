@@ -9,7 +9,13 @@ def test_exported_openapi_contract_contains_phase_three_endpoints() -> None:
     contract = json.loads(contract_path.read_text(encoding="utf-8"))
     assert "/v1/taxonomy" in contract["paths"]
     assert "/v1/estimates" in contract["paths"]
+    assert "/v1/estimates/{estimate_id}" in contract["paths"]
+    assert "/v1/estimates/{estimate_id}/quote-substantiation" in contract["paths"]
+    assert "/v1/estimates/{estimate_id}/quote-substantiation.pdf" in contract["paths"]
+    assert "/v1/estimates/{estimate_id}/quote-packs/render" in contract["paths"]
     assert "/v1/estimates/{estimate_id}/scope-updates" in contract["paths"]
     assert "/v1/models/current" in contract["paths"]
     assert "MatterInput" in contract["components"]["schemas"]
+    assert "QuoteSubstantiationResponse" in contract["components"]["schemas"]
+    assert "QuotePackRenderResponse" in contract["components"]["schemas"]
     assert "decision_support_disclaimer" in json.dumps(contract)

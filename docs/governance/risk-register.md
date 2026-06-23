@@ -23,6 +23,7 @@ This register separates technical feasibility from legal, regulatory, pilot, and
 | Model accuracy and calibration | Requires pilot evidence | Synthetic validation passes, but production accuracy and calibration require real firm samples. | Run firm-specific pilot evaluation with matter-type stratification, prediction intervals, and model cards. |
 | Bilingual legal terminology | Requires legal review | Bilingual UX is required, but legal terminology and disclaimers must be reviewed before pilot use. | Maintain reviewed English and Traditional Chinese translation catalog with sign-off status. |
 | Scope-creep monitoring misuse | Requires pilot evidence | Variance alerts are useful for decision support, but may be misused as performance judgments or client-facing assertions. | Test partner workflow, disclaimers, alert thresholds, and audit context during controlled pilot. |
+| Quote substantiation packs | Requires pilot evidence | Internal partner previews are decision-support evidence only. Client-facing PDFs require partner approval, immutable snapshots, model/data lineage, storage access controls, download audit, expiry, and revocation. | Keep preview and approved-client states separate; store PDFs in controlled object storage, not database rows; verify RLS, retention, deletion, and disclaimer copy before hosted pilots. |
 
 ## Explicit Exclusions
 
@@ -34,6 +35,7 @@ This register separates technical feasibility from legal, regulatory, pilot, and
 ## Review Triggers
 
 - A later phase introduces real firm data, hosted processing, tenant-specific model artifacts, or client-facing reports.
+- A quote substantiation pack becomes shareable outside the firm or is attached to a client fee proposal.
 - A model strategy changes from synthetic baseline or firm-specific pilot to pooled research or pooled production.
 - A UI flow changes disclaimer wording, bilingual legal terminology, or partner review requirements.
 - Pilot evidence contradicts synthetic-data assumptions about scope creep, calibration, or matter-type behavior.

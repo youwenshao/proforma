@@ -1,18 +1,24 @@
 import Link from "next/link";
-import type { EstimateResponse, ModelStrategy } from "@/lib/api/types";
+import type { EstimateResponse, ModelStrategy, QuoteSubstantiation } from "@/lib/api/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EstimateSummary } from "./estimate-summary";
 import { FeeRecommendationPanel } from "./fee-recommendation-panel";
 import { LimitationsAlert } from "./limitations-alert";
+import { QuoteSubstantiationPanel } from "./quote-substantiation-panel";
 import { StageBreakdownTable } from "./stage-breakdown-table";
 
 type EstimateResultsViewProps = {
   estimate: EstimateResponse | null;
   modelStrategy: ModelStrategy;
+  quoteSubstantiation?: QuoteSubstantiation | null;
 };
 
-export function EstimateResultsView({ estimate, modelStrategy }: EstimateResultsViewProps) {
+export function EstimateResultsView({
+  estimate,
+  modelStrategy,
+  quoteSubstantiation = null,
+}: EstimateResultsViewProps) {
   if (!estimate) {
     return (
       <Card>
@@ -69,6 +75,10 @@ export function EstimateResultsView({ estimate, modelStrategy }: EstimateResults
         fee={estimate.fee_recommendation}
         riskTolerance={modelStrategy === "pooled_research" ? "pooled research" : "balanced"}
       />
+
+      {quoteSubstantiation ? (
+        <QuoteSubstantiationPanel substantiation={quoteSubstantiation} />
+      ) : null}
 
       <Card>
         <CardHeader>

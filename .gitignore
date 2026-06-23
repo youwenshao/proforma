@@ -1,5 +1,7 @@
 .worktrees/
+artifacts/estimates/
 artifacts/models/*.joblib
+artifacts/quote_packs/
 __pycache__/
 *.py[cod]
 .pytest_cache/

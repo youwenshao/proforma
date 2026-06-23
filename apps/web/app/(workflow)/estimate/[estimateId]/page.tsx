@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EstimateResultsView } from "@/components/estimate/estimate-results-view";
-import { getEstimate } from "@/lib/api/estimates";
+import { getEstimate, getQuoteSubstantiation } from "@/lib/api/estimates";
 import type { ModelStrategy } from "@/lib/api/types";
 
 type EstimatePageProps = {
@@ -14,6 +14,7 @@ export default async function EstimatePage({ params, searchParams }: EstimatePag
     searchParams,
   ]);
   const estimate = await getEstimate(estimateId);
+  const quoteSubstantiation = estimate ? await getQuoteSubstantiation(estimateId) : null;
 
   return (
     <main className="min-h-screen bg-background px-6 py-10 text-foreground">
@@ -21,7 +22,11 @@ export default async function EstimatePage({ params, searchParams }: EstimatePag
         <Link className="text-sm text-muted-foreground underline-offset-4 hover:underline" href="/">
           Back to dashboard
         </Link>
-        <EstimateResultsView estimate={estimate} modelStrategy={modelStrategy} />
+        <EstimateResultsView
+          estimate={estimate}
+          modelStrategy={modelStrategy}
+          quoteSubstantiation={quoteSubstantiation}
+        />
       </div>
     </main>
   );

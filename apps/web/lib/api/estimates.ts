@@ -1,6 +1,12 @@
 import { apiGet, apiPost } from "./client";
 import { sampleEstimate } from "./fixtures";
-import type { EstimateResponse, MatterInput, ModelStrategy, RiskTolerance } from "./types";
+import type {
+  EstimateResponse,
+  MatterInput,
+  ModelStrategy,
+  QuoteSubstantiation,
+  RiskTolerance,
+} from "./types";
 
 export type EstimateRequest = {
   tenant_id: string;
@@ -29,5 +35,13 @@ export async function getEstimate(estimateId: string): Promise<EstimateResponse 
       ...sampleEstimate,
       estimate_id: estimateId,
     };
+  }
+}
+
+export async function getQuoteSubstantiation(estimateId: string): Promise<QuoteSubstantiation | null> {
+  try {
+    return await apiGet<QuoteSubstantiation>(`/v1/estimates/${estimateId}/quote-substantiation`);
+  } catch {
+    return null;
   }
 }

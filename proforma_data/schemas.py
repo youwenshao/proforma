@@ -235,6 +235,67 @@ class EstimateInterval(ContractModel):
         return self
 
 
+ChartDataValue = str | int | float | bool | None
+QuotePackStatus = Literal["draft", "approved", "rendering", "rendered", "shared", "revoked", "failed"]
+
+
+class QuotePackMetric(ContractModel):
+    label: str
+    value: float | str
+    unit: str | None = None
+    display_value: str
+    description: str
+    segment_label: str
+    sample_size: int = Field(ge=0)
+
+
+class QuotePackChartSpec(ContractModel):
+    chart_type: str
+    title: str
+    description: str
+    data: list[dict[str, ChartDataValue]]
+
+
+class QuoteBenchmarkSegment(ContractModel):
+    segment_label: str
+    dimensions: list[str]
+    sample_size: int = Field(ge=0)
+    fallback_level: str
+
+
+class QuotePackSnapshot(ContractModel):
+    schema_version: Literal["proforma.quote_pack.v1"] = "proforma.quote_pack.v1"
+    estimate_id: str
+    tenant_id: str
+    generated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    benchmark_segment: QuoteBenchmarkSegment
+    metrics: list[QuotePackMetric]
+    chart_specs: list[QuotePackChartSpec]
+    assumptions_and_guardrails: list[str]
+    evidence_footer: list[str]
+    limitations: list[str]
+    snapshot_checksum: str | None = None
+    status: QuotePackStatus = "draft"
+
+
+class QuoteSubstantiationResponse(QuotePackSnapshot):
+    pass
+
+
+class QuotePackRenderResponse(ContractModel):
+    quote_pack_id: str
+    estimate_id: str
+    tenant_id: str
+    status: Literal["rendered"]
+    storage_backend: Literal["local", "supabase"]
+    storage_path: str
+    checksum_sha256: str
+    file_size_bytes: int = Field(gt=0)
+    snapshot_checksum: str
+    approved_shareable: bool = False
+    rendered_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+
 class PredictionResponse(ContractModel):
     estimate_id: str
     tenant_id: str
@@ -266,6 +327,7 @@ SCHEMA_EXPORTS: dict[str, type[BaseModel]] = {
     "matter-input.schema.json": MatterInput,
     "matter-estimate.schema.json": MatterEstimate,
     "model-evaluation.schema.json": ModelEvaluation,
+    "quote-pack-snapshot.schema.json": QuotePackSnapshot,
 }
 
 

@@ -115,6 +115,18 @@
             "title": "Confidence Interval Low Hkd",
             "type": "number"
           },
+          "downside_risk_hkd": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Downside Risk Hkd"
+          },
           "expected_downside_hkd": {
             "anyOf": [
               {
@@ -127,10 +139,39 @@
             ],
             "title": "Expected Downside Hkd"
           },
+          "expected_margin_hkd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Margin Hkd"
+          },
+          "margin_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Margin Pct"
+          },
           "partner_decision_support_disclaimer": {
             "default": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
             "title": "Partner Decision Support Disclaimer",
             "type": "string"
+          },
+          "pricing_guardrails": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Pricing Guardrails",
+            "type": "array"
           },
           "recommended_fee_hkd": {
             "exclusiveMinimum": 0.0,
@@ -201,6 +242,18 @@
           "cross_border_flag": {
             "title": "Cross Border Flag",
             "type": "boolean"
+          },
+          "deal_value_hkd": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deal Value Hkd"
           },
           "document_volume": {
             "exclusiveMinimum": 0.0,
@@ -380,6 +433,317 @@
         "title": "PredictionResponse",
         "type": "object"
       },
+      "QuoteBenchmarkSegment": {
+        "additionalProperties": false,
+        "properties": {
+          "dimensions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Dimensions",
+            "type": "array"
+          },
+          "fallback_level": {
+            "title": "Fallback Level",
+            "type": "string"
+          },
+          "sample_size": {
+            "minimum": 0.0,
+            "title": "Sample Size",
+            "type": "integer"
+          },
+          "segment_label": {
+            "title": "Segment Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "segment_label",
+          "dimensions",
+          "sample_size",
+          "fallback_level"
+        ],
+        "title": "QuoteBenchmarkSegment",
+        "type": "object"
+      },
+      "QuotePackChartSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "chart_type": {
+            "title": "Chart Type",
+            "type": "string"
+          },
+          "data": {
+            "items": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "chart_type",
+          "title",
+          "description",
+          "data"
+        ],
+        "title": "QuotePackChartSpec",
+        "type": "object"
+      },
+      "QuotePackMetric": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "display_value": {
+            "title": "Display Value",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "sample_size": {
+            "minimum": 0.0,
+            "title": "Sample Size",
+            "type": "integer"
+          },
+          "segment_label": {
+            "title": "Segment Label",
+            "type": "string"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "label",
+          "value",
+          "display_value",
+          "description",
+          "segment_label",
+          "sample_size"
+        ],
+        "title": "QuotePackMetric",
+        "type": "object"
+      },
+      "QuotePackRenderResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "approved_shareable": {
+            "default": false,
+            "title": "Approved Shareable",
+            "type": "boolean"
+          },
+          "checksum_sha256": {
+            "title": "Checksum Sha256",
+            "type": "string"
+          },
+          "estimate_id": {
+            "title": "Estimate Id",
+            "type": "string"
+          },
+          "file_size_bytes": {
+            "exclusiveMinimum": 0.0,
+            "title": "File Size Bytes",
+            "type": "integer"
+          },
+          "quote_pack_id": {
+            "title": "Quote Pack Id",
+            "type": "string"
+          },
+          "rendered_at": {
+            "format": "date-time",
+            "title": "Rendered At",
+            "type": "string"
+          },
+          "snapshot_checksum": {
+            "title": "Snapshot Checksum",
+            "type": "string"
+          },
+          "status": {
+            "const": "rendered",
+            "title": "Status",
+            "type": "string"
+          },
+          "storage_backend": {
+            "enum": [
+              "local",
+              "supabase"
+            ],
+            "title": "Storage Backend",
+            "type": "string"
+          },
+          "storage_path": {
+            "title": "Storage Path",
+            "type": "string"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "quote_pack_id",
+          "estimate_id",
+          "tenant_id",
+          "status",
+          "storage_backend",
+          "storage_path",
+          "checksum_sha256",
+          "file_size_bytes",
+          "snapshot_checksum"
+        ],
+        "title": "QuotePackRenderResponse",
+        "type": "object"
+      },
+      "QuoteSubstantiationResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "assumptions_and_guardrails": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Assumptions And Guardrails",
+            "type": "array"
+          },
+          "benchmark_segment": {
+            "$ref": "#/components/schemas/QuoteBenchmarkSegment"
+          },
+          "chart_specs": {
+            "items": {
+              "$ref": "#/components/schemas/QuotePackChartSpec"
+            },
+            "title": "Chart Specs",
+            "type": "array"
+          },
+          "estimate_id": {
+            "title": "Estimate Id",
+            "type": "string"
+          },
+          "evidence_footer": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Footer",
+            "type": "array"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/QuotePackMetric"
+            },
+            "title": "Metrics",
+            "type": "array"
+          },
+          "schema_version": {
+            "const": "proforma.quote_pack.v1",
+            "default": "proforma.quote_pack.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "snapshot_checksum": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snapshot Checksum"
+          },
+          "status": {
+            "default": "draft",
+            "enum": [
+              "draft",
+              "approved",
+              "rendering",
+              "rendered",
+              "shared",
+              "revoked",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "estimate_id",
+          "tenant_id",
+          "benchmark_segment",
+          "metrics",
+          "chart_specs",
+          "assumptions_and_guardrails",
+          "evidence_footer",
+          "limitations"
+        ],
+        "title": "QuoteSubstantiationResponse",
+        "type": "object"
+      },
       "ScopeUpdateRequest": {
         "additionalProperties": false,
         "properties": {
@@ -427,6 +791,10 @@
       "ScopeUpdateResponse": {
         "additionalProperties": false,
         "properties": {
+          "actual_cost_hkd": {
+            "title": "Actual Cost Hkd",
+            "type": "number"
+          },
           "actual_hours": {
             "title": "Actual Hours",
             "type": "number"
@@ -435,6 +803,14 @@
             "title": "Estimate Id",
             "type": "string"
           },
+          "overrun_probability": {
+            "title": "Overrun Probability",
+            "type": "number"
+          },
+          "predicted_cost_hkd": {
+            "title": "Predicted Cost Hkd",
+            "type": "number"
+          },
           "predicted_hours": {
             "title": "Predicted Hours",
             "type": "number"
@@ -442,6 +818,14 @@
           "recommended_review_action": {
             "title": "Recommended Review Action",
             "type": "string"
+          },
+          "reforecast_final_cost_hkd": {
+            "title": "Reforecast Final Cost Hkd",
+            "type": "number"
+          },
+          "reforecast_final_hours": {
+            "title": "Reforecast Final Hours",
+            "type": "number"
           },
           "scope_creep_flag": {
             "title": "Scope Creep Flag",
@@ -461,8 +845,13 @@
           "stage_name",
           "predicted_hours",
           "actual_hours",
+          "predicted_cost_hkd",
+          "actual_cost_hkd",
           "variance_pct",
           "scope_creep_flag",
+          "reforecast_final_cost_hkd",
+          "reforecast_final_hours",
+          "overrun_probability",
           "recommended_review_action"
         ],
         "title": "ScopeUpdateResponse",
@@ -716,6 +1105,167 @@
         ]
       }
     },
+    "/v1/estimates/{estimate_id}": {
+      "get": {
+        "operationId": "get_estimate_v1_estimates__estimate_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "estimate_id",
+            "required": true,
+            "schema": {
+              "title": "Estimate Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Estimate",
+        "tags": [
+          "estimates"
+        ]
+      }
+    },
+    "/v1/estimates/{estimate_id}/quote-packs/render": {
+      "post": {
+        "operationId": "render_quote_pack_v1_estimates__estimate_id__quote_packs_render_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "estimate_id",
+            "required": true,
+            "schema": {
+              "title": "Estimate Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotePackRenderResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Render Quote Pack",
+        "tags": [
+          "estimates"
+        ]
+      }
+    },
+    "/v1/estimates/{estimate_id}/quote-substantiation": {
+      "get": {
+        "operationId": "get_quote_substantiation_v1_estimates__estimate_id__quote_substantiation_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "estimate_id",
+            "required": true,
+            "schema": {
+              "title": "Estimate Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteSubstantiationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Quote Substantiation",
+        "tags": [
+          "estimates"
+        ]
+      }
+    },
+    "/v1/estimates/{estimate_id}/quote-substantiation.pdf": {
+      "get": {
+        "operationId": "get_quote_substantiation_pdf_v1_estimates__estimate_id__quote_substantiation_pdf_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "estimate_id",
+            "required": true,
+            "schema": {
+              "title": "Estimate Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Quote Substantiation Pdf",
+        "tags": [
+          "estimates"
+        ]
+      }
+    },
     "/v1/estimates/{estimate_id}/scope-updates": {
       "post": {
         "operationId": "create_scope_update_v1_estimates__estimate_id__scope_updates_post",
@@ -809,6 +1359,29 @@
           }
         },
         "summary": "Model Evaluation",
+        "tags": [
+          "models"
+        ]
+      }
+    },
+    "/v1/models/similar-matter-evidence": {
+      "get": {
+        "operationId": "similar_matter_evidence_v1_models_similar_matter_evidence_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Similar Matter Evidence V1 Models Similar Matter Evidence Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Similar Matter Evidence",
         "tags": [
           "models"
         ]

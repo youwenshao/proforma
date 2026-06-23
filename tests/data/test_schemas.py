@@ -9,6 +9,7 @@ from proforma_data.schemas import (
     MatterEstimate,
     MatterInput,
     ModelEvaluation,
+    QuotePackSnapshot,
     StageEstimate,
 )
 
@@ -103,10 +104,29 @@ def test_exported_json_schemas_include_schema_version(tmp_path: Path) -> None:
     assert properties["risk_tolerance"]["enum"] == ["Low", "Medium", "High"]
     assert (tmp_path / "matter-estimate.schema.json").exists()
     assert (tmp_path / "model-evaluation.schema.json").exists()
+    assert (tmp_path / "quote-pack-snapshot.schema.json").exists()
+    quote_pack_schema = json.loads((tmp_path / "quote-pack-snapshot.schema.json").read_text(encoding="utf-8"))
+    assert quote_pack_schema["properties"]["schema_version"]["const"] == "proforma.quote_pack.v1"
 
     ModelEvaluation(
         dataset_id="synthetic-mvp-v1",
         model_version="baseline-v1",
         metrics={"mae": 1000.0},
+        limitations=["Synthetic feasibility data only."],
+    )
+
+    QuotePackSnapshot(
+        estimate_id="estimate-1",
+        tenant_id="tenant-hk-001",
+        benchmark_segment={
+            "segment_label": "All matters",
+            "dimensions": [],
+            "sample_size": 4000,
+            "fallback_level": "global",
+        },
+        metrics=[],
+        chart_specs=[],
+        assumptions_and_guardrails=["Partner final decision required before client sharing."],
+        evidence_footer=["Model version: baseline-v1"],
         limitations=["Synthetic feasibility data only."],
     )
