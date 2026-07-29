@@ -6,6 +6,7 @@ import { LocalizedLink } from "@/components/localized-link";
 import { ModelEvidenceView } from "@/components/models/model-evidence-view";
 import { Button } from "@/components/ui/button";
 import type {
+  ModelArtifactIndex,
   ModelCurrent,
   ModelEvaluation,
   SimilarMatterEvidence,
@@ -14,6 +15,7 @@ import type {
 import { useTranslations } from "@/lib/i18n/locale-context";
 
 type ModelsPageContentProps = {
+  artifactIndex: ModelArtifactIndex;
   current: ModelCurrent;
   evaluation: ModelEvaluation;
   similarMatterEvidence: SimilarMatterEvidence;
@@ -21,6 +23,7 @@ type ModelsPageContentProps = {
 };
 
 export function ModelsPageContent({
+  artifactIndex,
   current,
   evaluation,
   similarMatterEvidence,
@@ -41,6 +44,7 @@ export function ModelsPageContent({
           </Button>
         </div>
         <ModelEvidenceView
+          artifactIndex={artifactIndex}
           current={current}
           evaluation={evaluation}
           similarMatterEvidence={similarMatterEvidence}

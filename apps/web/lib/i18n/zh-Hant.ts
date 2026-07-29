@@ -276,64 +276,183 @@ export const zhHantMessages = {
 
   "models.eyebrow": "模型證據",
   "models.title": "可行性證據套件",
-  "models.syntheticGovernance": "合成數據及管治背景",
+  "models.lede":
+    "本頁以淺白語言說明 ProForma 的估算模型是什麼、它從哪些數據學習、估算與實際相差多少，以及目前尚未獲准的用途。閱讀本頁無需統計學背景，所有技術名詞均在首次出現時解釋。",
+  "models.syntheticGovernance": "請先閱讀：本頁每個數字均來自虛構數據",
   "models.syntheticGovernanceBody":
-    "目前模型證據基於 {marker}；匯集使用仍受法律審閱門檻規限。",
-  "models.datasetBuilt": "合成驗證數據集的建立方式",
-  "models.whatItIs": "內容概述",
+    "本頁證據由 {marker} 產生，這是一組由電腦生成的虛構香港法律事項。全程並未使用任何真實客戶、事務所或事項檔案。這足以證明軟件能完整運作、各項保障措施有效，但並不能證明任何事務所實際收費或應該收費多少。在法律審閱完成前，仍禁止使用多間事務所匯集的數據訓練模型。",
+
+  "models.glossary": "貫穿本頁的五個名詞",
+  "models.glossaryScopeCreep": "範圍增長",
+  "models.glossaryScopeCreepBody":
+    "工作範圍超出報價時的假設。在本系統中，當實際完成的工作成本高於原本報價、費用上限或預算逾 5%，該事項即標示為範圍增長。低於此門檻的超支會記錄為超支，但不會標示。",
+  "models.glossaryModel": "模型",
+  "models.glossaryModelBody":
+    "一組以過往事項擬合而成的統計公式。輸入開工前已知的事實，它便回傳估算成本、時長及工作量。它不會閱讀文件，也不會撰寫文字。",
+  "models.glossaryRange": "估算區間",
+  "models.glossaryRangeBody":
+    "每項估算均以低至高的區間呈現，而非單一數字，因為沒有任何估算是確定的。區間較寬是誠實反映該事項較難預測，並非缺陷。",
+  "models.glossaryError": "誤差",
+  "models.glossaryErrorBody":
+    "模型估算與事項實際成本之間的差距。誤差一律以多宗事項的平均值呈現，因此數字描述的是整體典型表現，而非任何單一事項。",
+  "models.glossarySynthetic": "合成數據",
+  "models.glossarySyntheticBody":
+    "由程式按既定規則及刻意加入的隨機變化產生的記錄，而非取自真實檔案。合成數據可自由公開查閱，因為每一行背後都沒有真實客戶。",
+
+  "models.datasetBuilt": "支撐這些估算的執業數據如何建立",
+  "models.whatItIs": "內容是什麼",
   "models.whatItIsBody":
-    "可重現的產生器在 {datasetId} 下建立了 4,000 宗合成香港事項，標記為 {marker}。",
-  "models.howSynthesized": "合成方法",
+    "{datasetId} 是一個載有 4,000 宗虛構香港法律事項的檔案，標記為 {marker}。每一行代表一宗虛構事項，記錄其事項類型、客戶類別、事務所規模、工作複雜程度、所收取的時薪、最初的報價，以及最終實際成本。",
+  "models.howSynthesized": "數字從何而來",
   "models.howSynthesizedBody":
-    "數據集使用結構化數值及領域分佈、種子值 20260622 及驗證規則，並非由大型語言模型撰寫敘述。",
-  "models.whatItProves": "證明內容",
+    "沒有任何內容抄自真實檔案，也沒有任何文字由 AI 聊天機械人撰寫。我們把對香港市場的假設明確寫下來：各事項類型的典型費用水平、按事務所規模劃分的時薪區間、跨境工作的額外成本，以及事項超出報價的頻率；程式再按這些假設，配以合理的隨機變化，產生 4,000 宗事項。",
+  "models.whatItProves": "它能證明與不能證明什麼",
   "models.whatItProvesBody":
-    "支援在取得真實數據前驗證特徵、校準及審閱流程，並非生產市場證明或真實事務所準確度聲明。",
-  "models.whatMetricsMean": "指標含義",
-  "models.maeDesc":
-    "MAE 表示典型成本誤差的港元規模，數值越低越好，最適合在同類事項組合內比較。",
-  "models.rmseDesc":
-    "RMSE 同樣衡量成本誤差，但對大型誤差賦予較高權重，預期下降且不應由少數極端事項主導。",
-  "models.smapeDesc":
-    "sMAPE 為百分比式誤差指標，數值越低越好，有助比較大小事項而不僅依賴港元規模。",
-  "models.rangeCoverageDesc":
-    "區間覆蓋率檢視實際結果落入模型區間的頻率，目標是接近所聲明的信心水平，而非追求絕對確定。",
-  "models.rocAucDesc":
-    "ROC-AUC 適用於分類模型（如範圍增長風險），數值越高表示高風險事項較常排在低風險事項之前。",
-  "models.scopeCreepRatesDesc":
-    "這些比率檢視合成環境是否產生足夠超支以測試警示，驗證報告目標為合理壓力測試，而非市場預測。",
-  "models.correlationsDesc":
-    "相關性檢視驅動因素是否朝合理方向變動，例如文件越多工時越高，或複雜度越高成本越高。",
-  "models.flowTitle": "估算證據流程",
+    "它證明軟件能運作：資料輸入表單、估算、區間、範圍增長警示與審計紀錄能協同運作，且任何機密欄位都無法傳入模型。它無法證明真實香港事項的成本，因為虛構數據的準確度不可能高於其背後的假設。",
+  "models.reproducibility": "任何人都可重建並核實我們的工作",
+  "models.reproducibilityBody":
+    "程式每次均由同一個固定數字（稱為種子值，20260622）開始，因此重新執行會產生完全相同的檔案，而非一組新數字。產生器原始碼、數據集、逐欄說明的數據字典及完整驗證報告，均可在下方「目前模型」一節下載。",
+  "models.sanityChecks": "數據獲接納前必須通過的內建檢查",
+  "models.sanityChecksBody":
+    "產生器會重複執行，直至完成的數據通過以下每一項檢查。完整結果載於驗證報告。",
+  "models.sanityCheck1": "越複雜的事項成本越高；文件越多的事項所需工時越長。",
+  "models.sanityCheck2": "大型及國際事務所的時薪高於小型本地事務所。",
+  "models.sanityCheck3":
+    "合夥人及助理律師時薪維持在合理的香港區間內，並設有不得低於的下限。",
+  "models.sanityCheck4": "各階段成本相加須完全等於事項總額，不會憑空多出或缺少金額。",
+  "models.sanityCheck5":
+    "事項超出報價的次數足以觸發警示，且比率按事項類型合理地變化：例行遺囑認證甚少，具爭議的訴訟則經常發生。",
+  "models.sanityCheck6": "任何一行均不含姓名、電郵地址、事項描述或任何自由文字。",
+
+  "models.flowTitle": "一宗事項如何變成合夥人可簽署的數字",
   "models.currentModel": "目前模型",
   "models.syntheticData": "合成數據",
+  "models.whatModelIs": "這個模型實際上是什麼",
+  "models.whatModelIsBody":
+    "{version} 並非聊天機械人，也不會閱讀文件。它是一組標準且行之已久的統計公式，以上述虛構事項擬合而成：一條估算成本、一條估算時長、一條估算合夥人工時、一條估算助理律師工時，第五條則評分範圍增長風險。",
+  "models.modelInputs": "它獲准看到什麼",
+  "models.modelInputsBody":
+    "僅限資料輸入表單上的結構化事實：事項類型及子類型、司法管轄區、事務所規模、客戶類別、相關交易金額、文件數量、複雜程度、當事人數目、是否跨境、時薪及計費模式。",
+  "models.modelExclusions": "它永不會看到什麼",
+  "models.modelExclusionsBody":
+    "任何只有在事項完結後才知道的資料，例如最終成本、實際工時、是否超支或結案方式。正因為刻意不提供這些資料，準確度數字才有意義，而非循環論證。客戶姓名、敘述及自由文字則完全排除。",
   "models.modelVersion": "模型版本",
-  "models.featureVersion": "特徵版本",
-  "models.datasetLineage": "數據集譜系",
-  "models.sourceMarker": "來源標記",
-  "models.evaluationSummary": "評估摘要",
-  "models.calibrationMethod": "校準方法",
+  "models.featureVersion": "輸入定義版本",
+  "models.datasetLineage": "所學習的數據集",
+  "models.sourceMarker": "數據來源標記",
+  "models.versionsExplainer":
+    "系統產生的每項估算都附有這些識別碼，因此任何向客戶展示的數字，都可追溯至產生它的確切模型與數據。",
+
+  "models.artifacts": "查閱或下載證據檔案",
+  "models.artifactsBody":
+    "支撐本頁的每個檔案均開放查閱。當中沒有機密資料：數據集完全是虛構的，模型亦只以該虛構數據擬合。",
+  "models.artifactsDataset": "數據集及其製作方式",
+  "models.artifactsModel": "已擬合的模型檔案",
+  "models.artifactsReport": "模型說明卡及評估報告",
+  "models.artifactsRebuildNote":
+    "已擬合的模型檔案是由數據集重建而非儲存，因此在執行訓練指令前可能不存在。由於種子值固定，重建會產生相同檔案。",
+  "models.artifactsUnavailable":
+    "此環境並未發佈證據檔案，相關檔案仍可在專案程式庫中取得。",
+  "models.artifactView": "檢視",
+  "models.artifactDownload": "下載",
+  "models.artifactViewLabel": "在瀏覽器檢視{name}",
+  "models.artifactDownloadLabel": "下載{name}",
+  "models.artifactUnavailable": "此環境未建立",
+  "models.artifactRebuild": "重建指令：{command}",
+
+  "models.artifact.syntheticDataset": "合成事項數據集",
+  "models.artifact.syntheticDatasetSummary":
+    "全部 4,000 宗虛構事項的試算表檔案，每行一宗事項，可用 Excel 或 Numbers 開啟。",
+  "models.artifact.datasetGenerator": "產生器程式",
+  "models.artifact.datasetGeneratorSummary":
+    "產生該數據集的完整原始碼，包括每一項以數字寫明、可供閱讀與質詢的市場假設。",
+  "models.artifact.dataDictionary": "數據字典",
+  "models.artifact.dataDictionarySummary": "逐欄說明每個欄位的意義及其產生方式。",
+  "models.artifact.validationReport": "驗證報告",
+  "models.artifact.validationReportSummary":
+    "內建檢查的完整結果，包括按事項類型劃分的超出報價比率及相關性表格。",
+  "models.artifact.datasetLineage": "數據集譜系記錄",
+  "models.artifact.datasetLineageSummary":
+    "來源印記：數據集識別碼、記錄數目、產生器版本，以及重現該檔案所需的種子值。",
+  "models.artifact.modelCardCost": "模型說明卡：成本估算",
+  "models.artifact.modelCardCostSummary":
+    "成本模型的一頁摘要：預期用途、排除用途、所依賴的事實、實測準確度及已知限制。",
+  "models.artifact.modelCardScopeCreep": "模型說明卡：範圍增長風險",
+  "models.artifact.modelCardScopeCreepSummary":
+    "評分事項超出報價風險之模型的同款一頁摘要。",
+  "models.artifact.trainingReportCost": "訓練報告：成本估算",
+  "models.artifact.trainingReportCostSummary":
+    "本頁準確度數字背後的詳細結果，並按事項類型細分。",
+  "models.artifact.strategyComparisonReport": "事務所專屬與匯集訓練比較",
+  "models.artifact.strategyComparisonReportSummary":
+    "研究報告，比較以單一事務所事項訓練的模型，與以跨事務所匯集事項訓練的模型。",
+  "models.artifact.bundleTotalCost": "已擬合模型：總成本",
+  "models.artifact.bundleTotalCostSummary":
+    "已擬合的成本公式及其設定，儲存後可日後重現完全相同的估算。",
+  "models.artifact.bundleDuration": "已擬合模型：時長",
+  "models.artifact.bundleDurationSummary": "估算事項由接受指示至完結所需日數的公式。",
+  "models.artifact.bundlePartnerHours": "已擬合模型：合夥人工時",
+  "models.artifact.bundlePartnerHoursSummary": "估算合夥人投入時間的公式。",
+  "models.artifact.bundleAssociateHours": "已擬合模型：助理律師工時",
+  "models.artifact.bundleAssociateHoursSummary": "估算助理律師投入時間的公式。",
+  "models.artifact.bundleScopeCreep": "已擬合模型：範圍增長風險",
+  "models.artifact.bundleScopeCreepSummary": "評分事項超出報價可能性的公式。",
+
+  "models.evaluationSummary": "估算與實際的接近程度",
+  "models.holdoutExplainer": "測試方式",
+  "models.holdoutExplainerBody":
+    "模型以四分之三的虛構事項擬合，再用來估算餘下四分之一從未見過的事項。以下所有數字均為它在這些未見事項上的表現，這是現階段最接近全新委聘的替代測試。",
+  "models.calibrationMethod": "區間如何計算",
   "models.calibrationDescription":
-    "{method}。當事項類型有足夠樣本時使用分段殘差分位數；稀疏分段則回退至全域殘差分位數。",
-  "models.errorByMatterType": "按事項類型的誤差：平均誤差與大型誤差敏感度",
+    "我們量度過往估算與實際相差多遠，並以這些偏差的分布繪出低至高的區間。若某事項類型本身有足夠事項，便使用其自身的分布；若數量太少而不可靠，則改用整體分布。（方法：{method}。）",
+  "models.whatMetricsMean": "各數字的含義",
+  "models.maeLabel": "平均誤差",
+  "models.maeDesc":
+    "在典型事項上，估算與真實成本相差多少港元。可理解為：在一般事項上我們大約差了這個金額，數值越小越好。由於這是現金金額，處理較大型事項的事項類型自然會顯示較大數值。統計學上稱為 MAE。",
+  "models.rmseLabel": "對大型偏差的敏感度",
+  "models.rmseDesc":
+    "與平均誤差概念相同，但偶爾出現的極大偏差所佔權重高得多。若此數字明顯高於平均誤差，代表雖然多數事項估算良好，仍有少數異常事項估算欠佳。統計學上稱為 RMSE。",
+  "models.smapeLabel": "百分比誤差",
+  "models.smapeDesc":
+    "以每宗事項本身規模的百分比表示誤差，讓簡單遺囑與大型融資能公平比較。數值 0.28 表示在典型事項上估算約有 28% 偏差。統計學上稱為 sMAPE。",
+  "models.rangeCoverageLabel": "區間覆蓋率",
+  "models.rangeCoverageDesc":
+    "實際成本落入所公布低至高區間的頻率。若區間標示為 80% 區間，此數值應接近 0.80。數值明顯偏低，代表區間過窄，顯得比證據所支持的更有信心。",
+  "models.rocAucLabel": "範圍增長風險排序分數",
+  "models.rocAucDesc":
+    "評估獨立的範圍增長警示。任取一宗超出報價的事項與一宗沒有超出的事項：此數值代表模型把超支者評為較高風險的頻率。0.5 等同擲毫，1.0 則為完美。統計學上稱為 ROC-AUC。",
+  "models.scopeCreepRatesLabel": "範圍增長及超支比率",
+  "models.scopeCreepRatesDesc":
+    "虛構事項中超出報價的比例。這些比率是刻意設定在看似合理的水平，好讓監察警示有可偵測的對象，並非關於真實香港事項超支頻率的研究結論。",
+  "models.correlationsLabel": "相關性",
+  "models.correlationsDesc":
+    "檢查數據是否按執業者預期的方向變動：文件越多工時越長，複雜度越高成本越高。數值接近 1 代表兩者緊密同步上升，接近 0 則代表兩者無關。",
+  "models.errorByMatterType": "按事項類型的準確度",
+  "models.errorByMatterTypeNote":
+    "請在同一事項類型內比較，而非跨類型比較。處理較大型事項的類型必然顯示較大的現金誤差，這本身並不代表模型在該類型表現較差。",
   "models.matterType": "事項類型",
-  "models.firmVsPooled": "事務所專屬與匯集軌道",
-  "models.firmSpecific": "事務所專屬軌道",
-  "models.pooledResearch": "匯集研究軌道",
+
+  "models.firmVsPooled": "兩種訓練方式及其現況",
+  "models.firmSpecific": "以單一事務所自身事項訓練",
+  "models.firmSpecificBody":
+    "這是計劃中首個投入實務的路徑。事務所的模型只從自身歷史學習，數據不會離開事務所，估算亦反映該事務所的實際運作方式。此方式須累積足夠的過往事項才可依賴。",
+  "models.pooledResearch": "以跨事務所匯集的事項訓練",
+  "models.pooledResearchBody":
+    "僅屬研究軌道。匯集數據可讓模型有多得多的學習樣本，但會引起客戶保密、資料保障及專業責任等問題，必須先取得書面解答，方可使用。",
+  "models.technicalNote": "技術註記",
   "models.firmSpecificUnavailable": "無法提供事務所專屬證據。",
   "models.pooledUnavailable": "無法提供匯集證據。",
-  "models.legalGateStatus": "法律審閱門檻狀態",
-  "models.minimumRecords": "每間事務所最低記錄數：{count}",
-  "models.similarMatter": "類似事項證據",
-  "models.allowedInputs": "批准後允許的輸入",
-  "models.excludedInputs": "排除的輸入",
-  "models.retrievalEnabled": "檢索已啟用",
-  "models.retrievalDisabled": "檢索已停用",
+  "models.legalGateStatus": "待法律審閱，暫時封鎖",
+  "models.minimumRecords": "須有該事務所至少 {count} 宗過往事項",
+  "models.similarMatter": "展示可資比較的過往事項",
+  "models.similarMatterBody":
+    "這是一項計劃中的功能，將向合夥人顯示估算所依據的過往事項。目前已關閉。啟用前須先就真實事務所數據的處理方式取得批准，包括儲存地點、保存期限及刪除方式。",
+  "models.allowedInputs": "獲批准後可使用",
+  "models.excludedInputs": "仍然排除",
+  "models.retrievalEnabled": "功能已開啟",
+  "models.retrievalDisabled": "功能已關閉",
   "models.metricsByMatterType": "按事項類型的指標",
-  "models.rangeCoverage": "區間覆蓋率",
-  "models.averageError": "平均誤差",
-  "models.largeErrorSensitivity": "大型誤差敏感度",
-  "models.relativeError": "相對誤差",
+  "models.rangeMethod": "區間計算方法",
 
   "charts.partnerHours": "合夥人工時",
   "charts.associateHours": "助理律師工時",
@@ -342,17 +461,18 @@ export const zhHantMessages = {
   "charts.shareOfMatters": "事項佔比 (%)",
   "charts.avgCostShare": "平均成本佔比 (%)",
   "charts.averageError": "平均誤差",
-  "charts.largeErrorSensitivity": "大型誤差敏感度",
+  "charts.largeErrorSensitivity": "對大型偏差的敏感度",
   "charts.lowBound": "下限",
   "charts.recommended": "建議值",
   "charts.highBound": "上限",
   "charts.downside": "下行情況",
   "charts.estimate": "估算",
-  "charts.structuredFacts": "結構化資料",
+  "charts.structuredFacts": "你輸入的事實",
   "charts.structuredFactsText":
-    "事項類型、司法管轄區、複雜度、當事人、文件及計費模式。",
-  "charts.modelVersionStep": "模型版本",
-  "charts.modelVersionText": "目前可行性模型套用合成數據模式及校準。",
+    "事項類型、司法管轄區、複雜度、當事人、文件及計費模式，除此以外並無使用其他資料。",
+  "charts.modelVersionStep": "模型進行比對",
+  "charts.modelVersionText":
+    "系統將這些事實與數據集中各事項所呈現的模式比對，並參考過往估算的偏差幅度。",
   "charts.estimateRange": "估算區間",
   "charts.estimateRangeText":
     "用戶可見低、典型及高結果，而非單一虛假精確數字。",

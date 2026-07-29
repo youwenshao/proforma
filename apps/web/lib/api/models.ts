@@ -1,11 +1,13 @@
 import { apiGet } from "./client";
 import {
+  modelArtifactsFixture,
   modelCurrentFixture,
   modelEvaluationFixture,
   similarMatterEvidenceFixture,
   strategyComparisonFixture,
 } from "./fixtures";
 import type {
+  ModelArtifactIndex,
   ModelCurrent,
   ModelEvaluation,
   SimilarMatterEvidence,
@@ -25,6 +27,14 @@ export async function getModelEvaluation(): Promise<ModelEvaluation> {
     return await apiGet<ModelEvaluation>("/v1/models/evaluation");
   } catch {
     return modelEvaluationFixture;
+  }
+}
+
+export async function getModelArtifacts(): Promise<ModelArtifactIndex> {
+  try {
+    return await apiGet<ModelArtifactIndex>("/v1/models/artifacts");
+  } catch {
+    return modelArtifactsFixture;
   }
 }
 

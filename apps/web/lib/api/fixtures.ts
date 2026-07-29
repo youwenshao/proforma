@@ -1,5 +1,8 @@
 import type {
   EstimateResponse,
+  ModelArtifact,
+  ModelArtifactCategory,
+  ModelArtifactIndex,
   ModelCurrent,
   ModelEvaluation,
   SimilarMatterEvidence,
@@ -259,6 +262,158 @@ export const modelCurrentFixture: ModelCurrent = {
     source_marker: "SYNTHETIC_MVP_V1",
   },
   synthetic_data: true,
+};
+
+function artifactFixture(
+  artifact_id: string,
+  category: ModelArtifactCategory,
+  filename: string,
+  media_type: string,
+  size_bytes: number | null,
+  rebuild_command: string,
+): ModelArtifact {
+  const contentPath = `/v1/models/artifacts/${artifact_id}/content`;
+  const available = size_bytes !== null;
+  const viewable = available && media_type !== "application/octet-stream";
+
+  return {
+    artifact_id,
+    category,
+    filename,
+    media_type,
+    available,
+    viewable,
+    size_bytes,
+    rebuild_command,
+    download_path: `${contentPath}?disposition=attachment`,
+    view_path: viewable ? `${contentPath}?disposition=inline` : null,
+  };
+}
+
+const rebuildDatasetCommand = "python generate_dataset.py";
+const rebuildModelCommand =
+  "python -m ml.train --dataset output/proforma_hk_synthetic_mvp.csv --all-targets --output-dir artifacts/models";
+
+export const modelArtifactsFixture: ModelArtifactIndex = {
+  status: "available",
+  model_version: "proforma-baseline-v1",
+  dataset_id: "proforma-hk-synthetic-mvp-v1",
+  source_marker: "SYNTHETIC_MVP_V1",
+  synthetic_data: true,
+  artifacts: [
+    artifactFixture(
+      "synthetic-dataset",
+      "dataset",
+      "proforma_hk_synthetic_mvp.csv",
+      "text/csv",
+      2_310_144,
+      rebuildDatasetCommand,
+    ),
+    artifactFixture(
+      "dataset-generator",
+      "dataset",
+      "generate_dataset.py",
+      "text/x-python",
+      63_488,
+      rebuildDatasetCommand,
+    ),
+    artifactFixture(
+      "data-dictionary",
+      "dataset",
+      "data_dictionary.md",
+      "text/markdown",
+      8_192,
+      rebuildDatasetCommand,
+    ),
+    artifactFixture(
+      "validation-report",
+      "dataset",
+      "validation_report.md",
+      "text/markdown",
+      27_648,
+      rebuildDatasetCommand,
+    ),
+    artifactFixture(
+      "dataset-lineage",
+      "dataset",
+      "dataset_lineage.json",
+      "application/json",
+      338,
+      rebuildDatasetCommand,
+    ),
+    artifactFixture(
+      "model-card-cost",
+      "report",
+      "model_card_total_cost.md",
+      "text/markdown",
+      2_048,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "model-card-scope-creep",
+      "report",
+      "model_card_scope_creep.md",
+      "text/markdown",
+      2_048,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "training-report-cost",
+      "report",
+      "training_report_total_cost_hkd.json",
+      "application/json",
+      12_288,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "strategy-comparison-report",
+      "report",
+      "model_strategy_comparison.md",
+      "text/markdown",
+      4_096,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "model-bundle-total-cost",
+      "model",
+      "total_cost_hkd_<model>.joblib",
+      "application/octet-stream",
+      null,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "model-bundle-duration",
+      "model",
+      "duration_days_<model>.joblib",
+      "application/octet-stream",
+      null,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "model-bundle-partner-hours",
+      "model",
+      "partner_hours_<model>.joblib",
+      "application/octet-stream",
+      null,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "model-bundle-associate-hours",
+      "model",
+      "associate_hours_<model>.joblib",
+      "application/octet-stream",
+      null,
+      rebuildModelCommand,
+    ),
+    artifactFixture(
+      "model-bundle-scope-creep",
+      "model",
+      "scope_creep_flag_<model>.joblib",
+      "application/octet-stream",
+      null,
+      rebuildModelCommand,
+    ),
+  ],
 };
 
 export const modelEvaluationFixture: ModelEvaluation = {

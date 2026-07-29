@@ -1,6 +1,7 @@
 "use client";
 
 import type {
+  ModelArtifactIndex,
   ModelCurrent,
   ModelEvaluation,
   SimilarMatterEvidence,
@@ -8,32 +9,35 @@ import type {
 } from "@/lib/api/types";
 import { ModelFlowDiagram } from "@/components/charts/model-flow-diagram";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useTranslations } from "@/lib/i18n/locale-context";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { EvaluationSummary } from "./evaluation-summary";
+import { EvidenceCardTitle } from "./evidence-card-title";
+import { EvidenceGlossary } from "./evidence-glossary";
 import { ModelCurrentCard } from "./model-current-card";
 import { SimilarMatterEvidenceCard } from "./similar-matter-evidence-card";
 import { StrategyComparison as StrategyComparisonCard } from "./strategy-comparison";
 
 type ModelEvidenceViewProps = {
+  artifactIndex: ModelArtifactIndex;
   current: ModelCurrent;
   evaluation: ModelEvaluation;
   similarMatterEvidence: SimilarMatterEvidence;
   strategyComparison: StrategyComparison;
 };
 
-const metricExplainerKeys: Array<{ label: string; descriptionKey: TranslationKey }> = [
-  { label: "MAE", descriptionKey: "models.maeDesc" },
-  { label: "RMSE", descriptionKey: "models.rmseDesc" },
-  { label: "sMAPE", descriptionKey: "models.smapeDesc" },
-  { label: "Range coverage", descriptionKey: "models.rangeCoverageDesc" },
-  { label: "ROC-AUC", descriptionKey: "models.rocAucDesc" },
-  { label: "Scope-creep and overrun rates", descriptionKey: "models.scopeCreepRatesDesc" },
-  { label: "Correlations", descriptionKey: "models.correlationsDesc" },
+const sanityCheckKeys: TranslationKey[] = [
+  "models.sanityCheck1",
+  "models.sanityCheck2",
+  "models.sanityCheck3",
+  "models.sanityCheck4",
+  "models.sanityCheck5",
+  "models.sanityCheck6",
 ];
 
 export function ModelEvidenceView({
+  artifactIndex,
   current,
   evaluation,
   similarMatterEvidence,
@@ -48,6 +52,7 @@ export function ModelEvidenceView({
           {t("models.eyebrow")}
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">{t("models.title")}</h1>
+        <p className="mt-3 max-w-3xl text-sm text-muted-foreground">{t("models.lede")}</p>
       </div>
       <Alert>
         <AlertTitle>{t("models.syntheticGovernance")}</AlertTitle>
@@ -57,13 +62,12 @@ export function ModelEvidenceView({
           })}
         </AlertDescription>
       </Alert>
+      <EvidenceGlossary />
       <Card>
         <CardHeader>
-          <h2 className="font-heading text-base leading-snug font-medium">
-            {t("models.datasetBuilt")}
-          </h2>
+          <EvidenceCardTitle>{t("models.datasetBuilt")}</EvidenceCardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 text-sm">
+        <CardContent className="space-y-5 text-sm">
           <div className="grid gap-3 md:grid-cols-3">
             <div className="rounded-lg border border-border bg-muted/40 p-3">
               <p className="font-medium">{t("models.whatItIs")}</p>
@@ -84,22 +88,24 @@ export function ModelEvidenceView({
             </div>
           </div>
           <div>
-            <p className="font-medium">{t("models.whatMetricsMean")}</p>
-            <dl className="mt-3 grid gap-3 md:grid-cols-2">
-              {metricExplainerKeys.map((metric) => (
-                <div key={metric.label} className="rounded-lg border border-border p-3">
-                  <dt className="font-medium">{metric.label}</dt>
-                  <dd className="mt-1 text-muted-foreground">{t(metric.descriptionKey)}</dd>
-                </div>
+            <p className="font-medium">{t("models.reproducibility")}</p>
+            <p className="mt-1 text-muted-foreground">{t("models.reproducibilityBody")}</p>
+          </div>
+          <div>
+            <p className="font-medium">{t("models.sanityChecks")}</p>
+            <p className="mt-1 text-muted-foreground">{t("models.sanityChecksBody")}</p>
+            <ul className="mt-3 grid list-disc gap-2 pl-5 text-muted-foreground md:grid-cols-2">
+              {sanityCheckKeys.map((key) => (
+                <li key={key}>{t(key)}</li>
               ))}
-            </dl>
+            </ul>
           </div>
         </CardContent>
       </Card>
-      <ModelCurrentCard current={current} />
+      <ModelCurrentCard artifactIndex={artifactIndex} current={current} />
       <Card>
         <CardHeader>
-          <CardTitle>{t("models.flowTitle")}</CardTitle>
+          <EvidenceCardTitle>{t("models.flowTitle")}</EvidenceCardTitle>
         </CardHeader>
         <CardContent>
           <ModelFlowDiagram />

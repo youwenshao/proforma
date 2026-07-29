@@ -1318,6 +1318,78 @@
         ]
       }
     },
+    "/v1/models/artifacts": {
+      "get": {
+        "operationId": "model_artifacts_v1_models_artifacts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Model Artifacts V1 Models Artifacts Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Model Artifacts",
+        "tags": [
+          "models"
+        ]
+      }
+    },
+    "/v1/models/artifacts/{artifact_id}/content": {
+      "get": {
+        "operationId": "model_artifact_content_v1_models_artifacts__artifact_id__content_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artifact_id",
+            "required": true,
+            "schema": {
+              "title": "Artifact Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "disposition",
+            "required": false,
+            "schema": {
+              "default": "attachment",
+              "enum": [
+                "attachment",
+                "inline"
+              ],
+              "title": "Disposition",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Model Artifact Content",
+        "tags": [
+          "models"
+        ]
+      }
+    },
     "/v1/models/current": {
       "get": {
         "operationId": "current_model_v1_models_current_get",

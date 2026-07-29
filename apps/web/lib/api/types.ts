@@ -160,6 +160,30 @@ export type ModelEvaluation = {
   metrics_by_matter_type: Record<string, Record<string, number>>;
 };
 
+export type ModelArtifactCategory = "dataset" | "model" | "report";
+
+export type ModelArtifact = {
+  artifact_id: string;
+  category: ModelArtifactCategory;
+  filename: string;
+  media_type: string;
+  available: boolean;
+  viewable: boolean;
+  size_bytes: number | null;
+  rebuild_command: string;
+  download_path: string;
+  view_path: string | null;
+};
+
+export type ModelArtifactIndex = {
+  status: string;
+  model_version: string;
+  dataset_id: string;
+  source_marker: string;
+  synthetic_data: boolean;
+  artifacts: ModelArtifact[];
+};
+
 export type StrategyComparison = {
   status: string;
   tracks: {

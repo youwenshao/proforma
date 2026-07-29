@@ -2,8 +2,9 @@
 
 import type { StrategyComparison as StrategyComparisonType } from "@/lib/api/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useTranslations } from "@/lib/i18n/locale-context";
+import { EvidenceCardTitle } from "./evidence-card-title";
 
 type StrategyComparisonProps = {
   strategyComparison: StrategyComparisonType;
@@ -17,23 +18,27 @@ export function StrategyComparison({ strategyComparison }: StrategyComparisonPro
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("models.firmVsPooled")}</CardTitle>
+        <EvidenceCardTitle>{t("models.firmVsPooled")}</EvidenceCardTitle>
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2">
         <section className="rounded-lg border border-border p-4">
-          <h2 className="font-medium">{t("models.firmSpecific")}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {firmSpecific?.description ?? t("models.firmSpecificUnavailable")}
-          </p>
+          <h3 className="font-medium">{t("models.firmSpecific")}</h3>
+          <p className="mt-2 text-sm text-muted-foreground">{t("models.firmSpecificBody")}</p>
           {firmSpecific?.minimum_records_per_firm ? (
             <p className="mt-2 text-sm">
               {t("models.minimumRecords", { count: firmSpecific.minimum_records_per_firm })}
             </p>
           ) : null}
+          <p className="mt-3 text-xs text-muted-foreground">
+            <span className="font-medium">{t("models.technicalNote")}: </span>
+            {firmSpecific?.description ?? t("models.firmSpecificUnavailable")}
+          </p>
         </section>
         <section className="rounded-lg border border-border p-4">
-          <h2 className="font-medium">{t("models.pooledResearch")}</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <h3 className="font-medium">{t("models.pooledResearch")}</h3>
+          <p className="mt-2 text-sm text-muted-foreground">{t("models.pooledResearchBody")}</p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            <span className="font-medium">{t("models.technicalNote")}: </span>
             {pooled?.description ?? t("models.pooledUnavailable")}
           </p>
           {pooled?.legal_gate_status ? (

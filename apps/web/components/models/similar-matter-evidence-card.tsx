@@ -2,8 +2,9 @@
 
 import type { SimilarMatterEvidence } from "@/lib/api/types";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useTranslations } from "@/lib/i18n/locale-context";
+import { EvidenceCardTitle } from "./evidence-card-title";
 
 type SimilarMatterEvidenceCardProps = {
   evidence: SimilarMatterEvidence;
@@ -15,7 +16,7 @@ export function SimilarMatterEvidenceCard({ evidence }: SimilarMatterEvidenceCar
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("models.similarMatter")}</CardTitle>
+        <EvidenceCardTitle>{t("models.similarMatter")}</EvidenceCardTitle>
       </CardHeader>
       <CardContent className="space-y-4 text-sm">
         <div className="flex flex-wrap gap-2">
@@ -27,7 +28,7 @@ export function SimilarMatterEvidenceCard({ evidence }: SimilarMatterEvidenceCar
               : t("models.retrievalDisabled")}
           </Badge>
         </div>
-        <p className="text-muted-foreground">{evidence.description}</p>
+        <p className="text-muted-foreground">{t("models.similarMatterBody")}</p>
         <dl className="grid gap-3 md:grid-cols-2">
           <div>
             <dt className="font-medium">{t("models.allowedInputs")}</dt>
@@ -38,6 +39,10 @@ export function SimilarMatterEvidenceCard({ evidence }: SimilarMatterEvidenceCar
             <dd className="text-muted-foreground">{evidence.excluded_inputs.join(", ")}</dd>
           </div>
         </dl>
+        <p className="text-xs text-muted-foreground">
+          <span className="font-medium">{t("models.technicalNote")}: </span>
+          {evidence.description}
+        </p>
       </CardContent>
     </Card>
   );

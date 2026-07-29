@@ -2,12 +2,19 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Query, status
+from fastapi.responses import FileResponse
 
 from ml.config import MODEL_VERSION
 from proforma_data.lineage import DATASET_ID, FEATURE_VERSION, SOURCE_MARKER
+from services.api.app.model_artifacts import (
+    INLINE_MEDIA_TYPE,
+    artifact_payload,
+    build_artifact_catalog,
+    find_artifact,
+)
 from services.api.app.settings import get_settings
 
 router = APIRouter(prefix="/v1/models", tags=["models"])
@@ -68,6 +75,44 @@ def strategy_comparison() -> dict[str, Any]:
             },
         },
     }
+
+
+@router.get("/artifacts")
+def model_artifacts() -> dict[str, Any]:
+    settings = get_settings()
+    catalog = build_artifact_catalog(settings)
+    return {
+        "status": "available" if any(artifact.available for artifact in catalog) else "not_available",
+        "model_version": MODEL_VERSION,
+        "dataset_id": DATASET_ID,
+        "source_marker": SOURCE_MARKER,
+        "synthetic_data": True,
+        "artifacts": [artifact_payload(artifact) for artifact in catalog],
+    }
+
+
+@router.get("/artifacts/{artifact_id}/content", response_class=FileResponse)
+def model_artifact_content(
+    artifact_id: str,
+    disposition: Literal["attachment", "inline"] = Query(default="attachment"),
+) -> FileResponse:
+    artifact = find_artifact(get_settings(), artifact_id)
+    if artifact is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Unknown artifact")
+    if artifact.path is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Artifact is not built in this environment. Rebuild with: {artifact.rebuild_command}",
+        )
+
+    inline = disposition == "inline" and artifact.viewable
+    return FileResponse(
+        artifact.path,
+        media_type=INLINE_MEDIA_TYPE if inline else artifact.media_type,
+        headers={
+            "content-disposition": f'{"inline" if inline else "attachment"}; filename="{artifact.filename}"'
+        },
+    )
 
 
 @router.get("/similar-matter-evidence")

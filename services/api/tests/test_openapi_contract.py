@@ -15,6 +15,8 @@ def test_exported_openapi_contract_contains_phase_three_endpoints() -> None:
     assert "/v1/estimates/{estimate_id}/quote-packs/render" in contract["paths"]
     assert "/v1/estimates/{estimate_id}/scope-updates" in contract["paths"]
     assert "/v1/models/current" in contract["paths"]
+    assert "/v1/models/artifacts" in contract["paths"]
+    assert "/v1/models/artifacts/{artifact_id}/content" in contract["paths"]
     assert "MatterInput" in contract["components"]["schemas"]
     assert "QuoteSubstantiationResponse" in contract["components"]["schemas"]
     assert "QuotePackRenderResponse" in contract["components"]["schemas"]

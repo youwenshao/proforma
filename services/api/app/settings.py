@@ -11,6 +11,8 @@ class ApiSettings(BaseModel):
     service_name: str = "proforma-api"
     api_version: str = "v1"
     artifacts_dir: Path = Path("artifacts")
+    dataset_dir: Path = Path("output")
+    project_root: Path = Path(".")
     audit_log_path: Path = Path("artifacts/audit/prediction_requests.jsonl")
     estimate_store_dir: Path = Path("artifacts/estimates")
     quote_benchmarks_path: Path = Path("artifacts/reports/quote_benchmarks.json")
@@ -28,6 +30,8 @@ class ApiSettings(BaseModel):
 def get_settings() -> ApiSettings:
     audit_log_path = os.environ.get("PROFORMA_AUDIT_LOG_PATH")
     artifacts_dir = os.environ.get("PROFORMA_ARTIFACTS_DIR")
+    dataset_dir = os.environ.get("PROFORMA_DATASET_DIR")
+    project_root = os.environ.get("PROFORMA_PROJECT_ROOT")
     estimate_store_dir = os.environ.get("PROFORMA_ESTIMATE_STORE_DIR")
     quote_benchmarks_path = os.environ.get("PROFORMA_QUOTE_BENCHMARKS_PATH")
     quote_pack_storage_dir = os.environ.get("PROFORMA_QUOTE_PACK_STORAGE_DIR")
@@ -36,6 +40,8 @@ def get_settings() -> ApiSettings:
     supabase_service_role_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY")
     return ApiSettings(
         artifacts_dir=Path(artifacts_dir) if artifacts_dir else Path("artifacts"),
+        dataset_dir=Path(dataset_dir) if dataset_dir else Path("output"),
+        project_root=Path(project_root) if project_root else Path("."),
         audit_log_path=Path(audit_log_path) if audit_log_path else Path("artifacts/audit/prediction_requests.jsonl"),
         estimate_store_dir=Path(estimate_store_dir) if estimate_store_dir else Path("artifacts/estimates"),
         quote_benchmarks_path=Path(quote_benchmarks_path)
