@@ -18,6 +18,7 @@ export const enMessages = {
   "nav.proformaHome": "ProForma home",
   "nav.new": "New",
   "nav.estimate": "Estimate",
+  "nav.pitch": "Pitch",
 
   "footer.tagline":
     "Feasibility-stage pricing intelligence for Hong Kong legal teams.",

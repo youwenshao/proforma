@@ -50,6 +50,7 @@ function SiteFooterContent() {
       { href: "/estimate/new", label: t("nav.newEstimate") },
       { href: "/results", label: t("nav.results") },
       { href: "/models", label: t("nav.modelEvidence") },
+      { href: "/pitch", label: t("nav.pitch") },
     ],
     [t],
   );
