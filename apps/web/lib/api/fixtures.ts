@@ -416,6 +416,19 @@ export const modelArtifactsFixture: ModelArtifactIndex = {
   ],
 };
 
+/** Used when the live artifacts API is unreachable so the UI never advertises dead download links. */
+export const modelArtifactsUnavailableFixture: ModelArtifactIndex = {
+  ...modelArtifactsFixture,
+  status: "not_available",
+  artifacts: modelArtifactsFixture.artifacts.map((artifact) => ({
+    ...artifact,
+    available: false,
+    viewable: false,
+    size_bytes: null,
+    view_path: null,
+  })),
+};
+
 export const modelEvaluationFixture: ModelEvaluation = {
   status: "available",
   model_version: "proforma-baseline-v1",

@@ -1,6 +1,6 @@
 import { apiGet } from "./client";
 import {
-  modelArtifactsFixture,
+  modelArtifactsUnavailableFixture,
   modelCurrentFixture,
   modelEvaluationFixture,
   similarMatterEvidenceFixture,
@@ -34,7 +34,9 @@ export async function getModelArtifacts(): Promise<ModelArtifactIndex> {
   try {
     return await apiGet<ModelArtifactIndex>("/v1/models/artifacts");
   } catch {
-    return modelArtifactsFixture;
+    // Never fall back to downloadable fixture links: those paths 404 when the
+    // API has not yet published the artifacts catalog.
+    return modelArtifactsUnavailableFixture;
   }
 }
 

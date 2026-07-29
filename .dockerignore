@@ -19,6 +19,10 @@ artifacts/*
 !artifacts/reports
 !artifacts/reports/**
 
-output
+# Keep the published synthetic evidence files; exclude other generated output.
+output/*
+!output/proforma_hk_synthetic_mvp.csv
+!output/validation_report.md
+!output/dataset_lineage.json
 data
 schemas
