@@ -76,13 +76,7 @@ function SiteFooterContent() {
               {t("footer.tagline")} {t("footer.disclaimer")}
             </p>
             <div className="flex items-center gap-4 text-sm">
-              <span className="text-white/50">Sentimento Technologies Limited</span>
-              <a
-                className="text-white/50 transition-colors hover:text-white"
-                href="https://www.sentimento.dev"
-              >
-                sentimento.dev
-              </a>
+              <span className="text-white/50">Yixiang (Billy) Zuo</span>
             </div>
           </div>
 

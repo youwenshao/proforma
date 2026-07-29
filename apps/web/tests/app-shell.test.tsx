@@ -58,7 +58,7 @@ describe("app shell navigation", () => {
     expect(logoLink.firstElementChild).not.toHaveClass("border");
   });
 
-  it("renders the Sentimento company footer", () => {
+  it("renders the author credit in the footer", () => {
     renderWithLocale(
       <AppShell>
         <main>Dashboard content</main>
@@ -66,11 +66,8 @@ describe("app shell navigation", () => {
     );
 
     const footer = screen.getByRole("contentinfo");
-    expect(within(footer).getByText(/Sentimento Technologies Limited/i)).toBeInTheDocument();
-    expect(within(footer).getByRole("link", { name: /sentimento.dev/i })).toHaveAttribute(
-      "href",
-      "https://www.sentimento.dev",
-    );
+    expect(within(footer).getByText(/Yixiang \(Billy\) Zuo/i)).toBeInTheDocument();
+    expect(within(footer).queryByRole("link", { name: /sentimento\.dev/i })).not.toBeInTheDocument();
     expect(within(footer).getByText(/feasibility/i)).toBeInTheDocument();
   });
 });
