@@ -168,6 +168,7 @@ export const zhHantMessages = {
   "intake.dealValue": "交易金額（港元，選填）",
   "intake.documentVolume": "文件數量",
   "intake.complexityScore": "複雜度評分",
+  "intake.complexityScoreHint": "1 = 常規，3 = 典型，5 = 高度複雜。",
   "intake.partyCount": "當事人數量",
   "intake.crossBorder": "跨境事項",
   "intake.selectPlaceholder": "選擇{label}",

@@ -232,6 +232,7 @@ export function MatterIntakeForm({
           value={values.document_volume}
         />
         <NumberField
+          description={t("intake.complexityScoreHint")}
           error={errors.complexity_score ? t(errors.complexity_score) : undefined}
           label={t("intake.complexityScore")}
           max={5}
@@ -316,6 +317,7 @@ function SelectField({ error, label, name, onChange, options, placeholder, value
 }
 
 type NumberFieldProps = {
+  description?: string;
   error?: string;
   label: string;
   max?: number;
@@ -325,7 +327,16 @@ type NumberFieldProps = {
   value: string;
 };
 
-function NumberField({ error, label, max, min = 0, name, onChange, value }: NumberFieldProps) {
+function NumberField({
+  description,
+  error,
+  label,
+  max,
+  min = 0,
+  name,
+  onChange,
+  value,
+}: NumberFieldProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
@@ -338,6 +349,9 @@ function NumberField({ error, label, max, min = 0, name, onChange, value }: Numb
         type="number"
         value={value}
       />
+      {description ? (
+        <p className="text-xs text-muted-foreground">{description}</p>
+      ) : null}
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
     </div>
   );

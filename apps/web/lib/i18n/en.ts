@@ -181,6 +181,7 @@ export const enMessages = {
   "intake.dealValue": "Deal value HKD (optional)",
   "intake.documentVolume": "Document volume",
   "intake.complexityScore": "Complexity score",
+  "intake.complexityScoreHint": "1 = routine, 3 = typical, 5 = highly complex.",
   "intake.partyCount": "Party count",
   "intake.crossBorder": "Cross-border matter",
   "intake.selectPlaceholder": "Select {label}",
