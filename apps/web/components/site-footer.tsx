@@ -76,7 +76,7 @@ function SiteFooterContent() {
               {t("footer.tagline")} {t("footer.disclaimer")}
             </p>
             <div className="flex items-center gap-4 text-sm">
-              <span className="text-white/50">Yixiang (Billy) Zuo</span>
+              <span className="text-white/50">Team ProForma</span>
             </div>
           </div>
 

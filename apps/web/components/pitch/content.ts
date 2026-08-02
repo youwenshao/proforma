@@ -6,7 +6,7 @@ export const pitchContent = {
     productOneLiner:
       "ProForma is software that helps Hong Kong law firms quote fixed and capped fees using structured matter inputs and comparable-matter analysis — not hourly guesswork.",
     description:
-      "Presented by Yixiang (Billy) Zuo · Year 2 LLB, CUHK",
+      "Presented by Team ProForma",
     cue: "Scroll to begin",
   },
 

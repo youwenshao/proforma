@@ -26,6 +26,7 @@ describe("app shell navigation", () => {
       "href",
       "/models",
     );
+    expect(within(nav).queryByRole("link", { name: /pitch/i })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /sign in/i })).toHaveAttribute("href", "/login");
   });
 
@@ -58,7 +59,7 @@ describe("app shell navigation", () => {
     expect(logoLink.firstElementChild).not.toHaveClass("border");
   });
 
-  it("renders the author credit in the footer", () => {
+  it("renders the team credit and pitch link in the footer", () => {
     renderWithLocale(
       <AppShell>
         <main>Dashboard content</main>
@@ -66,7 +67,8 @@ describe("app shell navigation", () => {
     );
 
     const footer = screen.getByRole("contentinfo");
-    expect(within(footer).getByText(/Yixiang \(Billy\) Zuo/i)).toBeInTheDocument();
+    expect(within(footer).getByText(/Team ProForma/i)).toBeInTheDocument();
+    expect(within(footer).getByRole("link", { name: /pitch/i })).toHaveAttribute("href", "/pitch");
     expect(within(footer).queryByRole("link", { name: /sentimento\.dev/i })).not.toBeInTheDocument();
     expect(within(footer).getByText(/feasibility/i)).toBeInTheDocument();
   });

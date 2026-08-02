@@ -11,7 +11,6 @@ import {
   LogOut,
   Menu,
   PanelTopClose,
-  Presentation,
 } from "lucide-react";
 import { useMemo } from "react";
 import { signOutAppSession, useAppSession } from "@/lib/auth/session";
@@ -43,7 +42,6 @@ export function AppShell({ children }: AppShellProps) {
       { href: "/estimate/new", icon: FilePlus2, label: t("nav.newEstimate") },
       { href: "/results", icon: History, label: t("nav.results") },
       { href: "/models", icon: Brain, label: t("nav.modelEvidence") },
-      { href: "/pitch", icon: Presentation, label: t("nav.pitch") },
     ],
     [t],
   );
