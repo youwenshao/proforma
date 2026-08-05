@@ -1,6 +1,10 @@
 [project]
 name = "proforma-api"
 version = "0.1.0"
+description = "ProForma FastAPI and ML feasibility prototype"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Youwen Shao" }]
 requires-python = ">=3.12"
 dependencies = [
   "numpy",

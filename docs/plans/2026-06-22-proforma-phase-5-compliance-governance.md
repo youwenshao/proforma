@@ -12,7 +12,6 @@
 
 ## Source Context
 
-- Compliance rows: `docs/proforma-proposal-prelim.html`
 - Phase 0 risk register: `docs/governance/risk-register.md`
 - Phase 0 acceptance checklist: `docs/governance/phase-0-acceptance-checklist.md`
 - Phase 0 data residency decision: `docs/adr/0005-data-residency-and-deployment-gate.md`

@@ -50,7 +50,6 @@ function SiteFooterContent() {
       { href: "/estimate/new", label: t("nav.newEstimate") },
       { href: "/results", label: t("nav.results") },
       { href: "/models", label: t("nav.modelEvidence") },
-      { href: "/pitch", label: t("nav.pitch") },
     ],
     [t],
   );
@@ -75,9 +74,6 @@ function SiteFooterContent() {
             <p className="max-w-md text-sm leading-relaxed">
               {t("footer.tagline")} {t("footer.disclaimer")}
             </p>
-            <div className="flex items-center gap-4 text-sm">
-              <span className="text-white/50">Team ProForma</span>
-            </div>
           </div>
 
           <div className="flex flex-col items-start gap-4 sm:items-end">

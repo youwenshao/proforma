@@ -24,8 +24,6 @@ export const zhHantMessages = {
   "nav.proformaHome": "ProForma 首頁",
   "nav.new": "新增",
   "nav.estimate": "估算",
-  "nav.pitch": "提案簡報",
-
   "footer.tagline": "為香港法律團隊提供可行性階段定價情報。",
   "footer.disclaimer": "此示範版本不構成法律、監管或面向客戶的費用決定批准。",
 

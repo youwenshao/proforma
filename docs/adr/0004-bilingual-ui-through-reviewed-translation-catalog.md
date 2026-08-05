@@ -4,7 +4,7 @@ Status: Accepted
 
 ## Context
 
-The amended proposal describes a bilingual English and Traditional Chinese interface for Hong Kong law firms. The product also uses legal and pricing terminology that could affect user understanding: matter type, fee structure, scope creep, uncertainty, decision support, partner review, and legal disclaimers.
+Product requirements call for a bilingual English and Traditional Chinese interface for Hong Kong law firms. The product also uses legal and pricing terminology that could affect user understanding: matter type, fee structure, scope creep, uncertainty, decision support, partner review, and legal disclaimers.
 
 Unreviewed machine translation would create avoidable risk. Incorrect legal terminology could make estimates look more authoritative than intended, obscure synthetic-data limitations, or weaken disclaimers.
 

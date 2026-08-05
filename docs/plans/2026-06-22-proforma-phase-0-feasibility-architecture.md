@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Convert the amended ProForma HK proposal into a technical feasibility architecture, requirements brief, and governance gates before product code is built.
+**Goal:** Convert ProForma HK product requirements into a technical feasibility architecture, requirements brief, and governance gates before product code is built.
 
 **Architecture:** This phase produces documentation and repository scaffolding decisions only. It defines a Next.js frontend, Python FastAPI service, Python ML workspace, shared domain schemas, and compliance/governance documents as separate tracks that converge through typed API contracts.
 
@@ -12,7 +12,7 @@
 
 ## Source Context
 
-- Proposal: `docs/proforma-proposal-prelim.html`
+- Product requirements: `docs/requirements/product-requirements.md`
 - Data dictionary: `docs/data_dictionary.md`
 - Validation report: `output/validation_report.md`
 - Synthetic generator: `generate_dataset.py`
@@ -31,11 +31,10 @@
 
 **Files:**
 - Create: `docs/requirements/product-requirements.md`
-- Reference: `docs/proforma-proposal-prelim.html`
 
-**Step 1: Extract the amended workflow**
+**Step 1: Capture the product workflow**
 
-Capture the four product workflow steps from the proposal:
+Document the four product workflow steps:
 
 - Matter Parameters.
 - Predictive Analysis.
@@ -84,7 +83,7 @@ Commit message: `docs: add ProForma product requirements brief`
 
 **Files:**
 - Create: `docs/architecture/technical-feasibility-architecture.md`
-- Reference: `docs/proforma-proposal-prelim.html`
+- Reference: `docs/requirements/product-requirements.md`
 
 **Step 1: Document system boundaries**
 

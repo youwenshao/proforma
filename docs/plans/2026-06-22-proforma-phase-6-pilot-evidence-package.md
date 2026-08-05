@@ -12,7 +12,6 @@
 
 ## Source Context
 
-- Proposal call to action: `docs/proforma-proposal-prelim.html`
 - Phase 0 requirements: `docs/requirements/product-requirements.md`
 - Phase 0 architecture: `docs/architecture/technical-feasibility-architecture.md`
 - Phase 0 acceptance checklist: `docs/governance/phase-0-acceptance-checklist.md`

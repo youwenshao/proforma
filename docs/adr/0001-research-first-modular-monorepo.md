@@ -4,7 +4,7 @@ Status: Accepted
 
 ## Context
 
-ProForma HK is starting from an amended competition proposal, a synthetic dataset, and validation evidence rather than an existing production application. The first engineering risk is not UI implementation speed; it is keeping product requirements, model research, API contracts, and governance decisions aligned while the concept is still being validated.
+ProForma HK is starting from a synthetic-data research prototype, product requirements, and validation evidence rather than an existing production application. The first engineering risk is not UI implementation speed; it is keeping product requirements, model research, API contracts, and governance decisions aligned while the concept is still being validated.
 
 The target architecture includes a bilingual Next.js frontend, a FastAPI service, a Python ML workspace, shared domain contracts, local data staging, and governance documentation. These tracks need independent ownership, but they also need tight review of cross-cutting constraints such as synthetic-data labeling, tenant context, model metadata, and legal gates.
 

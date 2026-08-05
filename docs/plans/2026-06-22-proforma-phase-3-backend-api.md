@@ -15,7 +15,7 @@
 - Phase 1 data contracts: `proforma_data/schemas.py`
 - Phase 2 inference: `ml/inference.py`
 - API fixture: `artifacts/fixtures/sample_prediction_response.json`
-- Proposal workflow: `docs/proforma-proposal-prelim.html`
+- Product workflow: `docs/requirements/product-requirements.md`
 - Phase 0 architecture: `docs/architecture/technical-feasibility-architecture.md`
 - Phase 0 tenancy decision: `docs/adr/0003-tenant-aware-contracts-before-real-tenancy.md`
 - Phase 0 gates: `docs/governance/risk-register.md`

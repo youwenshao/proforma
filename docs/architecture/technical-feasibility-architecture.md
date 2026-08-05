@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This brief defines the Phase 0 architecture for converting the amended ProForma HK proposal into buildable product tracks. It is intentionally pre-production: it establishes system boundaries, typed contracts, model evidence paths, and governance gates before any product code accepts real firm data or makes compliance claims.
+This brief defines the Phase 0 architecture for converting ProForma HK product requirements into buildable product tracks. It is intentionally pre-production: it establishes system boundaries, typed contracts, model evidence paths, and governance gates before any product code accepts real firm data or makes compliance claims.
 
 ## System Boundaries
 
