@@ -93,6 +93,15 @@ describe("estimate results and fee recommendation", () => {
     expect(within(duration).getByText(/564 days/i)).toBeInTheDocument();
   });
 
+  it("renders decision impact weights from the estimate response", () => {
+    renderWithLocale(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
+
+    expect(screen.getByText(/what influenced this estimate/i)).toBeInTheDocument();
+    expect(screen.getByText(/firm tier/i)).toBeInTheDocument();
+    expect(screen.getByText(/28\.4% · pushes cost up/i)).toBeInTheDocument();
+    expect(screen.getByText(/party count/i)).toBeInTheDocument();
+  });
+
   it("renders stage estimates in an accessible table", () => {
     renderWithLocale(<EstimateResultsView estimate={sampleEstimate} modelStrategy="synthetic_baseline" />);
 

@@ -71,6 +71,20 @@ export type FeeRecommendation = {
   schema_version: string;
 };
 
+export type DecisionImpactFactor = {
+  feature: string;
+  display_label: string;
+  weight_pct: number;
+  direction: "increases" | "decreases";
+};
+
+export type DecisionImpact = {
+  method: string;
+  target: string;
+  factors: DecisionImpactFactor[];
+  unavailable_reason?: string | null;
+};
+
 export type EstimateResponse = {
   estimate_id: string;
   tenant_id: string;
@@ -87,6 +101,7 @@ export type EstimateResponse = {
   fee_recommendation: FeeRecommendation;
   decision_support_disclaimer: string;
   limitations: string[];
+  decision_impact?: DecisionImpact | null;
 };
 
 export type QuotePackMetric = {

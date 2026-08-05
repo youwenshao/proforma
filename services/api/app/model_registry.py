@@ -9,6 +9,7 @@ from typing import Any
 import joblib
 from ml.config import MODEL_VERSION
 from ml.config import CLASSIFICATION_TARGET, REGRESSION_TARGETS
+from ml.decision_impact import unavailable_decision_impact
 from ml.inference import predict as predict_with_bundles
 from ml.stage_allocation import allocate_stage_estimates
 from proforma_data.domain import PARTNER_RATE_BANDS
@@ -38,7 +39,7 @@ class ModelRegistry:
                 risk_tolerance=request.risk_tolerance,
                 cost_estimate=response["cost_estimate"],
             )
-            return response, True
+            return response, False
 
         if self.serving_mode == "live":
             raise ModelUnavailableError("Live model serving requested, but no model artifacts are available.")
@@ -54,6 +55,9 @@ class ModelRegistry:
             billing_model=request.matter_input.billing_model,
             risk_tolerance=request.risk_tolerance,
             cost_estimate=response["cost_estimate"],
+        )
+        response["decision_impact"] = unavailable_decision_impact(
+            reason="Fixture serving mode returns a canned prediction and does not attribute feature contributions.",
         )
 
         limitations = list(response.get("limitations", []))

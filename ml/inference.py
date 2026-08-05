@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 from ml.config import MODEL_VERSION
+from ml.decision_impact import decision_impact_for_bundle
 from ml.evaluate import prediction_interval
 from ml.features import LEAKAGE_FIELDS, parse_json_list, records_to_frame
 from ml.stage_allocation import allocate_stage_estimates
@@ -66,6 +67,7 @@ def predict(model_bundle: dict[str, Any] | Any, matter_input: dict[str, Any]) ->
                 else []
             ),
         ],
+        "decision_impact": decision_impact_for_bundle(cost_bundle, input_frame),
     }
     return PredictionResponse(**response).model_dump(mode="json")
 

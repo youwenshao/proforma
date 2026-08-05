@@ -201,6 +201,36 @@ export const sampleEstimate: EstimateResponse = {
   },
   limitations: ["Synthetic-data feasibility estimate only.", "Partner review required before client use."],
   model_version: "proforma-baseline-v1",
+  decision_impact: {
+    method: "ridge_linear_contribution",
+    target: "total_cost_hkd",
+    factors: [
+      {
+        feature: "firm_tier",
+        display_label: "Firm tier",
+        weight_pct: 28.4,
+        direction: "increases",
+      },
+      {
+        feature: "jurisdiction",
+        display_label: "Jurisdiction",
+        weight_pct: 18.7,
+        direction: "increases",
+      },
+      {
+        feature: "party_count",
+        display_label: "Party count",
+        weight_pct: 12.1,
+        direction: "increases",
+      },
+      {
+        feature: "complexity_score",
+        display_label: "Complexity",
+        weight_pct: 9.5,
+        direction: "decreases",
+      },
+    ],
+  },
   scope_creep_probability: 0.6540640046165398,
   stage_estimates: [
     {

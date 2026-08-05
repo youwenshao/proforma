@@ -223,6 +223,15 @@ export const zhHantMessages = {
   "summary.confidenceDescription": "於 {confidence} 信心水平下的低、典型及高預估",
   "summary.daysUnit": "天",
 
+  "impact.title": "影響此估算的因素",
+  "impact.description": "此預測中，各事項事實對成本模型線性貢獻所佔的比重。",
+  "impact.increases": "推高成本",
+  "impact.decreases": "拉低成本",
+  "impact.methodNote":
+    "百分比為總成本 Ridge 係數 × 標準化特徵貢獻的相對比重。僅供決策支援。",
+  "impact.unavailable": "未能提供因素影響",
+  "impact.unavailableBody": "此估算未以即時模型歸因，因此不顯示影響比重。",
+
   "notice.syntheticData":
     "此介面使用 SYNTHETIC_MVP_V1 可行性合成數據，並不構成法律、監管或生產定價批准。",
   "notice.decisionSupport":

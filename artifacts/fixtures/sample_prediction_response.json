@@ -1,37 +1,92 @@
 {
   "cost_estimate": {
-    "calibration_method": "residual_quantiles",
+    "calibration_method": "segment_residual_quantiles:matter_type",
     "confidence_level": 0.8,
-    "p10": 295709.5407759816,
-    "p50": 857275.9936940091,
-    "p90": 1526590.2534765112
+    "p10": 222085.32637880527,
+    "p50": 566875.5481284192,
+    "p90": 1051875.3836539472
   },
   "dataset_lineage": {
     "dataset_id": "proforma-hk-synthetic-mvp-v1",
     "schema_version": "proforma.matter.v1",
     "source_marker": "SYNTHETIC_MVP_V1"
   },
+  "decision_impact": {
+    "factors": [
+      {
+        "direction": "increases",
+        "display_label": "Matter type",
+        "feature": "matter_type",
+        "weight_pct": 31.2
+      },
+      {
+        "direction": "increases",
+        "display_label": "Document volume",
+        "feature": "document_volume",
+        "weight_pct": 16.0
+      },
+      {
+        "direction": "decreases",
+        "display_label": "Firm tier",
+        "feature": "firm_tier",
+        "weight_pct": 12.3
+      },
+      {
+        "direction": "increases",
+        "display_label": "Stage count",
+        "feature": "stage_count",
+        "weight_pct": 10.7
+      },
+      {
+        "direction": "decreases",
+        "display_label": "Cross-border",
+        "feature": "cross_border_flag",
+        "weight_pct": 8.0
+      },
+      {
+        "direction": "increases",
+        "display_label": "Matter subtype",
+        "feature": "matter_subtype",
+        "weight_pct": 6.1
+      },
+      {
+        "direction": "decreases",
+        "display_label": "Jurisdiction",
+        "feature": "jurisdiction",
+        "weight_pct": 4.5
+      },
+      {
+        "direction": "decreases",
+        "display_label": "Complexity",
+        "feature": "complexity_score",
+        "weight_pct": 2.7
+      }
+    ],
+    "method": "ridge_linear_contribution",
+    "target": "total_cost_hkd",
+    "unavailable_reason": null
+  },
   "decision_support_disclaimer": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
   "duration_estimate": {
-    "calibration_method": "residual_quantiles",
+    "calibration_method": "segment_residual_quantiles:matter_type",
     "confidence_level": 0.8,
-    "p10": 238.52744692354912,
-    "p50": 348.99527640491897,
-    "p90": 483.96579840393645
+    "p10": 234.83480896828627,
+    "p50": 363.574736100312,
+    "p90": 526.5691245793473
   },
   "estimate_id": "sample-estimate-v1",
   "fee_recommendation": {
     "billing_model": "Fixed Fee",
     "cap_amount_hkd": null,
-    "confidence_interval_high_hkd": 1213902.8070707167,
-    "confidence_interval_low_hkd": 859847.821675091,
+    "confidence_interval_high_hkd": 802695.7761498415,
+    "confidence_interval_low_hkd": 568576.1747728044,
     "downside_risk_hkd": null,
     "expected_downside_hkd": null,
     "expected_margin_hkd": null,
     "margin_pct": null,
     "partner_decision_support_disclaimer": "This recommendation is decision-support only; a responsible partner must review matter context, professional obligations, and client instructions before use.",
     "pricing_guardrails": [],
-    "recommended_fee_hkd": 1011585.6725589307,
+    "recommended_fee_hkd": 668913.1467915346,
     "schema_version": "proforma.matter.v1"
   },
   "input_summary": {
@@ -49,36 +104,36 @@
     "Partner review required before client use."
   ],
   "model_version": "proforma-baseline-v1",
-  "scope_creep_probability": 0.20862969981050217,
+  "scope_creep_probability": 0.6540640046165601,
   "stage_estimates": [
     {
-      "associate_hours": 41.948177840587334,
-      "cost_hkd": 138832.58984366606,
-      "partner_hours": 35.29028502189758,
+      "associate_hours": 33.017345619903175,
+      "cost_hkd": 91851.86126691925,
+      "partner_hours": 27.892225258155133,
       "stage_name": "Case Assessment"
     },
     {
-      "associate_hours": 69.42680368338799,
-      "cost_hkd": 195306.88471819597,
-      "partner_hours": 44.43818358679291,
+      "associate_hours": 54.64572933801343,
+      "cost_hkd": 129180.1488174872,
+      "partner_hours": 35.122409068019266,
       "stage_name": "Pleadings"
     },
     {
-      "associate_hours": 91.3579359441804,
-      "cost_hkd": 223625.38329801947,
-      "partner_hours": 44.94919219558998,
+      "associate_hours": 71.9076894746889,
+      "cost_hkd": 147870.51500348953,
+      "partner_hours": 35.52629266421523,
       "stage_name": "Discovery"
     },
     {
-      "associate_hours": 78.6040665652729,
-      "cost_hkd": 170390.01333177878,
-      "partner_hours": 29.75154727009667,
+      "associate_hours": 61.86913869723293,
+      "cost_hkd": 112638.65290694979,
+      "partner_hours": 23.514597791467935,
       "stage_name": "Interlocutory Applications"
     },
     {
-      "associate_hours": 66.34753872967303,
-      "cost_hkd": 129121.12250234885,
-      "partner_hours": 19.154859874799342,
+      "associate_hours": 52.22204467599002,
+      "cost_hkd": 85334.37013357342,
+      "partner_hours": 15.139341212030033,
       "stage_name": "Settlement/Trial"
     }
   ],

@@ -296,6 +296,20 @@ class QuotePackRenderResponse(ContractModel):
     rendered_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
+class DecisionImpactFactor(ContractModel):
+    feature: str
+    display_label: str
+    weight_pct: float = Field(ge=0, le=100)
+    direction: Literal["increases", "decreases"]
+
+
+class DecisionImpact(ContractModel):
+    method: str
+    target: str
+    factors: list[DecisionImpactFactor]
+    unavailable_reason: str | None = None
+
+
 class PredictionResponse(ContractModel):
     estimate_id: str
     tenant_id: str
@@ -309,6 +323,7 @@ class PredictionResponse(ContractModel):
     fee_recommendation: FeeRecommendation
     decision_support_disclaimer: str
     limitations: list[str]
+    decision_impact: DecisionImpact | None = None
 
 
 class PredictionRequest(ContractModel):

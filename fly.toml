@@ -10,7 +10,7 @@ primary_region = "sin"
   PROFORMA_PROJECT_ROOT = "/app"
   PROFORMA_AUDIT_LOG_PATH = "/data/audit/prediction_requests.jsonl"
   PROFORMA_ESTIMATE_STORE_DIR = "/data/estimates"
-  PROFORMA_MODEL_SERVING_MODE = "fixture"
+  PROFORMA_MODEL_SERVING_MODE = "live"
   PROFORMA_QUOTE_PACK_STORAGE_DIR = "/data/quote_packs"
 
 [mounts]

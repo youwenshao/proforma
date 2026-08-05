@@ -83,7 +83,7 @@ def test_registry_uses_trained_synthetic_bundles_when_available(tmp_path) -> Non
         EstimateRequest.model_validate(valid_estimate_payload()),
     )
 
-    assert synthetic_mode is True
+    assert synthetic_mode is False
     assert prediction["cost_estimate"]["p50"] == 100_000.0
     assert prediction["duration_estimate"]["p50"] == 20.0
     assert prediction["scope_creep_probability"] == 0.7

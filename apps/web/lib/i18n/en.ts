@@ -241,6 +241,17 @@ export const enMessages = {
     "Low, typical, and high estimates at {confidence} confidence",
   "summary.daysUnit": "days",
 
+  "impact.title": "What influenced this estimate",
+  "impact.description":
+    "Share of the cost model's linear contribution attributed to each matter fact for this prediction.",
+  "impact.increases": "pushes cost up",
+  "impact.decreases": "pushes cost down",
+  "impact.methodNote":
+    "Percentages are Ridge coefficient × standardized feature contributions for total cost (relative shares). Decision-support only.",
+  "impact.unavailable": "Feature influence unavailable",
+  "impact.unavailableBody":
+    "This estimate was served without live model attribution, so influence weights are not shown.",
+
   "notice.syntheticData":
     "This frontend uses synthetic data from SYNTHETIC_MVP_V1 feasibility data and does not establish legal, regulatory, or production pricing approval.",
   "notice.decisionSupport":

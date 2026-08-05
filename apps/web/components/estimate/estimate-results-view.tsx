@@ -6,6 +6,7 @@ import { StageEffortChart } from "@/components/charts/stage-effort-chart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/lib/i18n/locale-context";
+import { DecisionImpactPanel } from "./decision-impact-panel";
 import { EstimateReference } from "./estimate-reference";
 import { EstimateSummary } from "./estimate-summary";
 import { FeeRecommendationPanel } from "./fee-recommendation-panel";
@@ -76,6 +77,8 @@ export function EstimateResultsView({
         modelVersion={estimate.model_version}
         scopeCreepProbability={estimate.scope_creep_probability}
       />
+
+      <DecisionImpactPanel decisionImpact={estimate.decision_impact} />
 
       <FeeRecommendationPanel
         fee={estimate.fee_recommendation}

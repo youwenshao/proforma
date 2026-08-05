@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PROFORMA_MODEL_SERVING_MODE=fixture
+    PROFORMA_MODEL_SERVING_MODE=live
 
 WORKDIR /app
 
@@ -20,6 +20,12 @@ COPY docs/data_dictionary.md ./docs/data_dictionary.md
 COPY output/proforma_hk_synthetic_mvp.csv ./output/proforma_hk_synthetic_mvp.csv
 COPY output/validation_report.md ./output/validation_report.md
 COPY output/dataset_lineage.json ./output/dataset_lineage.json
+
+# Train inside the image so live serving does not depend on gitignored joblibs.
+RUN python -m ml.train \
+      --dataset output/proforma_hk_synthetic_mvp.csv \
+      --all-targets \
+      --output-dir artifacts/models
 
 ENV PROFORMA_ARTIFACTS_DIR=/app/artifacts \
     PROFORMA_DATASET_DIR=/app/output \
